@@ -229,7 +229,7 @@ async function startSimulation() {
             if(progress < 85) {
                 progress += 5;
                 els.loadingProgressBar.style.width = `${progress}%`;
-                els.loadingProgressText.innerText = `Sedang memproses... (estimasi AI sedang meracik)`;
+                els.loadingProgressText.innerText = `Sedang memproses... (estimasi System sedang meracik)`;
             }
         }, 2000);
 
@@ -273,7 +273,7 @@ async function startSimulation() {
         clearInterval(progressInterval);
         
         if(allQuestions.length < modeConfig.count) {
-           console.warn("AI generated fewer questions than requested.", allQuestions.length);
+           console.warn("System generated fewer questions than requested.", allQuestions.length);
         }
 
         appState.questions = allQuestions;
