@@ -20,10 +20,10 @@ const DAFTAR_VOUCHER = [
 
 // Dedicated API Keys
 const API_KEYS = {
-    TWK: "AQ.Ab8RN6JzD7KgSd_UhjtIIh2hSf-vh6s6bmnh_5W_1z9dCYxLrA",
-    TIU: "AQ.Ab8RN6Jr6mDym6pwp6cjgILqkx0Xrj5fdAJov2nqklpbPXxhEg",
-    TKP_BAHASA: "AQ.Ab8RN6IqJiTrHGHQ8bn0MMBKSqhDelE4HsNrnMGhAzHJu-TJFQ",
-    EXPLAINER: "AQ.Ab8RN6IZNDAH5pYr4_ikpb2X2CGmnuD3ReruYd_nAKpzHyb89w"
+    TWK: "AQ.Ab8RN6JV_vH-qvvdEzQFOsVNX1y-Eohogx72XMqF7o7CPwG82g",
+    TIU: "AQ.Ab8RN6J9Bqdpb3b2ZYYNiW4eEigBFRq9Xk84HjSvTPmxSb5yrA",
+    TKP_BAHASA: "AQ.Ab8RN6IF0xWIe_Vn0vfSLIZ2GFfabZOeW70ofySqYnYipbKl2Q",
+    EXPLAINER: "AQ.Ab8RN6K0BLGC0UyOcnt5pi-lsB1JLRI-NuItep0q6zkChaCC_g"
 };
 const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA', 'EXPLAINER'];
 
