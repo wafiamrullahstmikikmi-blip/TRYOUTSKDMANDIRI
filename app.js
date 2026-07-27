@@ -6,6 +6,27 @@ const PASSING_GRADES = {
 };
 const MAX_SCORES = { TWK: 150, TIU: 175, TKP: 225 };
 
+// Access Vouchers
+const DAFTAR_VOUCHER = [
+    "SKD2026A", "SKD99XRT", "SKD88PLM", "SKD777ZZ", "SKD123AB", 
+    "SKD444CC", "SKD555DD", "SKD666EE", "SKD777FF", "SKD888GG",
+    "SKD999HH", "SKD000II", "SKD111JJ", "SKD222KK", "SKD333LL",
+    "SKD444MM", "SKD555NN", "SKD666OO", "SKD777PP", "SKD888QQ",
+    "SKD999RR", "SKD000SS", "SKD111TT", "SKD222UU", "SKD333VV",
+    "SKD444WW", "SKD555XX", "SKD666YY", "SKD777ZA", "SKD888AA",
+    "SKD999BB", "SKD000CC", "SKD111DD", "SKD222EE", "SKD333FF",
+    "SKD444GG", "SKD555HH", "SKD666II", "SKD777JJ", "SKD888KK"
+];
+
+// Dedicated API Keys
+const API_KEYS = {
+    TWK: "AQ.Ab8RN6JzD7KgSd_UhjtIIh2hSf-vh6s6bmnh_5W_1z9dCYxLrA",
+    TIU: "AQ.Ab8RN6Jr6mDym6pwp6cjgILqkx0Xrj5fdAJov2nqklpbPXxhEg",
+    TKP_BAHASA: "AQ.Ab8RN6IqJiTrHGHQ8bn0MMBKSqhDelE4HsNrnMGhAzHJu-TJFQ",
+    EXPLAINER: "AQ.Ab8RN6IZNDAH5pYr4_ikpb2X2CGmnuD3ReruYd_nAKpzHyb89w"
+};
+const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA', 'EXPLAINER'];
+
 const MODES = {
     1: { name: "SKD Full", count: 110, duration: 100 * 60 },
     2: { name: "Drilling TWK", count: 30, duration: 25 * 60, kategori: "TWK" },
@@ -17,7 +38,7 @@ const MODES = {
 
 // State
 let appState = {
-    apiKey: '',
+    isLoggedIn: false,
     selectedMode: 1,
     questions: [], // Array of questions
     userAnswers: {}, // { questionIndex: { answer: 'A', ragu: false } }
@@ -35,7 +56,10 @@ const els = {
     loadingOverlay: document.getElementById('loading-overlay'),
     
     // Dashboard
-    apiKeyInput: document.getElementById('api-key'),
+    voucherKeyInput: document.getElementById('voucher-key'),
+    btnLogout: document.getElementById('btn-logout'),
+    voucherContainer: document.getElementById('voucher-container'),
+    loggedInBadge: document.getElementById('logged-in-badge'),
     btnStart: document.getElementById('btn-start'),
     modeCards: document.querySelectorAll('.mode-card'),
     tabFull: document.getElementById('tab-full'),
@@ -80,14 +104,30 @@ const els = {
     overallStatus: document.getElementById('overall-status')
 };
 
+// Auth Logic
+function checkAuth() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn) {
+        if(els.voucherContainer) els.voucherContainer.classList.add('hidden');
+        if(els.loggedInBadge) els.loggedInBadge.classList.remove('hidden');
+        if(els.btnLogout) els.btnLogout.classList.remove('hidden');
+        appState.isLoggedIn = true;
+    }
+}
+
+function logout() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('voucherCode');
+    appState.isLoggedIn = false;
+    if(els.voucherContainer) els.voucherContainer.classList.remove('hidden');
+    if(els.loggedInBadge) els.loggedInBadge.classList.add('hidden');
+    if(els.btnLogout) els.btnLogout.classList.add('hidden');
+    if (els.voucherKeyInput) els.voucherKeyInput.value = '';
+}
+
 // Initialization
 function init() {
-    // Load API key from local storage
-    const savedApiKey = localStorage.getItem('gemini_api_key');
-    if (savedApiKey) {
-        els.apiKeyInput.value = savedApiKey;
-        appState.apiKey = savedApiKey;
-    }
+    checkAuth();
 
     // Mode Selection Listeners
     els.modeCards.forEach(card => {
@@ -163,8 +203,8 @@ function getRandomSamples(arr, n) {
 // API INTEGRATION (Gemini)
 // -----------------------------------------------------------------
 
-async function callGemini(prompt, isJson = true) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${appState.apiKey}`;
+async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
+    const keysToTry = [preferredKeyType, ...FALLBACK_ORDER.filter(k => k !== preferredKeyType)];
     
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -177,39 +217,64 @@ async function callGemini(prompt, isJson = true) {
         payload.generationConfig.responseMimeType = "application/json";
     }
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.error?.message || 'API request failed');
-        }
-
-        const data = await response.json();
-        let textResult = data.candidates[0].content.parts[0].text;
+    for (let i = 0; i < keysToTry.length; i++) {
+        let keyType = keysToTry[i];
+        let apiKey = API_KEYS[keyType];
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent?key=${apiKey}`;
         
-        if (isJson) {
-            return JSON.parse(textResult);
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                if (response.status === 429) {
+                    console.warn(`Rate limit pada API Key ${keyType}, mencoba fallback...`);
+                    if (i === keysToTry.length - 1) throw new Error('Semua API Key terkena Rate Limit (429)');
+                    continue; 
+                }
+                const err = await response.json();
+                throw new Error(err.error?.message || 'API request failed');
+            }
+
+            const data = await response.json();
+            let textResult = data.candidates[0].content.parts[0].text;
+            
+            if (isJson) {
+                return JSON.parse(textResult);
+            }
+            return textResult;
+        } catch (error) {
+            if (error.message.includes('Rate Limit') && i < keysToTry.length - 1) {
+                continue;
+            }
+            console.error(`Gemini API Error (${keyType}):`, error);
+            if (i === keysToTry.length - 1) throw error;
         }
-        return textResult;
-    } catch (error) {
-        console.error("Gemini API Error:", error);
-        throw error;
     }
 }
 
 async function startSimulation() {
-    appState.apiKey = els.apiKeyInput.value.trim();
-    if (!appState.apiKey) {
-        alert("Silakan masukkan Google Gemini API Key terlebih dahulu.");
-        return;
+    if (!appState.isLoggedIn) {
+        const voucherVal = els.voucherKeyInput ? els.voucherKeyInput.value.trim().toUpperCase() : '';
+        if (!voucherVal) {
+            alert("Silakan masukkan Kode Voucher Akses terlebih dahulu.");
+            return;
+        }
+        if (!DAFTAR_VOUCHER.includes(voucherVal)) {
+            alert("Kode Voucher tidak valid! Silakan periksa kembali kode akses Anda.");
+            return;
+        }
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('voucherCode', voucherVal);
+        appState.isLoggedIn = true;
+        
+        if (els.voucherContainer) els.voucherContainer.classList.add('hidden');
+        if (els.loggedInBadge) els.loggedInBadge.classList.remove('hidden');
+        if (els.btnLogout) els.btnLogout.classList.remove('hidden');
     }
-    
-    localStorage.setItem('gemini_api_key', appState.apiKey);
     
     // Set Time based on mode
     const modeConfig = MODES[appState.selectedMode];
@@ -235,9 +300,9 @@ async function startSimulation() {
 
         if (appState.selectedMode === 1) {
             // MODE 1: SKD Full (Concurrent)
-            const pTwk = generateQuestionsData('TWK', 30, BANK_REFERENSI.twk_only);
-            const pTiu = generateQuestionsData('TIU', 35, BANK_REFERENSI.tiu_only);
-            const pTkp = generateQuestionsData('TKP', 45, BANK_REFERENSI.tkp_only);
+            const pTwk = generateQuestionsData('TWK', 30, BANK_REFERENSI.twk_only, 'TWK');
+            const pTiu = generateQuestionsData('TIU', 35, BANK_REFERENSI.tiu_only, 'TIU');
+            const pTkp = generateQuestionsData('TKP', 45, BANK_REFERENSI.tkp_only, 'TKP_BAHASA');
 
             const [twkData, tiuData, tkpData] = await Promise.all([pTwk, pTiu, pTkp]);
             
@@ -260,7 +325,11 @@ async function startSimulation() {
                 appState.selectedMode === 4 ? 'tkp_only' :
                 appState.selectedMode === 5 ? 'bahasa_indonesia' : 'bahasa_inggris';
             
-            const rawData = await generateQuestionsData(modeConfig.kategori, modeConfig.count, BANK_REFERENSI[bankKey]);
+            let tKey = 'TKP_BAHASA';
+            if (appState.selectedMode === 2) tKey = 'TWK';
+            else if (appState.selectedMode === 3) tKey = 'TIU';
+
+            const rawData = await generateQuestionsData(modeConfig.kategori, modeConfig.count, BANK_REFERENSI[bankKey], tKey);
             const arr = Array.isArray(rawData) ? rawData : rawData.soal || [];
             
             allQuestions = arr.slice(0, modeConfig.count).map((q, idx) => ({
@@ -304,7 +373,7 @@ async function startSimulation() {
     }
 }
 
-async function generateQuestionsData(kategori, jumlah, refBank) {
+async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK') {
     const samples = getRandomSamples(refBank, 3);
     const sampleStr = JSON.stringify(samples, null, 2);
     
@@ -327,7 +396,7 @@ Tugasmu: Buat soal BARU yang variasi angka/studi kasusnya berbeda dari referensi
 Instruksi Tambahan: ${instructions}
 Output WAJIB berupa JSON Array murni array of objects: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null}, ...].`;
 
-    return callGemini(prompt, true);
+    return callGemini(prompt, true, targetKey);
 }
 
 
@@ -811,7 +880,7 @@ Tugas System:
 Gunakan markdown yang rapi. Jangan tulisulang soal, langsung ke poin pembahasan.`;
 
     try {
-        const textRes = await callGemini(prompt, false);
+        const textRes = await callGemini(prompt, false, 'EXPLAINER');
         
         btn.classList.add('hidden');
         contentDiv.classList.remove('hidden');
