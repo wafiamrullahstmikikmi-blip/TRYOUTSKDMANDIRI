@@ -770,12 +770,12 @@ function renderDiscussionList(filter) {
         });
         optionsHtml += `</div>`;
 
-        // AI Explanation Area
+        // System Explanation Area
         let aiAreaHtml = `
             <div class="mt-4 pt-4 border-t border-gray-800">
                 <button id="btn-ai-${idx}" class="text-sm font-semibold text-brand-gold flex items-center gap-2 hover:text-white transition" onclick="fetchExplanation(${idx})">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Minta Pembahasan AI
+                    Minta Pembahasan System
                 </button>
                 <div id="ai-content-${idx}" class="mt-4 text-sm text-gray-300 hidden prose prose-sm prose-invert max-w-none bg-brand-surface p-4 rounded-xl border border-gray-700"></div>
             </div>
@@ -794,7 +794,7 @@ window.fetchExplanation = async function(idx) {
     const btn = document.getElementById(`btn-ai-${idx}`);
     const contentDiv = document.getElementById(`ai-content-${idx}`);
     
-    btn.innerHTML = `<span class="loading-dots">AI sedang menganalisis</span>`;
+    btn.innerHTML = `<span class="loading-dots">System sedang menganalisis</span>`;
     btn.disabled = true;
 
     const prompt = `Berikan pembahasan mendalam tapi ringkas untuk soal SKD berikut.
@@ -804,7 +804,7 @@ Pilihan: ${JSON.stringify(q.pilihan)}
 Jawaban User: ${uAns ? uAns : 'Kosong'}
 ${q.kategori !== 'TKP' ? 'Kunci Benar: ' + q.kunci : 'Bobot TKP: ' + JSON.stringify(q.bobotTKP)}
 
-Tugas AI:
+Tugas System:
 1. Berikan penjelasan mengapa kunci/bobot tertingginya adalah yang benar.
 2. Analisis kesalahan jawaban user (jika salah).
 3. Berikan trik cepat / konsep dasar yang perlu diingat untuk tipe soal ini.
