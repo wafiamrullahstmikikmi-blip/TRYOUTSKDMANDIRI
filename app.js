@@ -22,10 +22,9 @@ const DAFTAR_VOUCHER = [
 const API_KEYS = {
     TWK: "AIzaSyB8zmFEeFCow47ZgkRj4pf2V3DFdz35tRQ",
     TIU: "AIzaSyBDizf-p4R1FZ395YqJ2S5tl99hQJ7LF3A",
-    TKP_BAHASA: "AIzaSyBwi8JpNGUO-MMyb8rZ-VuwpetTtUZuGNg",
-    EXPLAINER: "AQ.Ab8RN6K0BLGC0UyOcnt5pi-lsB1JLRI-NuItep0q6zkChaCC_g"
+    TKP_BAHASA: "AIzaSyBwi8JpNGUO-MMyb8rZ-VuwpetTtUZuGNg"
 };
-const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA', 'EXPLAINER'];
+const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA'];
 
 const MODES = {
     1: { name: "SKD Full", count: 110, duration: 100 * 60 },
@@ -884,7 +883,7 @@ Tugas System:
 Gunakan markdown yang rapi. Jangan tulisulang soal, langsung ke poin pembahasan.`;
 
     try {
-        const textRes = await callGemini(prompt, false, 'EXPLAINER');
+        const textRes = await callGemini(prompt, false, 'TIU');
         
         btn.classList.add('hidden');
         contentDiv.classList.remove('hidden');
