@@ -20,9 +20,9 @@ const DAFTAR_VOUCHER = [
 
 // Dedicated API Keys
 const API_KEYS = {
-    TWK: "AQ.Ab8RN6JV_vH-qvvdEzQFOsVNX1y-Eohogx72XMqF7o7CPwG82g",
-    TIU: "AQ.Ab8RN6J9Bqdpb3b2ZYYNiW4eEigBFRq9Xk84HjSvTPmxSb5yrA",
-    TKP_BAHASA: "AQ.Ab8RN6IF0xWIe_Vn0vfSLIZ2GFfabZOeW70ofySqYnYipbKl2Q",
+    TWK: "AIzaSyB8zmFEeFCow47ZgkRj4pf2V3DFdz35tRQ",
+    TIU: "AIzaSyBDizf-p4R1FZ395YqJ2S5tl99hQJ7LF3A",
+    TKP_BAHASA: "AIzaSyBwi8JpNGUO-MMyb8rZ-VuwpetTtUZuGNg",
     EXPLAINER: "AQ.Ab8RN6K0BLGC0UyOcnt5pi-lsB1JLRI-NuItep0q6zkChaCC_g"
 };
 const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA', 'EXPLAINER'];
@@ -220,12 +220,16 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
     for (let i = 0; i < keysToTry.length; i++) {
         let keyType = keysToTry[i];
         let apiKey = API_KEYS[keyType];
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
+        // Hapus ?key= dari URL, kita oper lewat header
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent`;
         
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': apiKey
+                },
                 body: JSON.stringify(payload)
             });
 
