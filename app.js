@@ -220,7 +220,7 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
     for (let i = 0; i < keysToTry.length; i++) {
         let keyType = keysToTry[i];
         let apiKey = API_KEYS[keyType];
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
         
         try {
             const response = await fetch(url, {
