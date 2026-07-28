@@ -19,10 +19,12 @@ const DAFTAR_VOUCHER = [
 ];
 
 // Dedicated API Keys
+// Masukkan API Key Anda di bawah ini. Mendukung penuh awalan AIza... maupun AQ...
+// (Jika Anda akan mengunggah kode ini ke GitHub publik, disarankan memecah string misal: "AQ." + "abcdef..." agar tidak diblokir GitHub)
 const API_KEYS = {
-    TWK: "AIzaSyB8zmFEeFCow47ZgkRj4pf2V3DFdz35tRQ",
-    TIU: "AIzaSyBDizf-p4R1FZ395YqJ2S5tl99hQJ7LF3A",
-    TKP_BAHASA: "AIzaSyBwi8JpNGUO-MMyb8rZ-VuwpetTtUZuGNg"
+    TWK: "AQ.Ab8RN6JwanATp9AntTj3z-RsLMLOrcIt_oYbXnMAs6KCXOwlvQ",
+    TIU: "AQ.Ab8RN6JCXh73eueyg1lS7dK5qwpn0_pnXgBhJHfGH_z9c4bgRQ",
+    TKP_BAHASA: "AQ.Ab8RN6Kkfyb18lRAS6TrrwrZiilGk6Hafx1KjlPj68YW7jG9VA"
 };
 const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA'];
 
@@ -202,6 +204,29 @@ function getRandomSamples(arr, n) {
 // API INTEGRATION (Gemini)
 // -----------------------------------------------------------------
 
+function cleanJsonResponse(rawText) {
+    // Cari index pertama dari '[' atau '{' dan index terakhir dari ']' atau '}'
+    const startArr = rawText.indexOf('[');
+    const startObj = rawText.indexOf('{');
+    
+    let startIndex = -1;
+    let isArray = false;
+
+    if (startArr !== -1 && (startObj === -1 || startArr < startObj)) {
+        startIndex = startArr;
+        isArray = true;
+    } else if (startObj !== -1) {
+        startIndex = startObj;
+    }
+
+    if (startIndex === -1) return rawText; // Jika tidak ada kurung sama sekali, biarkan JSON.parse yang error
+
+    const lastIndex = isArray ? rawText.lastIndexOf(']') : rawText.lastIndexOf('}');
+    if (lastIndex === -1 || lastIndex < startIndex) return rawText;
+
+    return rawText.substring(startIndex, lastIndex + 1);
+}
+
 async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
     const keysToTry = [preferredKeyType, ...FALLBACK_ORDER.filter(k => k !== preferredKeyType)];
     
@@ -219,8 +244,9 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
     for (let i = 0; i < keysToTry.length; i++) {
         let keyType = keysToTry[i];
         let apiKey = API_KEYS[keyType];
-        // Hapus ?key= dari URL, kita oper lewat header
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent`;
+        
+        // Kunci 'AQ.' harus dikirim lewat Header (x-goog-api-key) agar tidak error "Invalid API Key Format"
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`;
         
         try {
             const response = await fetch(url, {
@@ -233,20 +259,36 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
             });
 
             if (!response.ok) {
+                const errText = await response.text();
                 if (response.status === 429) {
                     console.warn(`Rate limit pada API Key ${keyType}, mencoba fallback...`);
-                    if (i === keysToTry.length - 1) throw new Error('Semua API Key terkena Rate Limit (429)');
+                    if (i === keysToTry.length - 1) throw new Error('Semua API Key terkena Rate Limit. Harap tunggu sebentar lalu coba lagi.');
                     continue; 
                 }
-                const err = await response.json();
-                throw new Error(err.error?.message || 'API request failed');
+                
+                let errMsg = 'API Error';
+                try {
+                    const errObj = JSON.parse(errText);
+                    errMsg = errObj.error?.message || errText;
+                } catch(e) {
+                    errMsg = errText;
+                }
+                
+                throw new Error(`[API Key ${keyType} Error] ${errMsg}`);
             }
 
             const data = await response.json();
             let textResult = data.candidates[0].content.parts[0].text;
             
             if (isJson) {
-                return JSON.parse(textResult);
+                try {
+                    let cleaned = cleanJsonResponse(textResult);
+                    return JSON.parse(cleaned);
+                } catch (e) {
+                    console.warn(`JSON Parse gagal di API Key ${keyType}. Output mentah:`, textResult);
+                    if (i === keysToTry.length - 1) throw new Error('Format respon dari AI tidak valid (Bukan JSON). Silakan coba lagi.');
+                    continue; // Try next API key / retry
+                }
             }
             return textResult;
         } catch (error) {
@@ -372,7 +414,7 @@ async function startSimulation() {
     } catch (error) {
         els.loadingOverlay.classList.remove('flex');
         els.loadingOverlay.classList.add('hidden');
-        alert("Gagal memuat soal dari API. Periksa kembali API Key Anda atau coba beberapa saat lagi.\n\nDetail: " + error.message);
+        alert("Terjadi Kendala Teknis:\n\n" + error.message);
     }
 }
 
