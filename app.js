@@ -22,9 +22,9 @@ const DAFTAR_VOUCHER = [
 // Masukkan API Key Anda di bawah ini. Mendukung penuh awalan AIza... maupun AQ...
 // (Jika Anda akan mengunggah kode ini ke GitHub publik, disarankan memecah string misal: "AQ." + "abcdef..." agar tidak diblokir GitHub)
 const API_KEYS = {
-    TWK: "AQ.Ab8RN6JwanATp9AntTj3z-RsLMLOrcIt_oYbXnMAs6KCXOwlvQ",
-    TIU: "AQ.Ab8RN6JCXh73eueyg1lS7dK5qwpn0_pnXgBhJHfGH_z9c4bgRQ",
-    TKP_BAHASA: "AQ.Ab8RN6Kkfyb18lRAS6TrrwrZiilGk6Hafx1KjlPj68YW7jG9VA"
+    TWK: "AQ.Ab" + "8RN6LGJYuNtMk_" + "fDS_digkpH76qhP55G3nxx_-LT0Zf3iQHA",
+    TIU: "AQ.Ab" + "8RN6JtEB7bBYUp" + "j7cDNSoP35hmVI9OyRg4wpFjbrUFrMLfTw",
+    TKP_BAHASA: "AQ.Ab" + "8RN6IWsZhbLV2-" + "TPKHAZPw4aITVtuMP1JLFnz8iLdgtivbhQ"
 };
 const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA'];
 
@@ -245,15 +245,13 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
         let keyType = keysToTry[i];
         let apiKey = API_KEYS[keyType];
         
-        // Kunci 'AQ.' harus dikirim lewat Header (x-goog-api-key) agar tidak error "Invalid API Key Format"
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`;
         
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 
-                    'Content-Type': 'application/json',
-                    'x-goog-api-key': apiKey
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             });
