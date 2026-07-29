@@ -245,13 +245,15 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
         let keyType = keysToTry[i];
         let apiKey = API_KEYS[keyType];
         
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+        // WAJIB gunakan header x-goog-api-key untuk kunci AQ terbaru
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent`;
         
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': apiKey
                 },
                 body: JSON.stringify(payload)
             });
