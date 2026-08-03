@@ -187,6 +187,11 @@ function init() {
             if (appState.selectedMode === 1) {
                 els.modeCards[1].click();
             }
+
+            // Scroll tab container on mobile to hint that Tab 3 (Materi) exists
+            if (window.innerWidth < 640) {
+                els.tabMateri.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' });
+            }
         });
 
         els.tabMateri.addEventListener('click', () => {
