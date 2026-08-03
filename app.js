@@ -1030,7 +1030,7 @@ window.fetchYouTubeVideo = async function(query, containerId, btn) {
                 
                 // Render iframe wrapped in a flex item card with its own AI button
                 container.innerHTML += `
-                    <div class="w-[300px] sm:w-[400px] shrink-0 snap-center rounded-lg overflow-hidden bg-brand-navy border border-gray-800 flex flex-col">
+                    <div class="w-[280px] sm:w-[320px] shrink-0 snap-center rounded-2xl overflow-hidden bg-brand-navy border border-gray-700/50 flex flex-col shadow-lg transition-transform hover:-translate-y-1">
                         <div class="w-full bg-black aspect-video relative">
                             <iframe 
                                 class="absolute top-0 left-0 w-full h-full" 
@@ -1041,17 +1041,25 @@ window.fetchYouTubeVideo = async function(query, containerId, btn) {
                                 allowfullscreen>
                             </iframe>
                         </div>
-                        <div class="p-3 flex flex-col gap-2 flex-grow">
-                            <h5 class="text-white text-xs font-bold line-clamp-2">${title}</h5>
-                            <button class="mt-auto flex justify-center items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-3 py-2 rounded-lg transition-colors w-full" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
-                                <span>💡 Rangkum Video Ini</span>
+                        <div class="p-4 flex flex-col gap-3 flex-grow bg-gradient-to-b from-brand-navy to-brand-navy/80">
+                            <h5 class="text-white text-sm font-bold line-clamp-2 leading-snug">${title}</h5>
+                            <button class="mt-auto flex justify-center items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-4 py-2.5 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 w-full" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span>Rangkum Video Ini</span>
                             </button>
-                            <div id="summary-${videoId}" class="hidden text-xs text-gray-300 p-3 border border-brand-gold rounded-lg bg-brand-navy/80 mt-2 prose prose-sm prose-invert max-w-none overflow-y-auto max-h-48 custom-scrollbar"></div>
+                            <div id="summary-${videoId}" class="hidden text-xs text-gray-200 p-4 border border-brand-gold/50 rounded-xl bg-brand-navy/90 mt-2 prose prose-sm prose-invert max-w-none overflow-y-auto max-h-48 custom-scrollbar"></div>
                         </div>
                     </div>
                 `;
             });
             container.classList.remove('hidden');
+            
+            // Tampilkan wrapper slider jika ada
+            const wrapper = container.closest('.group\\/slider');
+            if (wrapper) {
+                wrapper.classList.remove('hidden');
+            }
+
             btn.classList.add('hidden'); // Hide fetch button after success
         } else {
             btn.innerHTML = `<span>❌ Video tidak ditemukan</span>`;
@@ -1067,6 +1075,15 @@ window.fetchYouTubeVideo = async function(query, containerId, btn) {
             btn.innerHTML = `<span>🎬 Coba Cari Ulang</span>`;
             btn.disabled = false;
         }, 3000);
+    }
+};
+
+window.scrollVideo = function(containerId, direction) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        // Scroll sebesar 320px (kurang lebih 1 card)
+        const scrollAmount = 320 * direction;
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
 };
 

@@ -124,7 +124,6 @@
 
                 <!-- Tab 2: Drilling Per Materi -->
                 <div id="tab-content-drill" class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-4 hidden">
-                    <!-- Mode 2 -->
                     <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="2">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 2:<br>Drilling TWK</h3>
@@ -134,7 +133,6 @@
                             25 Menit
                         </div>
                     </div>
-                    <!-- Mode 3 -->
                     <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="3">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 3:<br>Drilling TIU</h3>
@@ -144,7 +142,6 @@
                             35 Menit
                         </div>
                     </div>
-                    <!-- Mode 4 -->
                     <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="4">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 4:<br>Drilling TKP</h3>
@@ -154,7 +151,6 @@
                             40 Menit
                         </div>
                     </div>
-                    <!-- Mode 5 -->
                     <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="5">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 5:<br>B. Indonesia</h3>
@@ -164,7 +160,6 @@
                             30 Menit
                         </div>
                     </div>
-                    <!-- Mode 6 -->
                     <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="6">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 6:<br>B. Inggris</h3>
@@ -178,218 +173,328 @@
 
                 <!-- Tab 3: Kumpulan Materi & Trik SKD -->
                 <div id="tab-content-materi" class="mb-4 hidden">
-                    <div class="mb-6 relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
+                    <div class="sticky top-0 z-20 backdrop-blur-md bg-brand-navy/80 p-4 -mx-4 px-4 sm:-mx-8 sm:px-8 mb-6 border-b border-gray-800/50 shadow-lg">
+                        <div class="relative max-w-2xl mx-auto">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-brand-gold/70" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <input type="text" id="search-materi" class="glass-panel w-full pl-11 pr-4 py-3 rounded-full text-white text-sm focus:ring-2 focus:ring-brand-gold focus:outline-none transition-all placeholder-gray-400 shadow-inner" placeholder="Cari materi... (misal: Pancasila, Numerik)">
                         </div>
-                        <input type="text" id="search-materi" class="bg-brand-navy/60 border border-gray-700 text-white text-sm rounded-xl focus:ring-brand-gold focus:border-brand-gold block w-full pl-10 p-3 outline-none transition-all" placeholder="Cari materi... (misal: Pancasila, Numerik)">
                     </div>
 
                     <div class="space-y-4">
                         <!-- Accordion 1: TWK -->
-                        <details class="materi-accordion glass-panel rounded-xl border border-gray-700 bg-brand-navy/30 overflow-hidden" open>
-                            <summary class="p-4 font-bold text-brand-gold cursor-pointer hover:bg-brand-surface transition-colors flex justify-between items-center select-none outline-none">
+                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden" open>
+                            <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">🇮🇩 Kelompok TWK</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-4 border-t border-gray-700 bg-brand-surface space-y-4 materi-list">
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="pancasila wawasan kebangsaan pengamalan 45 butir hots">
-                                    <h4 class="font-bold text-white mb-2">Pancasila & Wawasan Kebangsaan</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Pengamalan 45 Butir Pancasila & Indikator HOTS)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Pancasila Wawasan Kebangsaan TWK', 'yt-container-1', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Pancasila & Wawasan Kebangsaan', 'summary-container-1', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="pancasila wawasan kebangsaan pengamalan 45 butir hots">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Pancasila & Wawasan Kebangsaan</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Pengamalan 45 Butir Pancasila & Indikator HOTS)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Pancasila Wawasan Kebangsaan TWK', 'yt-container-1', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-1" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-1" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-1" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-1', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-1" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-1', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="pemahaman uud 1945 pasal krusial amandemen">
-                                    <h4 class="font-bold text-white mb-2">Pemahaman UUD 1945</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Pasal Krusial & Amandemen)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Pemahaman UUD 1945 TWK', 'yt-container-2', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Pemahaman UUD 1945', 'summary-container-2', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="pemahaman uud 1945 pasal krusial amandemen">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Pemahaman UUD 1945</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Pasal Krusial & Amandemen)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Pemahaman UUD 1945 TWK', 'yt-container-2', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-2" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-2" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-2" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-2', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-2" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-2', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="sejarah indonesia pergerakan nasional proklamasi">
-                                    <h4 class="font-bold text-white mb-2">Sejarah Indonesia</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Pergerakan Nasional hingga Proklamasi)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Sejarah Indonesia Pergerakan Nasional TWK', 'yt-container-3', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Sejarah Indonesia (Pergerakan Nasional)', 'summary-container-3', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="sejarah indonesia pergerakan nasional proklamasi">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Sejarah Indonesia</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Pergerakan Nasional hingga Proklamasi)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Sejarah Indonesia Pergerakan Nasional TWK', 'yt-container-3', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-3" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-3" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-3" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-3', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-3" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-3', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="tata negara sistem pemerintahan bentuk negara otonomi kewenangan lembaga">
-                                    <h4 class="font-bold text-white mb-2">Tata Negara & Sistem Pemerintahan</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Bentuk Negara, Otonomi, Kewenangan Lembaga)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Tata Negara Sistem Pemerintahan TWK', 'yt-container-4', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Tata Negara & Sistem Pemerintahan', 'summary-container-4', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="tata negara sistem pemerintahan bentuk negara otonomi kewenangan lembaga">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Tata Negara & Sistem Pemerintahan</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Bentuk Negara, Otonomi, Kewenangan Lembaga)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Tata Negara Sistem Pemerintahan TWK', 'yt-container-4', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-4" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-4" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-4" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-4', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-4" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-4', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </details>
 
                         <!-- Accordion 2: TIU -->
-                        <details class="materi-accordion glass-panel rounded-xl border border-gray-700 bg-brand-navy/30 overflow-hidden">
-                            <summary class="p-4 font-bold text-brand-gold cursor-pointer hover:bg-brand-surface transition-colors flex justify-between items-center select-none outline-none">
+                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden">
+                            <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">🔢 Kelompok TIU</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-4 border-t border-gray-700 bg-brand-surface space-y-4 materi-list">
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="numerik hitung cepat rumus kecepatan jarak waktu perbandingan persentase">
-                                    <h4 class="font-bold text-white mb-2">Numerik & Hitung Cepat</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Rumus Kecepatan/Jarak/Waktu, Perbandingan, Persentase)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Numerik Hitung Cepat Jarak Waktu TIU', 'yt-container-5', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Numerik & Hitung Cepat', 'summary-container-5', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="numerik hitung cepat rumus kecepatan jarak waktu perbandingan persentase">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Numerik & Hitung Cepat</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Rumus Kecepatan/Jarak/Waktu, Perbandingan, Persentase)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Numerik Hitung Cepat Jarak Waktu TIU', 'yt-container-5', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-5" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-5" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-5" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-5', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-5" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-5', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="baris deret pola aritmatika geometri bertingkat">
-                                    <h4 class="font-bold text-white mb-2">Baris dan Deret</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Pola Aritmatika, Geometri, Bertingkat)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Baris Deret Aritmatika Geometri TIU', 'yt-container-6', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Baris dan Deret Aritmatika Geometri', 'summary-container-6', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="baris deret pola aritmatika geometri bertingkat">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Baris dan Deret</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Pola Aritmatika, Geometri, Bertingkat)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Baris Deret Aritmatika Geometri TIU', 'yt-container-6', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-6" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-6" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-6" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-6', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-6" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-6', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="silogisme logika penarikan kesimpulan modus ponens tollens">
-                                    <h4 class="font-bold text-white mb-2">Silogisme & Logika Penarikan Kesimpulan</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Modus Ponens, Tollens, Silogisme)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Silogisme Logika Penarikan Kesimpulan TIU', 'yt-container-7', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Silogisme & Logika Penarikan Kesimpulan', 'summary-container-7', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="silogisme logika penarikan kesimpulan modus ponens tollens">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Silogisme & Logika Penarikan Kesimpulan</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Modus Ponens, Tollens, Silogisme)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Silogisme Logika Penarikan Kesimpulan TIU', 'yt-container-7', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-7" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-7" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-7" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-7', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-7" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-7', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="verbal analogi padanan kata hubungan logis">
-                                    <h4 class="font-bold text-white mb-2">Verbal Analogi</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Padanan Kata & Hubungan Logis)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Verbal Analogi Padanan Kata TIU', 'yt-container-8', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Verbal Analogi', 'summary-container-8', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="verbal analogi padanan kata hubungan logis">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Verbal Analogi</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Padanan Kata & Hubungan Logis)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Verbal Analogi Padanan Kata TIU', 'yt-container-8', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-8" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-8" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-8" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-8', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-8" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-8', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </details>
 
                         <!-- Accordion 3: TKP -->
-                        <details class="materi-accordion glass-panel rounded-xl border border-gray-700 bg-brand-navy/30 overflow-hidden">
-                            <summary class="p-4 font-bold text-brand-gold cursor-pointer hover:bg-brand-surface transition-colors flex justify-between items-center select-none outline-none">
+                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden">
+                            <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">👥 Kelompok TKP</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-4 border-t border-gray-700 bg-brand-surface space-y-4 materi-list">
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="panduan kata kunci skor 5 aspek tkp pelayanan publik jejaring kerja sosial budaya tik profesionalisme anti-radikalisme">
-                                    <h4 class="font-bold text-white mb-2">Panduan Kata Kunci Skor 5 TKP</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(6 Aspek: Pelayanan Publik, Jejaring, Sosbud, TIK, Profesionalisme, Anti-Radikalisme)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Kata Kunci Skor 5 TKP', 'yt-container-9', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Panduan Kata Kunci Skor 5 TKP', 'summary-container-9', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="panduan kata kunci skor 5 aspek tkp pelayanan publik jejaring kerja sosial budaya tik profesionalisme anti-radikalisme">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Panduan Kata Kunci Skor 5 TKP</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(6 Aspek: Pelayanan Publik, Jejaring, Sosbud, TIK, Profesionalisme, Anti-Radikalisme)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Kata Kunci Skor 5 TKP', 'yt-container-9', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-9" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-9" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-9" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-9', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-9" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-9', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </details>
 
                         <!-- Accordion 4: BAHASA -->
-                        <details class="materi-accordion glass-panel rounded-xl border border-gray-700 bg-brand-navy/30 overflow-hidden">
-                            <summary class="p-4 font-bold text-brand-gold cursor-pointer hover:bg-brand-surface transition-colors flex justify-between items-center select-none outline-none">
+                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden">
+                            <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">📚 Kelompok Bahasa & Akademik</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-4 border-t border-gray-700 bg-brand-surface space-y-4 materi-list">
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="bahasa indonesia analisis wacana ide pokok kalimat efektif puebi eyd">
-                                    <h4 class="font-bold text-white mb-2">Bahasa Indonesia & Analisis Wacana</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Ide Pokok, Kalimat Efektif, PUEBI/EYD)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Bahasa Indonesia Ide Pokok PUEBI', 'yt-container-10', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Bahasa Indonesia & Analisis Wacana', 'summary-container-10', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="bahasa indonesia analisis wacana ide pokok kalimat efektif puebi eyd">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Bahasa Indonesia & Analisis Wacana</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Ide Pokok, Kalimat Efektif, PUEBI/EYD)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Bahasa Indonesia Ide Pokok PUEBI', 'yt-container-10', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-10" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-10" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-10" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-10', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-10" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-10', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="kemampuan bahasa inggris grammar structure reading comprehension">
-                                    <h4 class="font-bold text-white mb-2">Kemampuan Bahasa Inggris</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Grammar, Structure, Reading Comprehension)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Bahasa Inggris Reading Comprehension', 'yt-container-11', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Kemampuan Bahasa Inggris', 'summary-container-11', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="kemampuan bahasa inggris grammar structure reading comprehension">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Kemampuan Bahasa Inggris</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Grammar, Structure, Reading Comprehension)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Bahasa Inggris Reading Comprehension', 'yt-container-11', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-11" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-11" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-11" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-11', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-11" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-11', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="materi-item p-4 rounded-lg border border-gray-800 bg-brand-navy/50" data-title="tes akademik potensi tps skolastik tka">
-                                    <h4 class="font-bold text-white mb-2">Tes Akademik & Potensi TPS</h4>
-                                    <p class="text-xs text-gray-400 mb-3">(Potensi Skolastik & Tes Kemampuan Akademik)</p>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <button class="flex items-center gap-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="fetchYouTubeVideo('Tes Potensi Skolastik TKA TPS', 'yt-container-12', this)">
-                                            <span>🎬 Tonton 5 Video Materi</span>
-                                        </button>
-                                        <button class="flex items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-4 py-2 rounded-lg transition-colors shadow-lg" onclick="generateMateriSummary('Tes Akademik & Potensi TPS', 'summary-container-12', this)">
-                                            <span>💡 Buat Rangkuman AI</span>
+                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="tes akademik potensi tps skolastik tka">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                        <div>
+                                            <h4 class="font-bold text-white text-base">Tes Akademik & Potensi TPS</h4>
+                                            <p class="text-xs text-brand-gold mt-1">(Potensi Skolastik & Tes Kemampuan Akademik)</p>
+                                        </div>
+                                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('Tes Potensi Skolastik TKA TPS', 'yt-container-12', this)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>Tonton 5 Video</span>
                                         </button>
                                     </div>
-                                    <div id="summary-container-12" class="hidden text-sm text-gray-300 p-4 border border-brand-gold rounded-lg bg-brand-navy/60 mb-3 prose prose-sm prose-invert max-w-none"></div>
-                                    <div id="yt-container-12" class="hidden w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-center"></div>
+                                    <div class="relative mt-2">
+                                        <div id="slider-wrapper-12" class="hidden relative group/slider">
+                                            <button onclick="scrollVideo('yt-container-12', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <div id="yt-container-12" class="w-full overflow-x-auto snap-x flex gap-4 pb-4 custom-scrollbar items-stretch scroll-smooth hide-scrollbar"></div>
+                                            <button onclick="scrollVideo('yt-container-12', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-brand-navy/80 hover:bg-brand-gold text-white hover:text-brand-navy rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all shadow-lg border border-gray-700 focus:outline-none backdrop-blur-md">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </details>
