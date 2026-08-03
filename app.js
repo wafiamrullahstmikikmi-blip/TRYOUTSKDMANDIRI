@@ -8,7 +8,7 @@ const MAX_SCORES = { TWK: 150, TIU: 175, TKP: 225 };
 
 // Access Vouchers
 const DAFTAR_VOUCHER = [
-    "SKD2026A", "SKD99XRT", "SKD88PLM", "SKD777ZZ", "SKD123AB", 
+    "SKD278jl", "SKD99XRT", "SKD88PLM", "SKD777ZZ", "SKD123AB", 
     "SKD444CC", "SKD555DD", "SKD666EE", "SKD777FF", "SKD888GG",
     "SKD999HH", "SKD000II", "SKD111JJ", "SKD222KK", "SKD333LL",
     "SKD444MM", "SKD555NN", "SKD666OO", "SKD777PP", "SKD888QQ",
@@ -26,6 +26,7 @@ const API_KEYS = {
     TIU: "AQ.Ab" + "8RN6JtEB7bBYUp" + "j7cDNSoP35hmVI9OyRg4wpFjbrUFrMLfTw",
     TKP_BAHASA: "AQ.Ab" + "8RN6IWsZhbLV2-" + "TPKHAZPw4aITVtuMP1JLFnz8iLdgtivbhQ"
 };
+const YOUTUBE_API_KEY = "AIzaS" + "yDnHI4iW5W8m1S" + "Pv9b6VVknHhy69f2LPUE";
 const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA'];
 
 const MODES = {
@@ -65,8 +66,11 @@ const els = {
     modeCards: document.querySelectorAll('.mode-card'),
     tabFull: document.getElementById('tab-full'),
     tabDrill: document.getElementById('tab-drill'),
+    tabMateri: document.getElementById('tab-materi'),
     tabContentFull: document.getElementById('tab-content-full'),
     tabContentDrill: document.getElementById('tab-content-drill'),
+    tabContentMateri: document.getElementById('tab-content-materi'),
+    searchMateri: document.getElementById('search-materi'),
     
     // Exam
     questionText: document.getElementById('question-text'),
@@ -151,29 +155,67 @@ function init() {
     });
 
     // Tab Switcher Listeners
-    if(els.tabFull && els.tabDrill) {
+    if(els.tabFull && els.tabDrill && els.tabMateri) {
+        const activeTabClass = 'tab-btn flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold transition-all gold-gradient text-brand-navy shadow-sm whitespace-nowrap';
+        const inactiveTabClass = 'tab-btn flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold text-gray-400 hover:text-white transition-all whitespace-nowrap';
+
         els.tabFull.addEventListener('click', () => {
-            els.tabFull.className = 'tab-btn flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-sm font-bold transition-all gold-gradient text-brand-navy shadow-sm';
-            els.tabDrill.className = 'tab-btn flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-sm font-bold text-gray-400 hover:text-white transition-all';
+            els.tabFull.className = activeTabClass;
+            els.tabDrill.className = inactiveTabClass;
+            els.tabMateri.className = inactiveTabClass;
             
             els.tabContentFull.classList.remove('hidden');
             els.tabContentDrill.classList.add('hidden');
+            els.tabContentMateri.classList.add('hidden');
+            els.btnStart.parentElement.classList.remove('hidden'); // Show start button
             
             // Auto select Mode 1
             els.modeCards[0].click();
         });
 
         els.tabDrill.addEventListener('click', () => {
-            els.tabDrill.className = 'tab-btn flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-sm font-bold transition-all gold-gradient text-brand-navy shadow-sm';
-            els.tabFull.className = 'tab-btn flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-sm font-bold text-gray-400 hover:text-white transition-all';
+            els.tabDrill.className = activeTabClass;
+            els.tabFull.className = inactiveTabClass;
+            els.tabMateri.className = inactiveTabClass;
             
             els.tabContentDrill.classList.remove('hidden');
             els.tabContentFull.classList.add('hidden');
+            els.tabContentMateri.classList.add('hidden');
+            els.btnStart.parentElement.classList.remove('hidden'); // Show start button
             
             // Auto select Mode 2 if coming from Mode 1
             if (appState.selectedMode === 1) {
                 els.modeCards[1].click();
             }
+        });
+
+        els.tabMateri.addEventListener('click', () => {
+            els.tabMateri.className = activeTabClass;
+            els.tabFull.className = inactiveTabClass;
+            els.tabDrill.className = inactiveTabClass;
+            
+            els.tabContentMateri.classList.remove('hidden');
+            els.tabContentFull.classList.add('hidden');
+            els.tabContentDrill.classList.add('hidden');
+            
+            // Hide the start button for materi tab
+            els.btnStart.parentElement.classList.add('hidden');
+        });
+    }
+
+    // Search Materi Logic
+    if (els.searchMateri) {
+        els.searchMateri.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.materi-item');
+            items.forEach(item => {
+                const title = item.dataset.title.toLowerCase();
+                if (title.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         });
     }
 
@@ -940,3 +982,125 @@ Gunakan markdown yang rapi. Jangan tulisulang soal, langsung ke poin pembahasan.
 
 // Start app
 document.addEventListener('DOMContentLoaded', init);
+
+// YouTube API Fetch function
+window.fetchYouTubeVideo = async function(query, containerId, btn) {
+    if (YOUTUBE_API_KEY === "MASUKKAN_YOUTUBE_API_KEY_ANDA") {
+        alert("Silakan masukkan YOUTUBE_API_KEY Anda di file app.js terlebih dahulu.");
+        return;
+    }
+
+    const container = document.getElementById(containerId);
+    
+    // UI Loading state
+    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>Mencari 5 Video...</span>`;
+    btn.disabled = true;
+
+    try {
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=Materi+Konsep+SKD+Kedinasan+${encodeURIComponent(query)}+-soal+-pembahasan+soal&type=video&videoEmbeddable=true&key=${YOUTUBE_API_KEY}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`YouTube API Error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.items && data.items.length > 0) {
+            // Acak (shuffle) hasil pencarian agar video bervariasi setiap kali dimuat
+            const shuffledItems = data.items.sort(() => 0.5 - Math.random());
+            const selectedItems = shuffledItems.slice(0, 5);
+
+            container.innerHTML = '';
+            
+            // Sembunyikan tombol global "Buat Rangkuman AI" jika ada di sebelahnya (Fallback UI lama)
+            const globalAiBtn = btn.parentElement.querySelector('button:nth-child(2)');
+            if(globalAiBtn && globalAiBtn.innerText.includes("Rangkuman")) {
+                globalAiBtn.style.display = 'none';
+            }
+
+            selectedItems.forEach(item => {
+                const videoId = item.id.videoId;
+                const title = item.snippet.title;
+                const desc = item.snippet.description || '';
+                
+                // Escape string for HTML injection
+                const safeTitle = title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const safeDesc = desc.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+                
+                // Render iframe wrapped in a flex item card with its own AI button
+                container.innerHTML += `
+                    <div class="w-[300px] sm:w-[400px] shrink-0 snap-center rounded-lg overflow-hidden bg-brand-navy border border-gray-800 flex flex-col">
+                        <div class="w-full bg-black aspect-video relative">
+                            <iframe 
+                                class="absolute top-0 left-0 w-full h-full" 
+                                src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0" 
+                                title="${safeTitle}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="p-3 flex flex-col gap-2 flex-grow">
+                            <h5 class="text-white text-xs font-bold line-clamp-2">${title}</h5>
+                            <button class="mt-auto flex justify-center items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 px-3 py-2 rounded-lg transition-colors w-full" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
+                                <span>💡 Rangkum Video Ini</span>
+                            </button>
+                            <div id="summary-${videoId}" class="hidden text-xs text-gray-300 p-3 border border-brand-gold rounded-lg bg-brand-navy/80 mt-2 prose prose-sm prose-invert max-w-none overflow-y-auto max-h-48 custom-scrollbar"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.classList.remove('hidden');
+            btn.classList.add('hidden'); // Hide fetch button after success
+        } else {
+            btn.innerHTML = `<span>❌ Video tidak ditemukan</span>`;
+            setTimeout(() => {
+                btn.innerHTML = `<span>🎬 Coba Cari Ulang</span>`;
+                btn.disabled = false;
+            }, 3000);
+        }
+    } catch (error) {
+        console.error(error);
+        btn.innerHTML = `<span>❌ Terjadi Kesalahan (Limit API)</span>`;
+        setTimeout(() => {
+            btn.innerHTML = `<span>🎬 Coba Cari Ulang</span>`;
+            btn.disabled = false;
+        }, 3000);
+    }
+};
+
+window.generateVideoSummary = async function(title, desc, containerId, btn) {
+    const container = document.getElementById(containerId);
+    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-3 w-3 text-brand-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>Menyusun AI...</span>`;
+    btn.disabled = true;
+
+    const prompt = `Berikan rangkuman materi edukasi (SKD Kedinasan) berdasarkan video YouTube berikut.
+Judul Video: "${title}"
+Deskripsi Video: "${desc}"
+
+Tugas Anda:
+1. Berikan konsep utama materi yang dibahas dalam video tersebut.
+2. Tuliskan poin-poin penting / trik cepat yang mungkin diajarkan.
+Gunakan format markdown yang rapi (bold, list). JANGAN buat soal latihan. Batasi maksimal 150-200 kata agar ringkas.
+PENTING: Jika deskripsi video kosong atau tidak jelas, cobalah menebak materi dari judul videonya saja secara umum.`;
+
+    try {
+        // Using TKP_BAHASA key to balance load as requested by user
+        const textRes = await callGemini(prompt, false, 'TKP_BAHASA');
+        
+        btn.classList.add('hidden');
+        container.classList.remove('hidden');
+        
+        // Parse markdown if marked is available
+        if (typeof marked !== 'undefined') {
+            container.innerHTML = marked.parse(textRes);
+        } else {
+            container.innerHTML = `<pre class="whitespace-pre-wrap font-sans text-xs">${textRes}</pre>`;
+        }
+    } catch (error) {
+        btn.innerHTML = `<span>❌ Gagal. Coba lagi</span>`;
+        btn.disabled = false;
+        console.error("AI Summary Error:", error);
+    }
+};

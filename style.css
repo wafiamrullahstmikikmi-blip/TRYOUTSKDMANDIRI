@@ -165,3 +165,23 @@
       .5em 0 0 #d4af37;
   }
 }
+
+/* Tab 3 Custom Styles */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Accordion Styles */
+details.materi-accordion > summary {
+    list-style: none;
+}
+details.materi-accordion > summary::-webkit-details-marker {
+    display: none;
+}
+details.materi-accordion[open] > summary .accordion-icon {
+    transform: rotate(180deg);
+}
