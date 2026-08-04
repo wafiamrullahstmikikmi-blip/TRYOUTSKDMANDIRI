@@ -134,19 +134,66 @@ function logout() {
 function init() {
     checkAuth();
 
+    // Clean up old slider wrappers (migration to modal)
+    document.querySelectorAll('.materi-item').forEach(item => {
+        const sliderWrapper = item.querySelector('.group\\/slider');
+        if (sliderWrapper) sliderWrapper.remove();
+        
+        // Update the button's onclick attribute
+        const btn = item.querySelector('button[onclick^="fetchYouTubeVideo"]');
+        if (btn) {
+            const titleText = item.querySelector('h4').innerText;
+            const onclickStr = btn.getAttribute('onclick');
+            const match = onclickStr.match(/fetchYouTubeVideo\('([^']+)'/);
+            if (match) {
+                const query = match[1];
+                btn.setAttribute('onclick', `fetchYouTubeVideo('${query}', '${titleText}')`);
+            }
+        }
+    });
+
+    // Inject Video Modal
+    if (!document.getElementById('video-learning-modal')) {
+        const modalHTML = `
+        <div id="video-learning-modal" class="fixed inset-0 z-[100] bg-brand-navy hidden flex-col transition-all duration-300 transform translate-y-full opacity-0">
+            <div class="glass text-white shadow-lg p-4 flex justify-between items-center border-b border-gray-800 sticky top-0 z-10">
+                <div class="flex items-center gap-3">
+                    <div class="gold-gradient p-2 rounded-lg font-extrabold text-brand-navy text-xl leading-none shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-sm md:text-lg font-bold text-white leading-tight">Ruang Belajar Video</h2>
+                        <p id="vlm-title" class="text-xs text-brand-gold font-semibold">Memuat Materi...</p>
+                    </div>
+                </div>
+                <button onclick="closeVideoModal()" class="w-10 h-10 rounded-full bg-brand-surface border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-900/50 hover:border-red-500 transition-all shadow-md">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="flex-grow overflow-y-auto custom-scrollbar p-4 md:p-8 bg-brand-navy relative" id="vlm-scroll-container">
+                <div id="vlm-loading" class="absolute inset-0 flex flex-col justify-center items-center bg-brand-navy/90 backdrop-blur-sm z-10 hidden">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-brand-gold mb-4"></div>
+                    <p class="text-brand-gold font-semibold text-sm animate-pulse">Sedang mengambil video materi...</p>
+                </div>
+                <div id="vlm-content" class="max-w-4xl mx-auto flex flex-col gap-8 pb-20"></div>
+            </div>
+        </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
     // Mode Selection Listeners
     els.modeCards.forEach(card => {
         card.addEventListener('click', () => {
             // Remove active classes
             els.modeCards.forEach(c => {
-                c.classList.remove('active', 'border-brand-gold', 'shadow-[0_0_15px_rgba(212,175,55,0.3)]');
-                c.classList.add('border-gray-700', 'hover:border-brand-gold', 'hover:shadow-[0_0_10px_rgba(212,175,55,0.2)]');
+                c.classList.remove('active', 'ring-1', 'ring-brand-gold/50', 'bg-brand-navy/60', 'shadow-[0_0_30px_rgba(212,175,55,0.25)]');
+                c.classList.add('bg-brand-navy/20', 'ring-1', 'ring-transparent', 'hover:bg-brand-navy/40', 'hover:shadow-[0_0_20px_rgba(212,175,55,0.15)]');
                 const indicator = c.querySelector('.indicator');
                 if(indicator) indicator.classList.add('hidden');
             });
             // Add active classes
-            card.classList.add('active', 'border-brand-gold', 'shadow-[0_0_15px_rgba(212,175,55,0.3)]');
-            card.classList.remove('border-gray-700', 'hover:border-brand-gold', 'hover:shadow-[0_0_10px_rgba(212,175,55,0.2)]');
+            card.classList.add('active', 'ring-1', 'ring-brand-gold/50', 'bg-brand-navy/60', 'shadow-[0_0_30px_rgba(212,175,55,0.25)]');
+            card.classList.remove('bg-brand-navy/20', 'ring-1', 'ring-transparent', 'hover:bg-brand-navy/40', 'hover:shadow-[0_0_20px_rgba(212,175,55,0.15)]');
             const indicator = card.querySelector('.indicator');
             if(indicator) indicator.classList.remove('hidden');
             
@@ -156,8 +203,10 @@ function init() {
 
     // Tab Switcher Listeners
     if(els.tabFull && els.tabDrill && els.tabMateri) {
-        const activeTabClass = 'tab-btn flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold transition-all gold-gradient text-brand-navy shadow-sm whitespace-nowrap';
-        const inactiveTabClass = 'tab-btn flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold text-gray-400 hover:text-white transition-all whitespace-nowrap';
+        const baseTabClass = 'nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all md:w-full ';
+        const activeTabClass = baseTabClass + 'gold-gradient text-brand-navy shadow-[0_0_15px_rgba(212,175,55,0.4)]';
+        const inactiveTabClass = baseTabClass + 'text-gray-400 hover:text-white hover:bg-white/5';
+
 
         els.tabFull.addEventListener('click', () => {
             els.tabFull.className = activeTabClass;
@@ -186,11 +235,6 @@ function init() {
             // Auto select Mode 2 if coming from Mode 1
             if (appState.selectedMode === 1) {
                 els.modeCards[1].click();
-            }
-
-            // Scroll tab container on mobile to hint that Tab 3 (Materi) exists
-            if (window.innerWidth < 640) {
-                els.tabMateri.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' });
             }
         });
 
@@ -988,18 +1032,42 @@ Gunakan markdown yang rapi. Jangan tulisulang soal, langsung ke poin pembahasan.
 // Start app
 document.addEventListener('DOMContentLoaded', init);
 
-// YouTube API Fetch function
-window.fetchYouTubeVideo = async function(query, containerId, btn) {
+window.closeVideoModal = function() {
+    const modal = document.getElementById('video-learning-modal');
+    if (modal) {
+        modal.classList.add('translate-y-full', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('vlm-content').innerHTML = ''; // Clean up iframes
+        }, 300);
+    }
+};
+
+// YouTube API Fetch function (Modal version)
+window.fetchYouTubeVideo = async function(query, moduleTitle) {
     if (YOUTUBE_API_KEY === "MASUKKAN_YOUTUBE_API_KEY_ANDA") {
         alert("Silakan masukkan YOUTUBE_API_KEY Anda di file app.js terlebih dahulu.");
         return;
     }
 
-    const container = document.getElementById(containerId);
+    const modal = document.getElementById('video-learning-modal');
+    const loading = document.getElementById('vlm-loading');
+    const content = document.getElementById('vlm-content');
+    const titleEl = document.getElementById('vlm-title');
     
-    // UI Loading state
-    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>Mencari 5 Video...</span>`;
-    btn.disabled = true;
+    // Open Modal
+    titleEl.innerText = moduleTitle || "Memuat Materi...";
+    content.innerHTML = '';
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Trigger transition
+    requestAnimationFrame(() => {
+        modal.classList.remove('translate-y-full', 'opacity-0');
+    });
+
+    loading.classList.remove('hidden');
 
     try {
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=Materi+Konsep+SKD+Kedinasan+${encodeURIComponent(query)}+-soal+-pembahasan+soal&type=video&videoEmbeddable=true&key=${YOUTUBE_API_KEY}`;
@@ -1012,30 +1080,21 @@ window.fetchYouTubeVideo = async function(query, containerId, btn) {
         const data = await response.json();
         
         if (data.items && data.items.length > 0) {
-            // Acak (shuffle) hasil pencarian agar video bervariasi setiap kali dimuat
             const shuffledItems = data.items.sort(() => 0.5 - Math.random());
             const selectedItems = shuffledItems.slice(0, 5);
 
-            container.innerHTML = '';
-            
-            // Sembunyikan tombol global "Buat Rangkuman AI" jika ada di sebelahnya (Fallback UI lama)
-            const globalAiBtn = btn.parentElement.querySelector('button:nth-child(2)');
-            if(globalAiBtn && globalAiBtn.innerText.includes("Rangkuman")) {
-                globalAiBtn.style.display = 'none';
-            }
-
+            let htmlStr = '';
             selectedItems.forEach(item => {
                 const videoId = item.id.videoId;
                 const title = item.snippet.title;
                 const desc = item.snippet.description || '';
                 
-                // Escape string for HTML injection
                 const safeTitle = title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 const safeDesc = desc.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
                 
-                // Render iframe wrapped in a flex item card with its own AI button
-                container.innerHTML += `
-                    <div class="w-[280px] sm:w-[320px] shrink-0 snap-center rounded-2xl overflow-hidden bg-brand-navy border border-gray-700/50 flex flex-col shadow-lg transition-transform hover:-translate-y-1">
+                // Full-width cards for modal
+                htmlStr += `
+                    <div class="w-full rounded-2xl overflow-hidden bg-brand-navy border border-gray-700/50 flex flex-col shadow-xl">
                         <div class="w-full bg-black aspect-video relative">
                             <iframe 
                                 class="absolute top-0 left-0 w-full h-full" 
@@ -1046,49 +1105,26 @@ window.fetchYouTubeVideo = async function(query, containerId, btn) {
                                 allowfullscreen>
                             </iframe>
                         </div>
-                        <div class="p-4 flex flex-col gap-3 flex-grow bg-gradient-to-b from-brand-navy to-brand-navy/80">
-                            <h5 class="text-white text-sm font-bold line-clamp-2 leading-snug">${title}</h5>
-                            <button class="mt-auto flex justify-center items-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-4 py-2.5 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 w-full" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                <span>Rangkum Video Ini</span>
+                        <div class="p-5 md:p-6 flex flex-col gap-4 bg-gradient-to-b from-brand-navy to-brand-navy/80">
+                            <h5 class="text-white text-base md:text-lg font-bold leading-snug">${title}</h5>
+                            <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span>Buat Rangkuman AI</span>
                             </button>
-                            <div id="summary-${videoId}" class="hidden text-xs text-gray-200 p-4 border border-brand-gold/50 rounded-xl bg-brand-navy/90 mt-2 prose prose-sm prose-invert max-w-none overflow-y-auto max-h-48 custom-scrollbar"></div>
+                            <div id="summary-${videoId}" class="hidden text-sm text-gray-200 p-5 border border-brand-gold/50 rounded-xl bg-brand-navy/90 mt-2 prose prose-invert max-w-none"></div>
                         </div>
                     </div>
                 `;
             });
-            container.classList.remove('hidden');
-            
-            // Tampilkan wrapper slider jika ada
-            const wrapper = container.closest('.group\\/slider');
-            if (wrapper) {
-                wrapper.classList.remove('hidden');
-            }
-
-            btn.classList.add('hidden'); // Hide fetch button after success
+            content.innerHTML = htmlStr;
         } else {
-            btn.innerHTML = `<span>❌ Video tidak ditemukan</span>`;
-            setTimeout(() => {
-                btn.innerHTML = `<span>🎬 Coba Cari Ulang</span>`;
-                btn.disabled = false;
-            }, 3000);
+            content.innerHTML = `<div class="text-center text-white mt-10">❌ Video tidak ditemukan. Coba tutup dan buka lagi.</div>`;
         }
     } catch (error) {
         console.error(error);
-        btn.innerHTML = `<span>❌ Terjadi Kesalahan (Limit API)</span>`;
-        setTimeout(() => {
-            btn.innerHTML = `<span>🎬 Coba Cari Ulang</span>`;
-            btn.disabled = false;
-        }, 3000);
-    }
-};
-
-window.scrollVideo = function(containerId, direction) {
-    const container = document.getElementById(containerId);
-    if (container) {
-        // Scroll sebesar 320px (kurang lebih 1 card)
-        const scrollAmount = 320 * direction;
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        content.innerHTML = `<div class="text-center text-red-400 mt-10">❌ Terjadi Kesalahan (Limit API). Coba lagi nanti.</div>`;
+    } finally {
+        loading.classList.add('hidden');
     }
 };
 

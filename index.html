@@ -33,7 +33,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-brand-navy text-brand-light font-sans antialiased min-h-screen flex flex-col relative">
+<body class="bg-brand-navy text-brand-light font-sans antialiased h-screen flex flex-col relative md:flex-row pb-16 md:pb-0 overflow-hidden">
 
     <!-- Loading Overlay (Global) -->
     <div id="loading-overlay" class="fixed inset-0 bg-brand-navy bg-opacity-95 backdrop-blur-md z-50 hidden flex-col justify-center items-center text-white">
@@ -48,11 +48,39 @@
         <p id="loading-progress-text" class="text-xs text-brand-gold font-mono">Menunggu respon API...</p>
     </div>
 
-    <!-- Header -->
-    <header class="glass text-white shadow-lg py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-40">
-        <div class="flex items-center gap-3">
+    <!-- Global Navigation (Sidebar on Desktop, Bottom Bar on Mobile) -->
+    <nav class="fixed z-50 flex bg-brand-navy/80 backdrop-blur-xl shadow-2xl border-gray-800 transition-all bottom-0 left-0 right-0 h-16 w-full flex-row border-t items-center justify-around px-2 md:relative md:w-64 md:h-screen md:flex-col md:border-t-0 md:border-r md:px-4 md:py-6 md:justify-start md:gap-4 md:flex-shrink-0">
+        <!-- Logo (Desktop Only) -->
+        <div class="hidden md:flex items-center gap-3 mb-8 px-2 w-full">
             <div class="gold-gradient p-2 rounded-lg font-extrabold text-brand-navy text-xl leading-none shadow-sm">SKD</div>
-            <h1 class="text-lg md:text-xl font-bold tracking-tight">TRYOUT SKD CAT Kedinasan</h1>
+            <h1 class="text-lg font-bold tracking-tight text-white leading-tight">TRYOUT<br>KEDINASAN</h1>
+        </div>
+        <!-- Nav Buttons -->
+        <button id="tab-full" class="nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all gold-gradient text-brand-navy shadow-[0_0_15px_rgba(212,175,55,0.4)] md:w-full">
+            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            <span class="text-[10px] md:text-sm font-bold text-center md:text-left">Ujian Full</span>
+        </button>
+        <button id="tab-drill" class="nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all text-gray-400 hover:text-white hover:bg-white/5 md:w-full">
+            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <span class="text-[10px] md:text-sm font-bold text-center md:text-left">Drilling</span>
+        </button>
+        <button id="tab-materi" class="nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all text-gray-400 hover:text-white hover:bg-white/5 md:w-full">
+            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <span class="text-[10px] md:text-sm font-bold text-center md:text-left">Materi</span>
+        </button>
+    </nav>
+
+    <!-- Main App Container -->
+    <div class="flex-grow flex flex-col relative w-full h-full overflow-hidden">
+        
+    <!-- Header -->
+    <header class="glass text-white shadow-lg py-4 px-6 flex justify-between items-center sticky top-0 z-40 flex-shrink-0">
+        <div class="flex items-center gap-3 md:hidden">
+            <div class="gold-gradient p-2 rounded-lg font-extrabold text-brand-navy text-xl leading-none shadow-sm">SKD</div>
+            <h1 class="text-lg font-bold tracking-tight">TRYOUT CAT</h1>
+        </div>
+        <div class="hidden md:flex flex-grow justify-start">
+            <span class="text-lg font-bold text-white tracking-tight">Platform Latihan Mandiri</span>
         </div>
         <div class="flex items-center gap-4">
             <div class="text-sm font-medium text-gray-300 hidden md:flex items-center gap-2">
@@ -63,19 +91,19 @@
         </div>
     </header>
 
-    <main class="flex-grow flex flex-col relative">
+    <main class="flex-grow flex flex-col relative overflow-y-auto overflow-x-hidden custom-scrollbar">
         <!-- ================= DASHBOARD VIEW ================= -->
-        <section id="dashboard-view" class="flex-grow flex items-center justify-center p-4 md:p-6 pb-32">
+        <section id="dashboard-view" class="flex-grow flex items-start md:items-center justify-center p-4 md:p-6 py-8 md:py-12">
             <div class="glass rounded-2xl p-6 md:p-12 max-w-4xl w-full relative">
                 
                 <!-- Voucher Config -->
-                <div id="voucher-container" class="bg-brand-navy/60 border border-brand-gold/30 p-4 rounded-xl mb-6 shadow-inner transition-all">
+                <div id="voucher-container" class="bg-brand-navy/40 p-4 rounded-2xl mb-6 shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-all">
                     <div class="flex flex-col md:flex-row gap-3 items-center justify-between">
                         <div class="flex items-center gap-2 w-full md:w-auto justify-center md:justify-start">
                             <svg class="w-5 h-5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
                             <label for="voucher-key" class="text-sm font-semibold text-brand-gold">Masukkan Kode Voucher Akses</label>
                         </div>
-                        <input type="text" id="voucher-key" placeholder="Contoh: SKD2026A" class="w-full flex-grow px-4 py-2 bg-brand-surface border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-brand-gold outline-none transition-all font-mono text-sm max-w-md text-center md:text-left uppercase">
+                        <input type="text" id="voucher-key" placeholder="Contoh: SKD2026A" class="w-full flex-grow px-4 py-2 bg-brand-panel/50 ring-1 ring-white/5 text-white rounded-xl focus:ring-1 focus:ring-brand-gold outline-none transition-all font-mono text-sm max-w-md text-center md:text-left uppercase shadow-inner">
                     </div>
                 </div>
 
@@ -91,30 +119,24 @@
                     <p class="text-brand-muted text-sm">Platform latihan soal berbasis sistem cerdas untuk seleksi sekolah kedinasan.</p>
                 </div>
 
-                <!-- Tab Switcher (Segmented Control) -->
-                <div class="flex justify-center mb-8">
-                    <div class="inline-flex bg-brand-surface rounded-xl p-1 border border-gray-700 w-full sm:w-auto overflow-x-auto hide-scrollbar">
-                        <button id="tab-full" class="tab-btn flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold transition-all gold-gradient text-brand-navy shadow-sm whitespace-nowrap">Paket Ujian Full</button>
-                        <button id="tab-drill" class="tab-btn flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold text-gray-400 hover:text-white transition-all whitespace-nowrap">Drilling Per Materi</button>
-                        <button id="tab-materi" class="tab-btn flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold text-gray-400 hover:text-white transition-all whitespace-nowrap">📚 Kumpulan Materi & Trik SKD</button>
-                    </div>
-                </div>
+                <!-- Old Tab Switcher removed. Using Sidebar/BottomBar Nav instead. -->
 
                 <!-- Tab 1: Paket Ujian Full -->
                 <div id="tab-content-full" class="mb-4">
-                    <div class="mode-card active glass-panel p-6 md:p-10 rounded-2xl border-2 border-brand-gold shadow-[0_0_20px_rgba(212,175,55,0.3)] cursor-pointer relative overflow-hidden transition-all text-center flex flex-col items-center justify-center" data-mode="1">
-                        <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-xs font-bold px-3 py-1.5 rounded-bl-xl indicator">TERPILIH</div>
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-brand-navy border-2 border-brand-gold flex items-center justify-center mb-4 md:mb-6 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-                            <svg class="w-8 h-8 md:w-10 md:h-10 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <div class="mode-card active bg-brand-navy/60 p-6 md:p-10 rounded-[2.5rem] ring-1 ring-brand-gold/50 shadow-[0_0_40px_rgba(212,175,55,0.25)] cursor-pointer relative overflow-hidden transition-all text-center flex flex-col items-center justify-center" data-mode="1">
+                        <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-xs font-bold px-4 py-2 rounded-bl-[1.5rem] indicator shadow-lg">TERPILIH</div>
+                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-brand-navy ring-1 ring-brand-gold flex items-center justify-center mb-4 md:mb-6 shadow-[0_0_20px_rgba(212,175,55,0.3)] relative">
+                            <div class="absolute inset-0 bg-brand-gold/20 rounded-full blur-xl"></div>
+                            <svg class="w-8 h-8 md:w-10 md:h-10 text-brand-gold relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                         </div>
                         <h3 class="font-black text-white text-xl md:text-3xl mb-2">Mode 1: SKD Full Package</h3>
                         <p class="text-sm text-gray-300 mb-6 max-w-md">Kombinasi komprehensif Tes Wawasan Kebangsaan, Tes Inteligensia Umum, dan Tes Karakteristik Pribadi sesuai standar terbaru.</p>
                         <div class="flex flex-wrap items-center justify-center gap-4 text-sm font-bold">
-                            <div class="flex items-center text-brand-gold gap-1.5 bg-brand-navy/50 px-4 py-2 rounded-lg border border-brand-gold/20">
+                            <div class="flex items-center text-brand-gold gap-1.5 bg-brand-navy/50 px-4 py-2 rounded-full ring-1 ring-white/10 shadow-lg">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                 110 Soal
                             </div>
-                            <div class="flex items-center text-brand-gold gap-1.5 bg-brand-navy/50 px-4 py-2 rounded-lg border border-brand-gold/20">
+                            <div class="flex items-center text-brand-gold gap-1.5 bg-brand-navy/50 px-4 py-2 rounded-full ring-1 ring-white/10 shadow-lg">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 100 Menit
                             </div>
@@ -124,7 +146,7 @@
 
                 <!-- Tab 2: Drilling Per Materi -->
                 <div id="tab-content-drill" class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-4 hidden">
-                    <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="2">
+                    <div class="mode-card bg-brand-navy/20 p-4 md:p-5 rounded-[2rem] ring-1 ring-transparent hover:bg-brand-navy/40 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] cursor-pointer transition-all relative overflow-hidden" data-mode="2">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 2:<br>Drilling TWK</h3>
                         <p class="text-[10px] md:text-xs text-brand-muted mb-3 h-8">Wawasan Kebangsaan (30 Soal)</p>
@@ -133,7 +155,7 @@
                             25 Menit
                         </div>
                     </div>
-                    <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="3">
+                    <div class="mode-card bg-brand-navy/20 p-4 md:p-5 rounded-[2rem] ring-1 ring-transparent hover:bg-brand-navy/40 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] cursor-pointer transition-all relative overflow-hidden" data-mode="3">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 3:<br>Drilling TIU</h3>
                         <p class="text-[10px] md:text-xs text-brand-muted mb-3 h-8">Inteligensia Umum (35 Soal)</p>
@@ -142,7 +164,7 @@
                             35 Menit
                         </div>
                     </div>
-                    <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="4">
+                    <div class="mode-card bg-brand-navy/20 p-4 md:p-5 rounded-[2rem] ring-1 ring-transparent hover:bg-brand-navy/40 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] cursor-pointer transition-all relative overflow-hidden" data-mode="4">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 4:<br>Drilling TKP</h3>
                         <p class="text-[10px] md:text-xs text-brand-muted mb-3 h-8">Karakteristik Pribadi (45 Soal)</p>
@@ -151,7 +173,7 @@
                             40 Menit
                         </div>
                     </div>
-                    <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="5">
+                    <div class="mode-card bg-brand-navy/20 p-4 md:p-5 rounded-[2rem] ring-1 ring-transparent hover:bg-brand-navy/40 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] cursor-pointer transition-all relative overflow-hidden" data-mode="5">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 5:<br>B. Indonesia</h3>
                         <p class="text-[10px] md:text-xs text-brand-muted mb-3 h-8">Tes Kemampuan Bahasa (30 Soal)</p>
@@ -160,7 +182,7 @@
                             30 Menit
                         </div>
                     </div>
-                    <div class="mode-card glass-panel p-4 md:p-5 rounded-xl border border-gray-700 hover:border-brand-gold hover:shadow-[0_0_10px_rgba(212,175,55,0.2)] cursor-pointer transition-all relative overflow-hidden" data-mode="6">
+                    <div class="mode-card bg-brand-navy/20 p-4 md:p-5 rounded-[2rem] ring-1 ring-transparent hover:bg-brand-navy/40 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] cursor-pointer transition-all relative overflow-hidden" data-mode="6">
                         <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] md:text-xs font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
                         <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight">Mode 6:<br>B. Inggris</h3>
                         <p class="text-[10px] md:text-xs text-brand-muted mb-3 h-8">Tes Kemampuan Bahasa (30 Soal)</p>
@@ -173,24 +195,24 @@
 
                 <!-- Tab 3: Kumpulan Materi & Trik SKD -->
                 <div id="tab-content-materi" class="mb-4 hidden">
-                    <div class="sticky top-0 z-20 backdrop-blur-md bg-brand-navy/80 p-4 -mx-4 px-4 sm:-mx-8 sm:px-8 mb-6 border-b border-gray-800/50 shadow-lg">
+                    <div class="sticky top-0 z-20 backdrop-blur-xl bg-brand-navy/60 p-4 -mx-4 px-4 sm:-mx-8 sm:px-8 mb-6 shadow-xl">
                         <div class="relative max-w-2xl mx-auto">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-brand-gold/70" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
                             </div>
-                            <input type="text" id="search-materi" class="glass-panel w-full pl-11 pr-4 py-3 rounded-full text-white text-sm focus:ring-2 focus:ring-brand-gold focus:outline-none transition-all placeholder-gray-400 shadow-inner" placeholder="Cari materi... (misal: Pancasila, Numerik)">
+                            <input type="text" id="search-materi" class="bg-brand-panel/50 w-full pl-11 pr-4 py-3 rounded-full text-white text-sm focus:ring-1 focus:ring-brand-gold focus:outline-none transition-all placeholder-gray-400 shadow-[0_0_15px_rgba(0,0,0,0.5)] inner-shadow" placeholder="Cari materi... (misal: Pancasila, Numerik)">
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <!-- Accordion 1: TWK -->
-                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden" open>
+                        <details class="materi-accordion group mb-4 rounded-3xl bg-brand-navy/30 hover:bg-brand-navy/50 shadow-lg transition-all duration-300 overflow-hidden" open>
                             <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">🇮🇩 Kelompok TWK</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="pancasila wawasan kebangsaan pengamalan 45 butir hots">
+                            <div class="p-5 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="pancasila wawasan kebangsaan pengamalan 45 butir hots">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Pancasila & Wawasan Kebangsaan</h4>
@@ -213,7 +235,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="pemahaman uud 1945 pasal krusial amandemen">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="pemahaman uud 1945 pasal krusial amandemen">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Pemahaman UUD 1945</h4>
@@ -236,7 +258,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="sejarah indonesia pergerakan nasional proklamasi">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="sejarah indonesia pergerakan nasional proklamasi">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Sejarah Indonesia</h4>
@@ -259,7 +281,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="tata negara sistem pemerintahan bentuk negara otonomi kewenangan lembaga">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="tata negara sistem pemerintahan bentuk negara otonomi kewenangan lembaga">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Tata Negara & Sistem Pemerintahan</h4>
@@ -286,13 +308,13 @@
                         </details>
 
                         <!-- Accordion 2: TIU -->
-                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden">
+                        <details class="materi-accordion group mb-4 rounded-3xl bg-brand-navy/30 hover:bg-brand-navy/50 shadow-lg transition-all duration-300 overflow-hidden">
                             <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">🔢 Kelompok TIU</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="numerik hitung cepat rumus kecepatan jarak waktu perbandingan persentase">
+                            <div class="p-5 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="numerik hitung cepat rumus kecepatan jarak waktu perbandingan persentase">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Numerik & Hitung Cepat</h4>
@@ -315,7 +337,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="baris deret pola aritmatika geometri bertingkat">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="baris deret pola aritmatika geometri bertingkat">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Baris dan Deret</h4>
@@ -338,7 +360,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="silogisme logika penarikan kesimpulan modus ponens tollens">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="silogisme logika penarikan kesimpulan modus ponens tollens">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Silogisme & Logika Penarikan Kesimpulan</h4>
@@ -361,7 +383,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="verbal analogi padanan kata hubungan logis">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="verbal analogi padanan kata hubungan logis">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Verbal Analogi</h4>
@@ -388,13 +410,13 @@
                         </details>
 
                         <!-- Accordion 3: TKP -->
-                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden">
+                        <details class="materi-accordion group mb-4 rounded-3xl bg-brand-navy/30 hover:bg-brand-navy/50 shadow-lg transition-all duration-300 overflow-hidden">
                             <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">👥 Kelompok TKP</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="panduan kata kunci skor 5 aspek tkp pelayanan publik jejaring kerja sosial budaya tik profesionalisme anti-radikalisme">
+                            <div class="p-5 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="panduan kata kunci skor 5 aspek tkp pelayanan publik jejaring kerja sosial budaya tik profesionalisme anti-radikalisme">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Panduan Kata Kunci Skor 5 TKP</h4>
@@ -421,13 +443,13 @@
                         </details>
 
                         <!-- Accordion 4: BAHASA -->
-                        <details class="materi-accordion group mb-4 glass-panel rounded-2xl border border-gray-700/50 bg-brand-navy/40 transition-all duration-300 overflow-hidden">
+                        <details class="materi-accordion group mb-4 rounded-3xl bg-brand-navy/30 hover:bg-brand-navy/50 shadow-lg transition-all duration-300 overflow-hidden">
                             <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">📚 Kelompok Bahasa & Akademik</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </summary>
-                            <div class="p-5 border-t border-gray-800/50 text-sm text-gray-300 space-y-5 materi-list">
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="bahasa indonesia analisis wacana ide pokok kalimat efektif puebi eyd">
+                            <div class="p-5 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="bahasa indonesia analisis wacana ide pokok kalimat efektif puebi eyd">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Bahasa Indonesia & Analisis Wacana</h4>
@@ -450,7 +472,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="kemampuan bahasa inggris grammar structure reading comprehension">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="kemampuan bahasa inggris grammar structure reading comprehension">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Kemampuan Bahasa Inggris</h4>
@@ -473,7 +495,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="materi-item p-5 rounded-2xl border border-gray-800 bg-brand-navy/40 hover:bg-brand-navy/60 transition-all duration-300 shadow-sm hover:shadow-md" data-title="tes akademik potensi tps skolastik tka">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="tes akademik potensi tps skolastik tka">
                                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                                         <div>
                                             <h4 class="font-bold text-white text-base">Tes Akademik & Potensi TPS</h4>
@@ -503,7 +525,7 @@
             </div>
 
             <!-- Sticky Bottom Action Bar for Start Button -->
-            <div class="fixed bottom-0 left-0 w-full p-4 md:p-6 backdrop-blur-lg bg-brand-navy/90 border-t border-gray-800 z-40 flex justify-center shadow-[0_-10px_30px_rgba(0,0,0,0.6)]">
+            <div class="fixed bottom-16 md:bottom-0 left-0 md:left-64 w-full md:w-[calc(100%-16rem)] p-4 md:p-6 backdrop-blur-lg bg-brand-navy/90 border-t border-gray-800 z-40 flex justify-center shadow-[0_-10px_30px_rgba(0,0,0,0.6)]">
                 <button id="btn-start" class="gold-gradient text-brand-navy font-black py-3.5 px-6 rounded-xl shadow-[0_0_20px_rgba(212,175,55,0.4)] transform transition hover:-translate-y-1 w-full max-w-lg text-base md:text-lg flex justify-center items-center gap-2 md:gap-3 border border-yellow-200/50">
                     Mulai Tryout Mode Terpilih
                     <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
@@ -517,14 +539,14 @@
             <div class="w-full md:w-3/4 min-h-[calc(100dvh-72px)] md:min-h-0 md:h-full p-4 md:p-8 flex flex-col md:overflow-y-auto bg-brand-navy custom-scrollbar relative">
                 
                 <!-- Category Info & Breadcrumb -->
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-800 sticky top-0 bg-brand-navy z-10 pt-2 backdrop-blur-md bg-opacity-90">
+                <div class="flex justify-between items-center mb-6 pb-4 sticky top-0 bg-brand-navy/80 z-10 pt-2 backdrop-blur-xl shadow-sm">
                     <div class="flex items-center gap-3">
-                        <span id="current-category-badge" class="px-3 py-1 gold-gradient text-brand-navy text-sm font-bold rounded-md">TWK</span>
+                        <span id="current-category-badge" class="px-3 py-1 gold-gradient text-brand-navy text-sm font-bold rounded-full shadow-sm">TWK</span>
                         <h2 class="text-xl font-bold text-white">Soal Nomor <span id="current-q-num">1</span></h2>
                     </div>
                     <div class="md:hidden">
                         <!-- Mobile Timer -->
-                        <div class="bg-brand-surface text-brand-gold border border-brand-gold px-3 py-1 rounded-md font-mono font-bold text-lg timer-display shadow-inner">
+                        <div class="bg-brand-navy/60 text-brand-gold ring-1 ring-brand-gold/50 px-3 py-1 rounded-full font-mono font-bold text-lg timer-display shadow-inner">
                             01:40:00
                         </div>
                     </div>
@@ -541,27 +563,27 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex flex-wrap justify-between items-center mt-auto pt-4 border-t border-gray-800 gap-2 sm:gap-4 sticky bottom-0 bg-brand-navy z-30 pb-4 shadow-[0_-10px_20px_rgba(2,6,23,0.95)] md:shadow-none md:pb-0">
-                    <button id="btn-prev" class="px-3 sm:px-6 py-2 border-2 border-gray-600 text-gray-300 font-bold rounded-lg hover:bg-brand-surface hover:border-gray-500 transition disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-base flex-1 md:flex-none">
+                <div class="flex flex-wrap justify-between items-center mt-auto pt-4 gap-2 sm:gap-4 sticky bottom-0 bg-brand-navy/90 backdrop-blur-lg z-30 pb-4 shadow-[0_-10px_30px_rgba(2,6,23,0.95)] md:shadow-none md:pb-0">
+                    <button id="btn-prev" class="px-3 sm:px-6 py-2 bg-brand-navy/50 ring-1 ring-white/10 text-gray-300 font-bold rounded-full hover:bg-brand-navy/80 transition disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-base flex-1 md:flex-none shadow-md">
                         &larr; Prev
                     </button>
                     
-                    <button id="btn-ragu" class="px-3 sm:px-6 py-2 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition shadow-sm flex items-center justify-center gap-1 sm:gap-2 group text-xs sm:text-base flex-1 md:flex-none">
-                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded border-2 border-white flex items-center justify-center transition-colors group-hover:bg-orange-800" id="icon-ragu"></div>
+                    <button id="btn-ragu" class="px-3 sm:px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-700 text-white font-bold rounded-full hover:from-orange-600 hover:to-orange-800 transition shadow-lg flex items-center justify-center gap-1 sm:gap-2 group text-xs sm:text-base flex-1 md:flex-none">
+                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white flex items-center justify-center transition-colors group-hover:bg-orange-800" id="icon-ragu"></div>
                         Ragu
                     </button>
 
-                    <button id="btn-next" class="px-3 sm:px-6 py-2 gold-gradient font-bold rounded-lg text-brand-navy transition shadow-sm text-xs sm:text-base flex-1 md:flex-none">
+                    <button id="btn-next" class="px-3 sm:px-6 py-2 gold-gradient font-bold rounded-full text-brand-navy transition shadow-[0_4px_15px_rgba(212,175,55,0.4)] text-xs sm:text-base flex-1 md:flex-none">
                         Next &rarr;
                     </button>
                 </div>
             </div>
 
             <!-- Right Column: Navigation & Timer -->
-            <div class="w-full md:w-1/4 h-auto md:h-full bg-brand-surface border-t-8 border-brand-navy md:border-t-0 md:border-l md:border-gray-800 flex flex-col z-20">
+            <div class="w-full md:w-1/4 h-auto md:h-full bg-brand-navy/40 shadow-[-10px_0_30px_rgba(0,0,0,0.3)] flex flex-col z-20 backdrop-blur-xl">
                 
                 <!-- Timer Panel -->
-                <div class="p-6 border-b border-gray-800 bg-brand-surface shadow-sm flex flex-col items-center justify-center hidden md:flex">
+                <div class="p-6 bg-brand-navy/20 shadow-inner flex flex-col items-center justify-center hidden md:flex">
                     <p class="text-sm text-gray-400 font-semibold mb-1 uppercase tracking-wider">Sisa Waktu</p>
                     <div class="text-4xl font-mono font-bold gold-text timer-display tracking-tight drop-shadow-sm">
                         01:40:00
@@ -759,6 +781,7 @@
             </div>
         </section>
     </main>
+    </div>
 
     <!-- Data Referensi Tertanam -->
     <script src="data-referensi.js"></script>
