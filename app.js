@@ -1254,3 +1254,125 @@ PENTING: Jika deskripsi video kosong atau tidak jelas, cobalah menebak materi da
         console.error("AI Summary Error:", error);
     }
 };
+
+// ==========================================
+// SAVED VIDEOS LOGIC
+// ==========================================
+window.toggleSaveVideo = function(videoId, title, desc, btn) {
+    const isSaved = appState.savedVideos.some(v => v.videoId === videoId);
+    if (isSaved) {
+        // Remove
+        appState.savedVideos = appState.savedVideos.filter(v => v.videoId !== videoId);
+        btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>`;
+        btn.classList.remove('text-brand-gold');
+        btn.classList.add('text-gray-400');
+    } else {
+        // Save
+        appState.savedVideos.push({ videoId, title, desc });
+        btn.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>`;
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('text-brand-gold');
+    }
+    localStorage.setItem('savedVideos', JSON.stringify(appState.savedVideos));
+    
+    // Auto re-render if we are in the saved videos tab
+    if (els.tabContentTersimpan && !els.tabContentTersimpan.classList.contains('hidden')) {
+        renderSavedVideos();
+    }
+};
+
+window.renderSavedVideos = function() {
+    if (!els.savedVideosGrid || !els.savedVideosEmpty) return;
+    
+    els.savedVideosGrid.innerHTML = '';
+    
+    if (appState.savedVideos.length === 0) {
+        els.savedVideosGrid.classList.add('hidden');
+        els.savedVideosEmpty.classList.remove('hidden');
+        els.savedVideosEmpty.classList.add('flex');
+        return;
+    }
+    
+    els.savedVideosEmpty.classList.add('hidden');
+    els.savedVideosEmpty.classList.remove('flex');
+    els.savedVideosGrid.classList.remove('hidden');
+    
+    let htmlStr = '';
+    appState.savedVideos.forEach(v => {
+        const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const safeDesc = v.desc.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+        
+        htmlStr += `
+            <div class="materi-item p-4 rounded-2xl bg-brand-navy/60 hover:bg-brand-navy shadow-lg border border-gray-700/50 transition-all duration-300 cursor-pointer group flex flex-col" onclick="openSavedVideo('${v.videoId}', '${safeTitle}', '${safeDesc}')">
+                <div class="w-full aspect-video bg-black rounded-xl overflow-hidden mb-4 relative">
+                    <img src="https://img.youtube.com/vi/${v.videoId}/mqdefault.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="w-12 h-12 rounded-full bg-brand-gold text-brand-navy flex items-center justify-center">
+                            <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="font-bold text-white text-sm line-clamp-2 leading-snug flex-grow">${v.title}</h4>
+                <div class="mt-3 flex justify-between items-center border-t border-gray-700/50 pt-3">
+                    <span class="text-xs text-brand-gold font-bold">Video Tersimpan</span>
+                    <button class="text-brand-gold hover:text-white p-1" onclick="event.stopPropagation(); toggleSaveVideo('${v.videoId}', '${safeTitle}', '${safeDesc}', this)">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    els.savedVideosGrid.innerHTML = htmlStr;
+};
+
+window.openSavedVideo = function(videoId, title, desc) {
+    const modal = document.getElementById('video-learning-modal');
+    const loading = document.getElementById('vlm-loading');
+    const content = document.getElementById('vlm-content');
+    const titleEl = document.getElementById('vlm-title');
+    
+    titleEl.innerText = "Video Tersimpan";
+    content.innerHTML = '';
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    requestAnimationFrame(() => {
+        modal.classList.remove('translate-y-full', 'opacity-0');
+    });
+
+    loading.classList.remove('hidden');
+    
+    const safeTitle = title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    const safeDesc = desc.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+
+    let htmlStr = `
+        <div class="w-full rounded-2xl overflow-hidden bg-brand-navy border border-gray-700/50 flex flex-col shadow-xl">
+            <div class="w-full bg-black aspect-video relative">
+                <iframe 
+                    class="absolute top-0 left-0 w-full h-full" 
+                    src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
+                    title="${safeTitle}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <div class="p-5 md:p-6 flex flex-col gap-4 bg-gradient-to-b from-brand-navy to-brand-navy/80">
+                <div class="flex justify-between items-start gap-4">
+                    <h5 class="text-white text-base md:text-lg font-bold leading-snug flex-grow">${title}</h5>
+                    <button class="text-brand-gold hover:text-white transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${safeDesc}', this)">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>
+                    </button>
+                </div>
+                <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span>Penjelasan & Rangkuman dari Video</span>
+                </button>
+                <div id="summary-${videoId}" class="hidden text-sm text-gray-200 p-5 border border-brand-gold/50 rounded-xl bg-brand-navy/90 mt-2 prose prose-invert max-w-none"></div>
+            </div>
+        </div>
+    `;
+    content.innerHTML = htmlStr;
+    loading.classList.add('hidden');
+};
