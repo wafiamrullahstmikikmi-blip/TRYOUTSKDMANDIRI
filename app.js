@@ -46,7 +46,8 @@ let appState = {
     userAnswers: {}, // { questionIndex: { answer: 'A', ragu: false } }
     currentQuestionIndex: 0,
     timerSeconds: MODES[1].duration,
-    timerInterval: null
+    timerInterval: null,
+    savedVideos: JSON.parse(localStorage.getItem('savedVideos')) || []
 };
 
 // DOM Elements
@@ -67,10 +68,14 @@ const els = {
     tabFull: document.getElementById('tab-full'),
     tabDrill: document.getElementById('tab-drill'),
     tabMateri: document.getElementById('tab-materi'),
+    tabTersimpan: document.getElementById('tab-tersimpan'),
     tabContentFull: document.getElementById('tab-content-full'),
     tabContentDrill: document.getElementById('tab-content-drill'),
     tabContentMateri: document.getElementById('tab-content-materi'),
+    tabContentTersimpan: document.getElementById('tab-content-tersimpan'),
     searchMateri: document.getElementById('search-materi'),
+    savedVideosGrid: document.getElementById('saved-videos-grid'),
+    savedVideosEmpty: document.getElementById('saved-videos-empty'),
     
     // Exam
     questionText: document.getElementById('question-text'),
@@ -246,7 +251,7 @@ function init() {
     });
 
     // Tab Switcher Listeners
-    if(els.tabFull && els.tabDrill && els.tabMateri) {
+    if(els.tabFull && els.tabDrill && els.tabMateri && els.tabTersimpan) {
         const baseTabClass = 'nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all md:w-full ';
         const activeTabClass = baseTabClass + 'gold-gradient text-brand-navy shadow-[0_0_15px_rgba(212,175,55,0.4)]';
         const inactiveTabClass = baseTabClass + 'text-gray-400 hover:text-white hover:bg-white/5';
@@ -256,10 +261,13 @@ function init() {
             els.tabFull.className = activeTabClass;
             els.tabDrill.className = inactiveTabClass;
             els.tabMateri.className = inactiveTabClass;
+            els.tabTersimpan.className = inactiveTabClass;
             
             els.tabContentFull.classList.remove('hidden');
             els.tabContentDrill.classList.add('hidden');
             els.tabContentMateri.classList.add('hidden');
+            els.tabContentTersimpan.classList.add('hidden');
+            els.tabContentTersimpan.classList.remove('flex');
             els.btnStart.parentElement.classList.remove('hidden'); // Show start button
             
             // Auto select Mode 1
@@ -270,10 +278,13 @@ function init() {
             els.tabDrill.className = activeTabClass;
             els.tabFull.className = inactiveTabClass;
             els.tabMateri.className = inactiveTabClass;
+            els.tabTersimpan.className = inactiveTabClass;
             
             els.tabContentDrill.classList.remove('hidden');
             els.tabContentFull.classList.add('hidden');
             els.tabContentMateri.classList.add('hidden');
+            els.tabContentTersimpan.classList.add('hidden');
+            els.tabContentTersimpan.classList.remove('flex');
             els.btnStart.parentElement.classList.remove('hidden'); // Show start button
             
             // Auto select Mode 2 if coming from Mode 1
@@ -286,13 +297,35 @@ function init() {
             els.tabMateri.className = activeTabClass;
             els.tabFull.className = inactiveTabClass;
             els.tabDrill.className = inactiveTabClass;
+            els.tabTersimpan.className = inactiveTabClass;
             
             els.tabContentMateri.classList.remove('hidden');
             els.tabContentFull.classList.add('hidden');
             els.tabContentDrill.classList.add('hidden');
+            els.tabContentTersimpan.classList.add('hidden');
+            els.tabContentTersimpan.classList.remove('flex');
             
             // Hide the start button for materi tab
             els.btnStart.parentElement.classList.add('hidden');
+        });
+
+        els.tabTersimpan.addEventListener('click', () => {
+            els.tabTersimpan.className = activeTabClass;
+            els.tabFull.className = inactiveTabClass;
+            els.tabDrill.className = inactiveTabClass;
+            els.tabMateri.className = inactiveTabClass;
+            
+            els.tabContentTersimpan.classList.remove('hidden');
+            els.tabContentTersimpan.classList.add('flex');
+            els.tabContentFull.classList.add('hidden');
+            els.tabContentDrill.classList.add('hidden');
+            els.tabContentMateri.classList.add('hidden');
+            
+            // Hide the start button for tersimpan tab
+            els.btnStart.parentElement.classList.add('hidden');
+            if (typeof renderSavedVideos === 'function') {
+                renderSavedVideos();
+            }
         });
     }
 
@@ -722,7 +755,12 @@ function navigateQuestion(index) {
     updateNavGridUI();
 
     // Scroll back to top for mobile and desktop views
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const mainContainer = document.querySelector('main');
+    if (mainContainer) {
+        mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     const leftCol = document.querySelector('#exam-view > div');
     if (leftCol) leftCol.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1150,7 +1188,17 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
                             </iframe>
                         </div>
                         <div class="p-5 md:p-6 flex flex-col gap-4 bg-gradient-to-b from-brand-navy to-brand-navy/80">
-                            <h5 class="text-white text-base md:text-lg font-bold leading-snug">${title}</h5>
+                            <div class="flex justify-between items-start gap-4">
+                                <h5 class="text-white text-base md:text-lg font-bold leading-snug flex-grow">${title}</h5>
+                                ${appState.savedVideos.some(v => v.videoId === videoId) 
+                                    ? `<button class="text-brand-gold hover:text-white transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${safeDesc}', this)">
+                                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>
+                                        </button>`
+                                    : `<button class="text-gray-400 hover:text-brand-gold transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${safeDesc}', this)">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                        </button>`
+                                }
+                            </div>
                             <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                 <span>Penjelasan & Rangkuman dari Video</span>
