@@ -1114,7 +1114,7 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
     loading.classList.remove('hidden');
 
     try {
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=Materi+Konsep+SKD+Kedinasan+${encodeURIComponent(query)}+-soal+-pembahasan+soal&type=video&videoEmbeddable=true&key=${YOUTUBE_API_KEY}`;
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=Materi+SKD+${encodeURIComponent(query)}&type=video&videoEmbeddable=true&key=${YOUTUBE_API_KEY}`;
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -1153,7 +1153,7 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
                             <h5 class="text-white text-base md:text-lg font-bold leading-snug">${title}</h5>
                             <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                <span>Buat Rangkuman AI</span>
+                                <span>Penjelasan & Rangkuman dari Video</span>
                             </button>
                             <div id="summary-${videoId}" class="hidden text-sm text-gray-200 p-5 border border-brand-gold/50 rounded-xl bg-brand-navy/90 mt-2 prose prose-invert max-w-none"></div>
                         </div>
