@@ -177,8 +177,52 @@ function init() {
                 </div>
                 <div id="vlm-content" class="max-w-4xl mx-auto flex flex-col gap-8 pb-20"></div>
             </div>
+            
+            <button id="vlm-scroll-top" class="absolute bottom-6 right-6 z-[110] bg-brand-gold text-brand-navy p-3 rounded-full shadow-[0_0_20px_rgba(212,175,55,0.4)] transform transition-all duration-300 opacity-0 translate-y-10 hover:scale-110 hidden flex items-center justify-center" onclick="document.getElementById('vlm-scroll-container').scrollTo({top: 0, behavior: 'smooth'})">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+            </button>
         </div>`;
         document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        // Listener for Modal Scroll
+        const vlmContainer = document.getElementById('vlm-scroll-container');
+        const vlmFab = document.getElementById('vlm-scroll-top');
+        if (vlmContainer && vlmFab) {
+            vlmContainer.addEventListener('scroll', () => {
+                if (vlmContainer.scrollTop > 300) {
+                    vlmFab.classList.remove('hidden');
+                    requestAnimationFrame(() => vlmFab.classList.remove('opacity-0', 'translate-y-10'));
+                } else {
+                    vlmFab.classList.add('opacity-0', 'translate-y-10');
+                    setTimeout(() => { if (vlmContainer.scrollTop <= 300) vlmFab.classList.add('hidden'); }, 300);
+                }
+            });
+        }
+    }
+
+    // Global Scroll-to-Top Button
+    if (!document.getElementById('global-scroll-top')) {
+        const globalFab = document.createElement('button');
+        globalFab.id = 'global-scroll-top';
+        globalFab.className = 'fixed bottom-28 md:bottom-8 right-4 md:right-8 z-[60] bg-brand-gold text-brand-navy p-3 rounded-full shadow-[0_0_20px_rgba(212,175,55,0.4)] transform transition-all duration-300 opacity-0 translate-y-10 hover:scale-110 hidden flex items-center justify-center';
+        globalFab.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>';
+        document.body.appendChild(globalFab);
+
+        const mainContainer = document.querySelector('main');
+        if (mainContainer) {
+            mainContainer.addEventListener('scroll', () => {
+                if (mainContainer.scrollTop > 300) {
+                    globalFab.classList.remove('hidden');
+                    requestAnimationFrame(() => globalFab.classList.remove('opacity-0', 'translate-y-10'));
+                } else {
+                    globalFab.classList.add('opacity-0', 'translate-y-10');
+                    setTimeout(() => { if (mainContainer.scrollTop <= 300) globalFab.classList.add('hidden'); }, 300);
+                }
+            });
+            globalFab.addEventListener('click', () => {
+                mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
     }
 
     // Mode Selection Listeners
