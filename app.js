@@ -1171,8 +1171,9 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
                 const title = item.snippet.title;
                 const desc = item.snippet.description || '';
                 
-                const safeTitle = title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                const safeDesc = desc.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+                const safeTitle = title.replace(/"/g, '&quot;');
+                const encTitle = encodeURIComponent(title).replace(/'/g, "%27");
+                const encDesc = encodeURIComponent(desc).replace(/'/g, "%27");
                 
                 // Full-width cards for modal
                 htmlStr += `
@@ -1191,15 +1192,15 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
                             <div class="flex justify-between items-start gap-4">
                                 <h5 class="text-white text-base md:text-lg font-bold leading-snug flex-grow">${title}</h5>
                                 ${appState.savedVideos.some(v => v.videoId === videoId) 
-                                    ? `<button class="text-brand-gold hover:text-white transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${safeDesc}', this)">
+                                    ? `<button class="text-brand-gold hover:text-white transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${encTitle}', '${encDesc}', this)">
                                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>
                                         </button>`
-                                    : `<button class="text-gray-400 hover:text-brand-gold transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${safeDesc}', this)">
+                                    : `<button class="text-gray-400 hover:text-brand-gold transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${encTitle}', '${encDesc}', this)">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
                                         </button>`
                                 }
                             </div>
-                            <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
+                            <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${encTitle}', '${encDesc}', 'summary-${videoId}', this)">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                 <span>Penjelasan & Rangkuman dari Video</span>
                             </button>
@@ -1220,7 +1221,9 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
     }
 };
 
-window.generateVideoSummary = async function(title, desc, containerId, btn) {
+window.generateVideoSummary = async function(encTitle, encDesc, containerId, btn) {
+    const title = decodeURIComponent(encTitle);
+    const desc = decodeURIComponent(encDesc);
     const container = document.getElementById(containerId);
     btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-3 w-3 text-brand-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>Menyusun AI...</span>`;
     btn.disabled = true;
@@ -1258,7 +1261,9 @@ PENTING: Jika deskripsi video kosong atau tidak jelas, cobalah menebak materi da
 // ==========================================
 // SAVED VIDEOS LOGIC
 // ==========================================
-window.toggleSaveVideo = function(videoId, title, desc, btn) {
+window.toggleSaveVideo = function(videoId, encTitle, encDesc, btn) {
+    const title = decodeURIComponent(encTitle);
+    const desc = decodeURIComponent(encDesc);
     const isSaved = appState.savedVideos.some(v => v.videoId === videoId);
     if (isSaved) {
         // Remove
@@ -1299,11 +1304,11 @@ window.renderSavedVideos = function() {
     
     let htmlStr = '';
     appState.savedVideos.forEach(v => {
-        const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        const safeDesc = v.desc.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+        const encTitle = encodeURIComponent(v.title).replace(/'/g, "%27");
+        const encDesc = encodeURIComponent(v.desc).replace(/'/g, "%27");
         
         htmlStr += `
-            <div class="materi-item p-4 rounded-2xl bg-brand-navy/60 hover:bg-brand-navy shadow-lg border border-gray-700/50 transition-all duration-300 cursor-pointer group flex flex-col" onclick="openSavedVideo('${v.videoId}', '${safeTitle}', '${safeDesc}')">
+            <div class="materi-item p-4 rounded-2xl bg-brand-navy/60 hover:bg-brand-navy shadow-lg border border-gray-700/50 transition-all duration-300 cursor-pointer group flex flex-col" onclick="openSavedVideo('${v.videoId}', '${encTitle}', '${encDesc}')">
                 <div class="w-full aspect-video bg-black rounded-xl overflow-hidden mb-4 relative">
                     <img src="https://img.youtube.com/vi/${v.videoId}/mqdefault.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1315,7 +1320,7 @@ window.renderSavedVideos = function() {
                 <h4 class="font-bold text-white text-sm line-clamp-2 leading-snug flex-grow">${v.title}</h4>
                 <div class="mt-3 flex justify-between items-center border-t border-gray-700/50 pt-3">
                     <span class="text-xs text-brand-gold font-bold">Video Tersimpan</span>
-                    <button class="text-brand-gold hover:text-white p-1" onclick="event.stopPropagation(); toggleSaveVideo('${v.videoId}', '${safeTitle}', '${safeDesc}', this)">
+                    <button class="text-brand-gold hover:text-white p-1" onclick="event.stopPropagation(); toggleSaveVideo('${v.videoId}', '${encTitle}', '${encDesc}', this)">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>
                     </button>
                 </div>
@@ -1326,7 +1331,9 @@ window.renderSavedVideos = function() {
     els.savedVideosGrid.innerHTML = htmlStr;
 };
 
-window.openSavedVideo = function(videoId, title, desc) {
+window.openSavedVideo = function(videoId, encTitle, encDesc) {
+    const title = decodeURIComponent(encTitle);
+    const desc = decodeURIComponent(encDesc);
     const modal = document.getElementById('video-learning-modal');
     const loading = document.getElementById('vlm-loading');
     const content = document.getElementById('vlm-content');
@@ -1343,8 +1350,7 @@ window.openSavedVideo = function(videoId, title, desc) {
 
     loading.classList.remove('hidden');
     
-    const safeTitle = title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    const safeDesc = desc.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+    const safeTitle = title.replace(/"/g, '&quot;');
 
     let htmlStr = `
         <div class="w-full rounded-2xl overflow-hidden bg-brand-navy border border-gray-700/50 flex flex-col shadow-xl">
@@ -1361,11 +1367,11 @@ window.openSavedVideo = function(videoId, title, desc) {
             <div class="p-5 md:p-6 flex flex-col gap-4 bg-gradient-to-b from-brand-navy to-brand-navy/80">
                 <div class="flex justify-between items-start gap-4">
                     <h5 class="text-white text-base md:text-lg font-bold leading-snug flex-grow">${title}</h5>
-                    <button class="text-brand-gold hover:text-white transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${safeDesc}', this)">
+                    <button class="text-brand-gold hover:text-white transition-colors p-2 shrink-0 bg-white/5 rounded-full" onclick="toggleSaveVideo('${videoId}', '${encTitle}', '${encDesc}', this)">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>
                     </button>
                 </div>
-                <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${safeTitle}', '${safeDesc}', 'summary-${videoId}', this)">
+                <button class="flex justify-center items-center gap-2 text-sm font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-brand-gold/30 self-start" onclick="generateVideoSummary('${encTitle}', '${encDesc}', 'summary-${videoId}', this)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     <span>Penjelasan & Rangkuman dari Video</span>
                 </button>
