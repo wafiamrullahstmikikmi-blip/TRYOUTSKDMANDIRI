@@ -57,6 +57,7 @@ const els = {
     examView: document.getElementById('exam-view'),
     evaluationView: document.getElementById('evaluation-view'),
     loadingOverlay: document.getElementById('loading-overlay'),
+    dashboardHeaderText: document.getElementById('dashboard-header-text'),
     
     // Dashboard
     voucherKeyInput: document.getElementById('voucher-key'),
@@ -269,6 +270,7 @@ function init() {
             els.tabContentTersimpan.classList.add('hidden');
             els.tabContentTersimpan.classList.remove('flex');
             els.btnStart.parentElement.classList.remove('hidden'); // Show start button
+            if (els.dashboardHeaderText) els.dashboardHeaderText.classList.remove('hidden');
             
             // Auto select Mode 1
             els.modeCards[0].click();
@@ -286,6 +288,7 @@ function init() {
             els.tabContentTersimpan.classList.add('hidden');
             els.tabContentTersimpan.classList.remove('flex');
             els.btnStart.parentElement.classList.remove('hidden'); // Show start button
+            if (els.dashboardHeaderText) els.dashboardHeaderText.classList.remove('hidden');
             
             // Auto select Mode 2 if coming from Mode 1
             if (appState.selectedMode === 1) {
@@ -307,6 +310,7 @@ function init() {
             
             // Hide the start button for materi tab
             els.btnStart.parentElement.classList.add('hidden');
+            if (els.dashboardHeaderText) els.dashboardHeaderText.classList.add('hidden');
         });
 
         els.tabTersimpan.addEventListener('click', () => {
@@ -323,6 +327,7 @@ function init() {
             
             // Hide the start button for tersimpan tab
             els.btnStart.parentElement.classList.add('hidden');
+            if (els.dashboardHeaderText) els.dashboardHeaderText.classList.add('hidden');
             if (typeof renderSavedVideos === 'function') {
                 renderSavedVideos();
             }
