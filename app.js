@@ -575,6 +575,13 @@ async function startSimulation() {
         setTimeout(() => {
             els.loadingOverlay.style.display = 'none';
             els.dashboardView.style.display = 'none';
+            
+            // Forcefully hide the button wrapper bypassing any HTML structure quirks
+            const btnWrap = document.getElementById('start-btn-wrapper');
+            if (btnWrap) {
+                btnWrap.style.display = 'none';
+            }
+            
             els.examView.style.display = '';
             
             startTimer();
