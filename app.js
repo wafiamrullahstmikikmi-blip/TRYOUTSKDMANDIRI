@@ -576,9 +576,9 @@ async function startSimulation() {
         setTimeout(() => {
             els.loadingOverlay.classList.remove('flex');
             els.loadingOverlay.classList.add('hidden');
-            els.dashboardView.classList.add('hidden');
+            els.dashboardView.style.display = 'none';
             els.examView.classList.remove('hidden');
-            els.examView.classList.add('flex');
+            els.examView.style.display = '';
             
             startTimer();
             navigateQuestion(0);
@@ -826,9 +826,9 @@ function finishExam() {
     }
 
     clearInterval(appState.timerInterval);
-    els.examView.classList.add('hidden');
-    els.examView.classList.remove('flex');
+    els.examView.style.display = 'none';
     els.evaluationView.classList.remove('hidden');
+    els.evaluationView.style.display = 'block';
     
     calculateAndShowEvaluation();
 }
