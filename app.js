@@ -734,7 +734,7 @@ function navigateQuestion(index) {
         letterDiv.innerText = key;
         
         const textDiv = document.createElement('div');
-        textDiv.className = 'mt-0.5 text-gray-300 leading-relaxed';
+        textDiv.className = 'mt-0.5 text-gray-300 leading-relaxed break-words whitespace-pre-wrap flex-1';
         textDiv.innerText = text;
 
         label.appendChild(letterDiv);
@@ -760,6 +760,10 @@ function navigateQuestion(index) {
     updateNavGridUI();
 
     // Scroll back to top for mobile and desktop views
+    const examView = document.getElementById('exam-view');
+    if (examView) {
+        examView.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     const mainContainer = document.querySelector('main');
     if (mainContainer) {
         mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
