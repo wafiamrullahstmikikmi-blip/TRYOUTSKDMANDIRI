@@ -1,4 +1,4 @@
-const CACHE_NAME = 'skd-app-cache-v7';
+const CACHE_NAME = 'skd-app-cache-v8';
 const urlsToCache = [
   './index.html',
   './style.css',
@@ -38,16 +38,22 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch Event
+// Fetch Event (Stale-While-Revalidate strategy)
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
+    caches.match(event.request).then(cachedResponse => {
+      const fetchPromise = fetch(event.request).then(networkResponse => {
+        // Update cache with the new network response
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, networkResponse.clone());
+        });
+        return networkResponse;
+      }).catch(() => {
+        // Fallback for offline (optional)
+      });
+      
+      // Return cached response immediately, or wait for network if not in cache
+      return cachedResponse || fetchPromise;
+    })
   );
 });

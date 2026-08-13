@@ -34,7 +34,28 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Force Cache Busting Script -->
+    <script>
+        (function(){
+            const currentVersion = 'v8';
+            if(localStorage.getItem('appVersion') !== currentVersion) {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                        for(let registration of registrations) {
+                            registration.unregister();
+                        }
+                    });
+                }
+                caches.keys().then(function(names) {
+                    for (let name of names)
+                        caches.delete(name);
+                });
+                localStorage.setItem('appVersion', currentVersion);
+                window.location.reload(true);
+            }
+        })();
+    </script>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body class="bg-brand-navy text-brand-light font-sans antialiased h-screen flex flex-col relative md:flex-row pb-20 md:pb-0 overflow-hidden overscroll-none">
 
