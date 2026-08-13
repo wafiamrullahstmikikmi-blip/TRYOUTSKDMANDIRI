@@ -499,8 +499,7 @@ async function startSimulation() {
     appState.timerSeconds = modeConfig.duration;
 
     // Show Loading
-    els.loadingOverlay.classList.remove('hidden');
-    els.loadingOverlay.classList.add('flex');
+    els.loadingOverlay.style.display = 'flex';
     els.loadingProgressText.innerText = `0 / ${modeConfig.count} Soal (Mulai generating...)`;
     els.loadingProgressBar.style.width = "5%";
 
@@ -574,10 +573,8 @@ async function startSimulation() {
         setupExamUI();
         
         setTimeout(() => {
-            els.loadingOverlay.classList.remove('flex');
-            els.loadingOverlay.classList.add('hidden');
+            els.loadingOverlay.style.display = 'none';
             els.dashboardView.style.display = 'none';
-            els.examView.classList.remove('hidden');
             els.examView.style.display = '';
             
             startTimer();
@@ -585,8 +582,7 @@ async function startSimulation() {
         }, 500);
 
     } catch (error) {
-        els.loadingOverlay.classList.remove('flex');
-        els.loadingOverlay.classList.add('hidden');
+        els.loadingOverlay.style.display = 'none';
         alert("Terjadi Kendala Teknis:\n\n" + error.message);
     }
 }
@@ -827,8 +823,7 @@ function finishExam() {
 
     clearInterval(appState.timerInterval);
     els.examView.style.display = 'none';
-    els.evaluationView.classList.remove('hidden');
-    els.evaluationView.style.display = 'block';
+    els.evaluationView.style.display = '';
     
     calculateAndShowEvaluation();
 }

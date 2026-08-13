@@ -38,8 +38,8 @@
 </head>
 <body class="bg-brand-navy text-brand-light font-sans antialiased h-screen flex flex-col relative md:flex-row pb-20 md:pb-0 overflow-hidden overscroll-none">
 
-    <!-- Loading Overlay (Global) -->
-    <div id="loading-overlay" class="fixed inset-0 bg-brand-navy bg-opacity-95 backdrop-blur-md z-50 hidden flex-col justify-center items-center text-white">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-brand-navy/95 backdrop-blur-sm z-50 flex-col items-center justify-center text-white" style="display: none;">
         <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-brand-gold mb-6"></div>
         <h2 class="text-2xl font-bold mb-2" id="loading-text">Sedang Menyiapkan Soal...</h2>
         <p class="text-sm text-gray-300 max-w-md text-center">Memanggil sistem untuk membuat soal HOTS terstandarisasi. Proses ini mungkin memakan waktu hingga 1-2 menit tergantung kerumitan mode.</p>
@@ -562,7 +562,7 @@
             </div>
         </section>
         <!-- ================= EXAM VIEW (CAT ENGINE) ================= -->
-        <section id="exam-view" class="hidden flex-grow block md:flex md:flex-row h-auto md:h-[calc(100vh-72px)] overflow-y-auto md:overflow-hidden relative">
+        <section id="exam-view" class="flex-grow block md:flex md:flex-row h-auto md:h-[calc(100vh-72px)] overflow-y-auto md:overflow-hidden relative" style="display: none;">
             
             <!-- Left Column: Question & Options -->
             <div class="w-full md:w-3/4 h-auto md:h-full p-4 md:p-8 flex flex-col flex-shrink-0 md:flex-shrink md:overflow-y-auto bg-brand-navy custom-scrollbar relative">
@@ -678,7 +678,7 @@
         </section>
 
         <!-- ================= EVALUATION VIEW ================= -->
-        <section id="evaluation-view" class="hidden flex-grow bg-brand-navy p-4 md:p-8 overflow-y-auto custom-scrollbar">
+        <section id="evaluation-view" class="flex-grow bg-brand-navy p-4 md:p-8 overflow-y-auto custom-scrollbar" style="display: none;">
             <div class="max-w-5xl mx-auto space-y-6">
                 
                 <!-- Score Summary -->
