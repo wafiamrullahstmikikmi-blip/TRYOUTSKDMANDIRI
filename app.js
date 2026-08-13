@@ -582,6 +582,12 @@ async function startSimulation() {
                 btnWrap.style.display = 'none';
             }
             
+            // Hide the global header to remove the "sepes atas" (wasted space at the top) during the exam
+            const globalHeader = document.getElementById('global-header');
+            if (globalHeader) {
+                globalHeader.style.display = 'none';
+            }
+            
             els.examView.style.display = '';
             
             startTimer();

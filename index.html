@@ -37,7 +37,7 @@
     <!-- Force Cache Busting Script -->
     <script>
         (function(){
-            const currentVersion = 'v9';
+            const currentVersion = 'v10';
             if(localStorage.getItem('appVersion') !== currentVersion) {
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -102,7 +102,7 @@
     <div class="flex-grow flex flex-col relative w-full h-full overflow-hidden">
         
     <!-- Header -->
-    <header class="glass text-white shadow-lg py-4 px-6 flex justify-between items-center sticky top-0 z-40 flex-shrink-0">
+    <header id="global-header" class="glass text-white shadow-lg py-4 px-6 flex justify-between items-center sticky top-0 z-40 flex-shrink-0">
         <div class="flex items-center gap-3 md:hidden">
             <div class="gold-gradient p-2 rounded-lg font-extrabold text-brand-navy text-xl leading-none shadow-sm">SKD</div>
             <h1 class="text-lg font-bold tracking-tight">TRYOUT CAT</h1>
@@ -587,10 +587,10 @@
         <section id="exam-view" class="flex-grow block md:flex md:flex-row h-auto md:h-[calc(100vh-72px)] overflow-y-auto md:overflow-hidden relative" style="display: none;">
             
             <!-- Left Column: Question & Options -->
-            <div class="w-full md:w-3/4 h-auto md:h-full p-4 md:p-8 flex flex-col flex-shrink-0 md:flex-shrink md:overflow-y-auto bg-brand-navy custom-scrollbar relative">
+            <div class="w-full md:w-3/4 h-auto md:h-full px-4 pt-2 pb-4 md:p-8 flex flex-col flex-shrink-0 md:flex-shrink md:overflow-y-auto bg-brand-navy custom-scrollbar relative">
                 
                 <!-- Category Info & Breadcrumb -->
-                <div class="flex justify-between items-center mb-6 pb-4 sticky top-0 bg-brand-navy/80 z-10 pt-2 backdrop-blur-xl shadow-sm">
+                <div class="flex justify-between items-center mb-4 pb-3 sticky top-0 bg-brand-navy/80 z-10 pt-1 backdrop-blur-xl shadow-sm">
                     <div class="flex items-center gap-3">
                         <span id="current-category-badge" class="px-3 py-1 gold-gradient text-brand-navy text-sm font-bold rounded-full shadow-sm">TWK</span>
                         <h2 class="text-xl font-bold text-white">Soal Nomor <span id="current-q-num">1</span></h2>
