@@ -574,18 +574,24 @@ async function startSimulation() {
         
         setTimeout(() => {
             els.loadingOverlay.style.display = 'none';
-            els.dashboardView.style.display = 'none';
             
-            // Forcefully hide the button wrapper bypassing any HTML structure quirks
+            // Nuke the dashboard view entirely from the DOM to ensure 0 layout interference
+            const dashView = document.getElementById('dashboard-view');
+            if(dashView) dashView.remove();
+            
+            // Forcefully remove the button wrapper bypassing any HTML structure quirks
             const btnWrap = document.getElementById('start-btn-wrapper');
-            if (btnWrap) {
-                btnWrap.style.display = 'none';
-            }
+            if (btnWrap) btnWrap.remove();
             
-            // Hide the global header to remove the "sepes atas" (wasted space at the top) during the exam
+            // Remove the global header entirely to remove the "sepes atas"
             const globalHeader = document.getElementById('global-header');
-            if (globalHeader) {
-                globalHeader.style.display = 'none';
+            if (globalHeader) globalHeader.remove();
+            
+            // Ensure main has no padding or margin that could cause sepes
+            const mainEl = document.querySelector('main');
+            if (mainEl) {
+                mainEl.style.paddingTop = '0px';
+                mainEl.style.marginTop = '0px';
             }
             
             els.examView.style.display = '';

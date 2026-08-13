@@ -37,7 +37,7 @@
     <!-- Force Cache Busting Script -->
     <script>
         (function(){
-            const currentVersion = 'v10';
+            const currentVersion = 'v11';
             if(localStorage.getItem('appVersion') !== currentVersion) {
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -584,10 +584,10 @@
         </section>
 
         <!-- ================= EXAM VIEW (CAT ENGINE) ================= -->
-        <section id="exam-view" class="flex-grow block md:flex md:flex-row h-auto md:h-[calc(100vh-72px)] overflow-y-auto md:overflow-hidden relative" style="display: none;">
+        <section id="exam-view" class="flex-grow flex flex-col md:flex-row h-full md:h-[calc(100vh-72px)] overflow-y-auto md:overflow-hidden relative w-full" style="display: none;">
             
             <!-- Left Column: Question & Options -->
-            <div class="w-full md:w-3/4 h-auto md:h-full px-4 pt-2 pb-4 md:p-8 flex flex-col flex-shrink-0 md:flex-shrink md:overflow-y-auto bg-brand-navy custom-scrollbar relative">
+            <div class="w-full md:w-3/4 flex-grow md:h-full px-4 pt-2 pb-4 md:p-8 flex flex-col flex-shrink-0 md:flex-shrink md:overflow-y-auto bg-brand-navy custom-scrollbar relative justify-start">
                 
                 <!-- Category Info & Breadcrumb -->
                 <div class="flex justify-between items-center mb-4 pb-3 sticky top-0 bg-brand-navy/80 z-10 pt-1 backdrop-blur-xl shadow-sm">
