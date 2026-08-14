@@ -37,7 +37,7 @@
     <!-- Force Cache Busting Script -->
     <script>
         (function(){
-            const currentVersion = 'v13';
+            const currentVersion = 'v14';
             if(localStorage.getItem('appVersion') !== currentVersion) {
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -584,7 +584,7 @@
         </section>
 
         <!-- ================= EXAM VIEW (CAT ENGINE) ================= -->
-        <section id="exam-view" class="block md:flex md:flex-row h-auto md:h-[calc(100vh-72px)] overflow-visible md:overflow-hidden relative w-full" style="display: none;">
+        <section id="exam-view" class="fixed inset-0 z-40 bg-brand-navy overflow-y-auto w-full h-full pb-20 custom-scrollbar md:static md:flex md:flex-row md:h-[calc(100vh-72px)] md:pb-0 md:overflow-hidden md:z-auto relative" style="display: none;">
             
             <!-- Left Column: Question & Options -->
             <div class="block w-full md:w-3/4 h-auto md:h-full px-4 pt-2 pb-10 md:p-8 bg-brand-navy custom-scrollbar relative">
