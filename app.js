@@ -74,6 +74,11 @@ const els = {
     tabContentDrill: document.getElementById('tab-content-drill'),
     tabContentMateri: document.getElementById('tab-content-materi'),
     tabContentTersimpan: document.getElementById('tab-content-tersimpan'),
+    tabRiwayat: document.getElementById('tab-riwayat'),
+    tabContentRiwayat: document.getElementById('tab-content-riwayat'),
+    examHistoryList: document.getElementById('exam-history-list'),
+    examHistoryEmpty: document.getElementById('exam-history-empty'),
+    btnClearHistory: document.getElementById('btn-clear-history'),
     searchMateri: document.getElementById('search-materi'),
     savedVideosGrid: document.getElementById('saved-videos-grid'),
     savedVideosEmpty: document.getElementById('saved-videos-empty'),
@@ -252,7 +257,7 @@ function init() {
     });
 
     // Tab Switcher Listeners
-    if(els.tabFull && els.tabDrill && els.tabMateri && els.tabTersimpan) {
+    if(els.tabFull && els.tabDrill && els.tabMateri && els.tabTersimpan && els.tabRiwayat) {
         const baseTabClass = 'nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all md:w-full ';
         const activeTabClass = baseTabClass + 'gold-gradient text-brand-navy shadow-[0_0_15px_rgba(212,175,55,0.4)]';
         const inactiveTabClass = baseTabClass + 'text-gray-400 hover:text-white hover:bg-white/5';
@@ -263,12 +268,15 @@ function init() {
             els.tabDrill.className = inactiveTabClass;
             els.tabMateri.className = inactiveTabClass;
             els.tabTersimpan.className = inactiveTabClass;
+            els.tabRiwayat.className = inactiveTabClass;
             
             els.tabContentFull.classList.remove('hidden');
             els.tabContentDrill.classList.add('hidden');
             els.tabContentMateri.classList.add('hidden');
             els.tabContentTersimpan.classList.add('hidden');
             els.tabContentTersimpan.classList.remove('flex');
+            els.tabContentRiwayat.classList.add('hidden');
+            els.tabContentRiwayat.classList.remove('flex');
             els.btnStart.parentElement.classList.remove('hidden'); // Show start button
             if (els.dashboardHeaderText) els.dashboardHeaderText.classList.remove('hidden');
             
@@ -281,12 +289,15 @@ function init() {
             els.tabFull.className = inactiveTabClass;
             els.tabMateri.className = inactiveTabClass;
             els.tabTersimpan.className = inactiveTabClass;
+            els.tabRiwayat.className = inactiveTabClass;
             
             els.tabContentDrill.classList.remove('hidden');
             els.tabContentFull.classList.add('hidden');
             els.tabContentMateri.classList.add('hidden');
             els.tabContentTersimpan.classList.add('hidden');
             els.tabContentTersimpan.classList.remove('flex');
+            els.tabContentRiwayat.classList.add('hidden');
+            els.tabContentRiwayat.classList.remove('flex');
             els.btnStart.parentElement.classList.remove('hidden'); // Show start button
             if (els.dashboardHeaderText) els.dashboardHeaderText.classList.remove('hidden');
             
@@ -301,15 +312,16 @@ function init() {
             els.tabFull.className = inactiveTabClass;
             els.tabDrill.className = inactiveTabClass;
             els.tabTersimpan.className = inactiveTabClass;
+            els.tabRiwayat.className = inactiveTabClass;
             
             els.tabContentMateri.classList.remove('hidden');
             els.tabContentFull.classList.add('hidden');
             els.tabContentDrill.classList.add('hidden');
             els.tabContentTersimpan.classList.add('hidden');
             els.tabContentTersimpan.classList.remove('flex');
-            
-            // Hide the start button for materi tab
-            els.btnStart.parentElement.classList.add('hidden');
+            els.tabContentRiwayat.classList.add('hidden');
+            els.tabContentRiwayat.classList.remove('flex');
+            els.btnStart.parentElement.classList.add('hidden'); // Hide start button
             if (els.dashboardHeaderText) els.dashboardHeaderText.classList.add('hidden');
         });
 
@@ -318,19 +330,39 @@ function init() {
             els.tabFull.className = inactiveTabClass;
             els.tabDrill.className = inactiveTabClass;
             els.tabMateri.className = inactiveTabClass;
+            els.tabRiwayat.className = inactiveTabClass;
             
             els.tabContentTersimpan.classList.remove('hidden');
             els.tabContentTersimpan.classList.add('flex');
+            els.tabContentMateri.classList.add('hidden');
             els.tabContentFull.classList.add('hidden');
             els.tabContentDrill.classList.add('hidden');
-            els.tabContentMateri.classList.add('hidden');
-            
-            // Hide the start button for tersimpan tab
-            els.btnStart.parentElement.classList.add('hidden');
+            els.tabContentRiwayat.classList.add('hidden');
+            els.tabContentRiwayat.classList.remove('flex');
+            els.btnStart.parentElement.classList.add('hidden'); // Hide start button
             if (els.dashboardHeaderText) els.dashboardHeaderText.classList.add('hidden');
-            if (typeof renderSavedVideos === 'function') {
-                renderSavedVideos();
-            }
+            
+            renderSavedVideos();
+        });
+
+        els.tabRiwayat.addEventListener('click', () => {
+            els.tabRiwayat.className = activeTabClass;
+            els.tabFull.className = inactiveTabClass;
+            els.tabDrill.className = inactiveTabClass;
+            els.tabMateri.className = inactiveTabClass;
+            els.tabTersimpan.className = inactiveTabClass;
+            
+            els.tabContentRiwayat.classList.remove('hidden');
+            els.tabContentRiwayat.classList.add('flex');
+            els.tabContentMateri.classList.add('hidden');
+            els.tabContentFull.classList.add('hidden');
+            els.tabContentDrill.classList.add('hidden');
+            els.tabContentTersimpan.classList.add('hidden');
+            els.tabContentTersimpan.classList.remove('flex');
+            els.btnStart.parentElement.classList.add('hidden'); // Hide start button
+            if (els.dashboardHeaderText) els.dashboardHeaderText.classList.add('hidden');
+            
+            renderExamHistory();
         });
     }
 
@@ -946,6 +978,22 @@ function calculateSKDFull() {
     renderScoreBar('TWK', scores.TWK, passTWK);
     renderScoreBar('TIU', scores.TIU, passTIU);
     renderScoreBar('TKP', scores.TKP, passTKP);
+    
+    // Save to history
+    window.saveExamHistory({
+        timestamp: Date.now(),
+        date: window.formatDate(Date.now()),
+        modeName: MODES[appState.selectedMode].name,
+        isSKDFull: true,
+        passed: passedAll,
+        details: {
+            TWK: scores.TWK,
+            TIU: scores.TIU,
+            TKP: scores.TKP,
+            Total: total,
+            status: passedAll ? 'LULUS PASSING GRADE' : 'TIDAK LULUS'
+        }
+    });
 }
 
 function calculateSingleMode() {
@@ -993,6 +1041,21 @@ function calculateSingleMode() {
     
     els.overallStatus.innerText = `Menjawab Benar: ${correctCount} | Salah/Kosong: ${wrongCount}`;
     els.overallStatus.className = 'inline-block px-6 py-2 rounded-full text-sm font-bold mt-2 bg-blue-50 text-blue-700 border border-blue-200';
+    
+    // Save to history
+    window.saveExamHistory({
+        timestamp: Date.now(),
+        date: window.formatDate(Date.now()),
+        modeName: modeConfig.name,
+        isSKDFull: false,
+        passed: false, // Single modes don't have passing grades
+        details: {
+            Total: totalScore,
+            Max: maxPossible,
+            Percentage: percentage,
+            status: `Benar: ${correctCount} | Salah/Kosong: ${wrongCount}`
+        }
+    });
 }
 
 function renderDiscussionList(filter) {
@@ -1404,4 +1467,92 @@ window.openSavedVideo = function(videoId, encTitle, encDesc) {
     `;
     content.innerHTML = htmlStr;
     loading.classList.add('hidden');
+};
+
+// -----------------------------------------------------------------
+// HISTORY FUNCTIONS
+// -----------------------------------------------------------------
+
+window.getExamHistory = function() {
+    return JSON.parse(localStorage.getItem('examHistory')) || [];
+};
+
+window.saveExamHistory = function(historyData) {
+    const history = window.getExamHistory();
+    history.unshift(historyData); // add to front
+    if (history.length > 50) history.pop();
+    localStorage.setItem('examHistory', JSON.stringify(history));
+};
+
+window.clearExamHistory = function() {
+    if(confirm("Apakah Anda yakin ingin menghapus seluruh riwayat ujian?")) {
+        localStorage.removeItem('examHistory');
+        window.renderExamHistory();
+    }
+};
+
+window.formatDate = function(timestamp) {
+    const d = new Date(timestamp);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    return `${d.getDate().toString().padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+};
+
+window.renderExamHistory = function() {
+    const history = window.getExamHistory();
+    if (!els.examHistoryList || !els.examHistoryEmpty || !els.btnClearHistory) return;
+    
+    els.examHistoryList.innerHTML = '';
+    
+    if (history.length === 0) {
+        els.examHistoryList.classList.add('hidden');
+        els.examHistoryEmpty.classList.remove('hidden');
+        els.examHistoryEmpty.classList.add('flex');
+        els.btnClearHistory.classList.add('hidden');
+        return;
+    }
+    
+    els.examHistoryList.classList.remove('hidden');
+    els.examHistoryEmpty.classList.add('hidden');
+    els.examHistoryEmpty.classList.remove('flex');
+    els.btnClearHistory.classList.remove('hidden');
+    
+    history.forEach((h, idx) => {
+        const div = document.createElement('div');
+        div.className = 'glass p-4 md:p-6 rounded-2xl border border-gray-700/50 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-brand-gold/50 transition-colors';
+        
+        let detailsHtml = '';
+        if (h.isSKDFull) {
+            detailsHtml = `
+                <div class="flex flex-wrap gap-3 mt-2">
+                    <span class="px-2 py-1 bg-brand-navy rounded-md text-xs font-semibold text-gray-300 border border-gray-800">TWK: ${h.details.TWK}</span>
+                    <span class="px-2 py-1 bg-brand-navy rounded-md text-xs font-semibold text-gray-300 border border-gray-800">TIU: ${h.details.TIU}</span>
+                    <span class="px-2 py-1 bg-brand-navy rounded-md text-xs font-semibold text-gray-300 border border-gray-800">TKP: ${h.details.TKP}</span>
+                    <span class="px-2 py-1 bg-brand-surface rounded-md text-xs font-bold text-brand-gold border border-brand-gold/30">Total: ${h.details.Total}</span>
+                </div>
+            `;
+        } else {
+            detailsHtml = `
+                <div class="flex flex-wrap gap-3 mt-2">
+                    <span class="px-2 py-1 bg-brand-navy rounded-md text-xs font-semibold text-gray-300 border border-gray-800">Skor: ${h.details.Total} / ${h.details.Max}</span>
+                    <span class="px-2 py-1 bg-brand-surface rounded-md text-xs font-bold text-brand-gold border border-brand-gold/30">Benar: ${h.details.Percentage}%</span>
+                </div>
+            `;
+        }
+        
+        const statusColor = h.passed ? 'text-green-500' : (h.isSKDFull ? 'text-red-500' : 'text-blue-400');
+        
+        div.innerHTML = `
+            <div class="flex-grow w-full">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-brand-gold font-bold text-base md:text-lg">${h.modeName}</span>
+                    <span class="text-gray-500 text-xs shrink-0">• ${h.date}</span>
+                </div>
+                ${detailsHtml}
+            </div>
+            <div class="text-left md:text-right shrink-0 mt-2 md:mt-0">
+                <div class="font-bold text-sm ${statusColor}">${h.details.status}</div>
+            </div>
+        `;
+        els.examHistoryList.appendChild(div);
+    });
 };

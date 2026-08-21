@@ -37,7 +37,7 @@
     <!-- Force Cache Busting Script -->
     <script>
         (function(){
-            const currentVersion = 'v17';
+            const currentVersion = 'v19';
             const forceClear = new URLSearchParams(window.location.search).get('clear');
             if(localStorage.getItem('appVersion') !== currentVersion || forceClear === '1') {
                 if ('serviceWorker' in navigator) {
@@ -100,6 +100,10 @@
         <button id="tab-tersimpan" class="nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all text-gray-400 hover:text-white hover:bg-white/5 md:w-full">
             <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
             <span class="text-[10px] md:text-sm font-bold text-center md:text-left">Tersimpan</span>
+        </button>
+        <button id="tab-riwayat" class="nav-btn-global flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-1 md:px-4 py-2 md:py-3.5 rounded-xl md:rounded-2xl transition-all text-gray-400 hover:text-white hover:bg-white/5 md:w-full">
+            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-[10px] md:text-sm font-bold text-center md:text-left">Riwayat</span>
         </button>
     </nav>
 
@@ -576,7 +580,31 @@
                             <p class="text-gray-400 font-medium">Belum ada video yang disimpan.</p>
                         </div>
                     </div>
-                </div> <!-- Closes tab-content-materi / space-y-4 -->
+                    
+                    <!-- TAB 5: Riwayat Ujian -->
+                    <div id="tab-content-riwayat" class="hidden w-full max-w-4xl mx-auto flex-col min-h-[50vh]">
+                        <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-700/50 pb-4">
+                            <div>
+                                <h3 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+                                    <svg class="w-6 h-6 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Riwayat Ujian
+                                </h3>
+                                <p class="text-sm text-gray-400 mt-1">Daftar hasil simulasi dan latihan yang pernah Anda kerjakan.</p>
+                            </div>
+                            <button id="btn-clear-history" onclick="clearExamHistory()" class="px-4 py-2 bg-red-900/50 hover:bg-red-800 text-red-200 text-xs font-bold rounded-lg border border-red-800 transition-all flex items-center gap-2 hidden">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                Hapus Riwayat
+                            </button>
+                        </div>
+                        <div id="exam-history-list" class="flex flex-col gap-4">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div id="exam-history-empty" class="hidden flex-col items-center justify-center py-20 text-center opacity-70">
+                            <svg class="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-gray-400 font-medium">Belum ada riwayat ujian.</p>
+                        </div>
+                    </div>
+                </div> <!-- Closes tab container -->
             </div> <!-- Closes glass -->
 
             <!-- Sticky Bottom Action Bar for Start Button -->
@@ -705,7 +733,7 @@
         </section>
 
         <!-- ================= EVALUATION VIEW ================= -->
-        <section id="evaluation-view" class="flex-grow bg-brand-navy p-4 md:p-8 overflow-y-auto custom-scrollbar" style="display: none;">
+        <section id="evaluation-view" class="fixed inset-0 z-[60] bg-brand-navy overflow-y-auto w-full h-full pb-20 p-4 custom-scrollbar md:left-64 md:w-auto md:h-screen md:p-8 md:pb-0" style="display: none;">
             <div class="max-w-5xl mx-auto space-y-6">
                 
                 <!-- Score Summary -->

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'skd-app-cache-v17';
+const CACHE_NAME = 'skd-app-cache-v19';
 const urlsToCache = [
   './index.html',
   './style.css',
