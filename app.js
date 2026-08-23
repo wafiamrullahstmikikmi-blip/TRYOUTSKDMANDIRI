@@ -646,7 +646,7 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
     if (kategori === 'TWK') {
         instructions = `Fokus pada implementasi dan penalaran, berbasis studi kasus tentang Nasionalisme, Integritas, Bela Negara, Pilar Negara, dan implementasi UUD 1945. kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TIU') {
-        instructions = `Cakup Kemampuan Verbal, Numerik, dan Figural (deskripsikan gambar dengan teks). kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Cakup Penalaran Analitis (kasus susunan posisi/penjadwalan yang kompleks), Numerik Berhitung Cepat/Deret pecahan bertingkat, dan Serial Figural (MAKSIMAL 4-5 soal figural saja dari total soal). KHUSUS SOAL FIGURAL: Wajib berikan TEPAT 5 (LIMA) deretan tag HTML <svg> murni berdampingan di dalam string 'pertanyaan' untuk menggambar pola urutan gambar. PENTING: Gunakan stroke="white" atau fill="white" pada elemen SVG (JANGAN HITAM) karena latar web berwarna gelap. Jangan gunakan teks pengantar pertanyaan sama sekali untuk soal figural. Selain itu, SEMUA nilai di dalam objek 'pilihan' (A, B, C, D, E) JUGA WAJIB berupa 1 tag <svg> murni, tanpa teks tulisan. kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TKP') {
         instructions = `Berbasis kasus dilematis pelayanan publik/kerja. kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik.`;
     } else { // Bahasa
@@ -659,6 +659,7 @@ ${sampleStr}
 
 Tugasmu: Buat soal BARU yang variasi angka/studi kasusnya berbeda dari referensi di atas, tetapi memiliki tingkat kesulitan dan tipe penalaran yang KEMBAR/SELEVEL dengan contoh referensi.
 Instruksi Tambahan: ${instructions}
+PENTING UNTUK MATEMATIKA: JANGAN PERNAH menggunakan sintaks LaTeX atau MathJax (seperti $...$, \\frac{}{}, \\times, \\sqrt{}). Gunakan teks biasa, misal: 1/2, x, akar, =. 
 Output WAJIB berupa JSON Array murni array of objects: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null}, ...].`;
 
     return callGemini(prompt, true, targetKey);
@@ -743,7 +744,7 @@ function navigateQuestion(index) {
     els.currentCategoryBadge.className = `px-3 py-1 text-sm font-bold rounded-md ${badgeClass}`;
 
     // Update Text
-    els.questionText.innerText = q.pertanyaan;
+    els.questionText.innerHTML = q.pertanyaan;
 
     // Render Options
     els.optionsContainer.innerHTML = '';
@@ -782,7 +783,7 @@ function navigateQuestion(index) {
         
         const textDiv = document.createElement('div');
         textDiv.className = 'mt-0.5 text-gray-300 leading-relaxed break-words whitespace-pre-wrap flex-1';
-        textDiv.innerText = text;
+        textDiv.innerHTML = text;
 
         label.appendChild(letterDiv);
         label.appendChild(textDiv);
@@ -1181,7 +1182,8 @@ Tugas System:
 1. Berikan penjelasan mengapa kunci/bobot tertingginya adalah yang benar.
 2. Analisis kesalahan jawaban user (jika salah).
 3. Berikan trik cepat / konsep dasar yang perlu diingat untuk tipe soal ini.
-Gunakan markdown yang rapi. Jangan tulisulang soal, langsung ke poin pembahasan.`;
+Gunakan markdown yang rapi. Jangan tulisulang soal, langsung ke poin pembahasan.
+PENTING: JANGAN SEKALI-KALI menggunakan sintaks LaTeX atau MathJax (seperti $...$, \\frac{}{}, \\times, \\mathbf{}). Gunakan simbol teks biasa (misal: 1/4, x, =).`;
 
     try {
         const textRes = await callGemini(prompt, false, 'TIU');

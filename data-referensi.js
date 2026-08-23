@@ -9,6 +9,58 @@ const BANK_REFERENSI = {
     twk_only: [
         {
             "kategori": "TWK",
+            "pertanyaan": "Dalam negara demokrasi, mahasiswa sering disebut sebagai agent of social control. Namun, pada praktiknya terdapat perdebatan mengenai batas antara pengawasan kebijakan pemerintah dan upaya delegitimasi institusi negara. Sekelompok mahasiswa melakukan kajian terhadap program bantuan sosial dan menemukan indikasi ketidaktepatan sasaran. Hasil kajian kemudian dipublikasikan disertai rekomendasi perbaikan tanpa menyerukan penolakan terhadap pemerintah maupun program tersebut.<br><br>Berdasarkan ilustrasi tersebut, alasan yang paling tepat mengenai pentingnya pengawalan kebijakan pemerintah oleh mahasiswa adalah ...",
+            "pilihan": {
+                "A": "Pengawasan bertujuan memastikan setiap kebijakan sesuai dengan kepentingan kelompok masyarakat yang melakukan pengawasan.",
+                "B": "Pengawasan dilakukan agar mahasiswa dapat memiliki kewenangan evaluasi yang dimiliki pemerintah.",
+                "C": "Pengawasan merupakan instrumen demokrasi yang memperkuat akuntabilitas tanpa menghilangkan legitimasi pemerintah sebagai pelaksana kebijakan.",
+                "D": "Pengawasan diperlukan karena pemerintah pada dasarnya tidak mampu mengawasi kebijakannya sendiri.",
+                "E": "Pengawasan bertujuan membatasi kewenangan pemerintah agar tidak dapat menjalankan kebijakan secara otoriter."
+            },
+            "kunci": "C",
+            "bobotTKP": null
+        },
+        {
+            "kategori": "TWK",
+            "pertanyaan": "Dalam sebuah forum diskusi rancangan peraturan daerah, terjadi perdebatan sengit antara dua kelompok masyarakat. Kelompok pertama menginginkan agar aturan daerah diwarnai oleh syariat agama mayoritas karena mereka merasa sebagai penduduk asli dan terbanyak. Di sisi lain, kelompok kedua menolak hal tersebut dengan alasan bahwa daerah tersebut juga dihuni oleh warga pendatang dengan keyakinan berbeda yang berkontribusi besar pada perekonomian daerah. Ketegangan memuncak hingga salah satu tokoh kelompok pertama melakukan walk-out. Sikap yang paling mencerminkan implementasi Sila Ke-4 dan Ke-3 secara bersamaan dalam menanggapi situasi ini adalah...",
+            "pilihan": {
+                "A": "Mendukung kelompok pertama karena bagaimanapun juga suara mayoritas adalah wujud dari demokrasi kerakyatan yang dipimpin oleh hikmat kebijaksanaan.",
+                "B": "Membatalkan rancangan peraturan daerah tersebut agar tidak terjadi konflik horizontal yang mengancam persatuan nasional.",
+                "C": "Menunda sidang dan melakukan pendekatan persuasif (lobi) di luar forum kepada kedua belah pihak untuk mencari jalan tengah yang tidak mencederai identitas kebangsaan.",
+                "D": "Meminta kelompok minoritas untuk mengalah demi menjaga stabilitas keamanan daerah sesuai dengan prinsip persatuan Indonesia.",
+                "E": "Membawa permasalahan ini ke Mahkamah Konstitusi karena urusan keagamaan adalah wewenang pemerintah pusat, bukan pemerintah daerah."
+            },
+            "kunci": "C",
+            "bobotTKP": null
+        },
+        {
+            "kategori": "TWK",
+            "pertanyaan": "Di era digital, penyebaran hoaks atau berita bohong sangat masif terjadi menjelang Pemilu. Banyak Aparatur Sipil Negara (ASN) yang tanpa sadar ikut membagikan berita yang belum terverifikasi kebenarannya melalui grup pesan singkat keluarga, dengan dalih 'hanya sekadar berbagi informasi'. Tindakan ASN tersebut, apabila ditinjau dari perspektif Bela Negara di era modern, menunjukkan pelemahan pada nilai dasar Bela Negara yaitu...",
+            "pilihan": {
+                "A": "Cinta tanah air, karena merusak nama baik bangsa di mata internasional.",
+                "B": "Sadar berbangsa dan bernegara, karena ASN terikat aturan netralitas dan UU ITE.",
+                "C": "Setia pada Pancasila sebagai ideologi negara, karena hoaks berpotensi memecah belah sila ke-3.",
+                "D": "Rela berkorban untuk bangsa dan negara, karena malas mengorbankan waktu untuk mencari kebenaran fakta.",
+                "E": "Kemampuan awal bela negara, karena tidak memiliki literasi digital dan ketahanan mental dalam menyaring informasi."
+            },
+            "kunci": "E",
+            "bobotTKP": null
+        },
+        {
+            "kategori": "TWK",
+            "pertanyaan": "Kebijakan pemerintah untuk memberikan subsidi kendaraan listrik menuai pro dan kontra. Sebagian masyarakat menilai kebijakan ini tidak tepat sasaran karena hanya dinikmati kalangan menengah ke atas, sementara masyarakat bawah masih kesulitan mengakses transportasi umum yang layak. Namun, pemerintah berdalih bahwa ini adalah langkah strategis jangka panjang untuk mengurangi emisi karbon global dan menekan defisit anggaran akibat impor BBM. Kebijakan pemerintah ini paling mencerminkan pengamalan pokok pikiran Pembukaan UUD 1945 yaitu...",
+            "pilihan": {
+                "A": "Pokok pikiran pertama (Persatuan), karena melindungi seluruh tumpah darah Indonesia dari ancaman perubahan iklim.",
+                "B": "Pokok pikiran kedua (Keadilan Sosial), karena berusaha mewujudkan kesejahteraan umum secara mandiri.",
+                "C": "Pokok pikiran ketiga (Kedaulatan Rakyat), karena kebijakan ini telah disetujui oleh wakil rakyat di DPR.",
+                "D": "Pokok pikiran keempat (Ketuhanan & Kemanusiaan), karena menjaga alam adalah bentuk amanah dari Tuhan YME.",
+                "E": "Pokok pikiran kedua dan ketiga, karena memadukan kesejahteraan dan keputusan politik."
+            },
+            "kunci": "A",
+            "bobotTKP": null
+        },
+        {
+            "kategori": "TWK",
             "pertanyaan": "Indonesia sebagai negara kepulauan yang sudah diatur batas-batasnya dalam undang-undang. Batas Indonesia paling barat adalah ...",
             "pilihan": {
                 "A": "Pulau We",
@@ -1038,6 +1090,58 @@ const BANK_REFERENSI = {
 
     // 3. TIU Only (Tes Inteligensia Umum)
     tiu_only: [
+        {
+            "kategori": "TIU",
+            "pertanyaan": "Perhatikan urutan gambar berikut:<br><br><img src=\"./soal/Screenshot 2026-08-23 132255.png\" style=\"max-width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\"><br><br>Pola gambar selanjutnya yang tepat untuk mengisi seri tersebut adalah ...",
+            "pilihan": {
+                "A": "Gambar dengan dua garis rotasi 90 derajat searah jarum jam",
+                "B": "Gambar dengan satu garis bertambah di sisi kiri bawah",
+                "C": "Gambar dengan rotasi garis 45 derajat berlawanan arah jarum jam",
+                "D": "Gambar heksagon dengan garis vertikal di tengah",
+                "E": "Gambar heksagon tanpa garis diagonal"
+            },
+            "kunci": "C",
+            "bobotTKP": null
+        },
+        {
+            "kategori": "TIU",
+            "pertanyaan": "Sebuah perusahaan sedang menyeleksi 7 calon manajer: P, Q, R, S, T, U, dan V. Wawancara dilakukan dalam satu hari dengan aturan urutan sebagai berikut:\n1. Q harus diwawancarai sebelum R.\n2. S tidak boleh diwawancarai pertama atau terakhir.\n3. Jarak urutan wawancara antara T dan U harus tepat 2 orang (contoh: T, _, _, U).\n4. V harus diwawancarai tepat setelah P.\n5. T diwawancarai pada urutan ketiga.\n\nJika Q diwawancarai pada urutan pertama, maka siapakah yang mungkin diwawancarai pada urutan kelima?",
+            "pilihan": {
+                "A": "P",
+                "B": "R",
+                "C": "S",
+                "D": "U",
+                "E": "V"
+            },
+            "kunci": "C",
+            "bobotTKP": null
+        },
+        {
+            "kategori": "TIU",
+            "pertanyaan": "Jika x = 2025² - 2024² dan y = 2026² - 2025², maka hubungan x dan y yang paling tepat adalah...",
+            "pilihan": {
+                "A": "x > y",
+                "B": "x < y",
+                "C": "x = y",
+                "D": "x + y = 0",
+                "E": "Hubungan x dan y tidak dapat ditentukan"
+            },
+            "kunci": "B",
+            "bobotTKP": null
+        },
+        {
+            "kategori": "TIU",
+            "pertanyaan": "Semua pelamar CPNS yang memiliki skor TOEFL di atas 500 akan lulus seleksi administrasi instansi X. \nBeberapa peserta bimbingan belajar Y adalah pelamar CPNS instansi X. \nTidak ada peserta bimbingan belajar Y yang memiliki skor TOEFL di atas 500.\n\nKesimpulan yang paling logis adalah...",
+            "pilihan": {
+                "A": "Semua pelamar CPNS instansi X dari bimbingan belajar Y lulus seleksi administrasi.",
+                "B": "Semua peserta bimbingan belajar Y tidak lulus seleksi administrasi instansi X.",
+                "C": "Beberapa pelamar CPNS instansi X yang tidak lulus seleksi administrasi adalah peserta bimbingan belajar Y.",
+                "D": "Beberapa peserta bimbingan belajar Y lulus seleksi administrasi instansi X.",
+                "E": "Tidak ada pelamar CPNS instansi X yang lulus seleksi administrasi dari bimbingan belajar Y."
+            },
+            "kunci": "C",
+            "bobotTKP": null
+        },
         {
             "kategori": "TIU",
             "pertanyaan": "Semua yang bulat adalah biji. Sebagian biji rasanya pahit.",
@@ -2082,6 +2186,58 @@ const BANK_REFERENSI = {
 
     // 4. TKP Only (Tes Karakteristik Pribadi)
     tkp_only: [
+        {
+            "kategori": "TKP",
+            "pertanyaan": "Seorang ASN di bagian pelayanan publik mendapati seorang warga yang ingin mengurus administrasi namun berkasnya tidak lengkap. Warga tersebut mencoba menyelipkan sejumlah uang ke dalam map dengan harapan prosesnya tetap bisa berjalan karena ia sangat membutuhkannya untuk urusan mendesak. Tindakan paling tepat yang mencerminkan integritas tinggi adalah ...",
+            "pilihan": {
+                "A": "Menerima uang tersebut dengan niat membantu warga, namun tetap meminta warga melengkapi berkas di kemudian hari",
+                "B": "Menolak uang tersebut dengan tegas dan meminta warga pulang untuk melengkapi berkas sesuai prosedur yang berlaku",
+                "C": "Menolak uang tersebut, menjelaskan prosedur secara santun, serta memberikan arahan atau solusi bagaimana warga bisa melengkapi berkas dengan cepat",
+                "D": "Melaporkan warga tersebut kepada pihak berwajib atas upaya gratifikasi tanpa memberikan penjelasan lebih lanjut",
+                "E": "Mengabaikan uang tersebut dan memproses berkas seadanya agar tidak terjadi perdebatan di ruang publik"
+            },
+            "kunci": null,
+            "bobotTKP": { "A": 1, "B": 4, "C": 5, "D": 3, "E": 2 }
+        },
+        {
+            "kategori": "TKP",
+            "pertanyaan": "Anda adalah seorang ASN di bagian pelayanan perizinan. Suatu hari, sistem server nasional mengalami down sehingga proses perizinan terhenti total sejak pagi. Antrean warga sudah sangat panjang dan beberapa warga mulai marah-marah, berteriak, dan menggebrak meja karena mereka sudah mengambil cuti kerja hanya untuk mengurus izin ini. Atasan anda sedang rapat di luar kota dan rekan kerja anda memilih untuk masuk ke ruang istirahat karena ketakutan. Tindakan anda...",
+            "pilihan": {
+                "A": "Mengumumkan kepada warga bahwa server sedang rusak dari pusat dan meminta mereka pulang lalu kembali lagi esok hari untuk menghindari keributan lebih lanjut.",
+                "B": "Mencetak form manual sebanyak mungkin, membagikannya kepada warga untuk diisi, dan berjanji akan menginputnya ke sistem segera setelah server kembali normal, lalu meminta kontak mereka.",
+                "C": "Menghubungi teknisi IT pusat secara terus-menerus sambil meminta petugas keamanan untuk menenangkan warga yang marah.",
+                "D": "Menghadapi warga dengan tenang, meminta maaf atas ketidaknyamanan, menjelaskan situasi secara transparan, dan menyediakan minuman ringan sambil mendata berkas mereka secara manual.",
+                "E": "Bersembunyi di ruangan belakang bersama rekan kerja karena keselamatan kerja adalah hal utama saat warga mulai bertindak anarkis."
+            },
+            "kunci": null,
+            "bobotTKP": { "A": 2, "B": 4, "C": 3, "D": 5, "E": 1 }
+        },
+        {
+            "kategori": "TKP",
+            "pertanyaan": "Anda ditugaskan memimpin tim lintas divisi untuk sebuah proyek digitalisasi layanan publik yang harus selesai dalam 2 bulan. Salah satu anggota tim anda adalah pegawai senior (mendekati masa pensiun) yang sangat gagap teknologi dan menolak menggunakan aplikasi manajemen proyek yang anda terapkan, ia bersikeras menggunakan kertas dan koordinasi tatap muka yang sangat menghambat kecepatan tim. Di sisi lain, ia memiliki relasi yang sangat kuat dengan pejabat daerah yang krusial untuk proyek ini. Sikap anda...",
+            "pilihan": {
+                "A": "Mengeluarkan pegawai senior tersebut dari tim agar tidak menghambat progres, lalu mencari pengganti yang lebih milenial dan melek IT.",
+                "B": "Membiarkan ia menggunakan metode konvensional asal pekerjaannya selesai, demi menjaga hubungan baik dan memanfaatkan relasinya.",
+                "C": "Menugaskan satu anggota tim junior untuk menjadi 'asisten' khusus bagi pegawai senior tersebut dalam hal input digital, sehingga relasinya tetap terpakai dan sistem tetap berjalan.",
+                "D": "Melaporkan kendala ini kepada atasan dan meminta saran bagaimana cara menghadapi pegawai senior yang keras kepala.",
+                "E": "Memaksa pegawai senior tersebut untuk ikut pelatihan IT intensif selama seminggu agar ia bisa mengikuti ritme kerja tim."
+            },
+            "kunci": null,
+            "bobotTKP": { "A": 1, "B": 3, "C": 5, "D": 2, "E": 4 }
+        },
+        {
+            "kategori": "TKP",
+            "pertanyaan": "Anda memergoki atasan langsung anda menerima sebuah amplop tebal dari seorang vendor setelah memenangkan tender pengadaan barang di kantor. Atasan anda menyadari bahwa anda melihatnya, lalu ia mendatangi anda, memberikan setengah isi amplop tersebut, dan berkata, 'Ini rezeki kantor, ambil saja buat tambah-tambah biaya sekolah anakmu, toh vendor ini kerjanya bagus dan tidak merugikan negara.' Anda sedang sangat membutuhkan uang untuk biaya rumah sakit istri anda. Sikap anda...",
+            "pilihan": {
+                "A": "Menerima uang tersebut karena sedang butuh mendesak, namun berjanji dalam hati ini adalah yang pertama dan terakhir kalinya.",
+                "B": "Menolak dengan sangat halus sambil beralasan bahwa anda sudah mendapat rezeki dari tempat lain, agar tidak menyinggung perasaan atasan.",
+                "C": "Menolak dengan tegas pemberian tersebut, lalu secara anonim melaporkan kejadian ini melalui sistem Whistleblowing System (WBS) instansi.",
+                "D": "Menerima uang tersebut sebagai barang bukti, lalu melaporkan atasan anda ke aparat penegak hukum secepatnya.",
+                "E": "Menolak pemberian tersebut secara sopan namun tegas, dan mengingatkan atasan bahwa hal tersebut melanggar kode etik ASN dan berpotensi pidana."
+            },
+            "kunci": null,
+            "bobotTKP": { "A": 1, "B": 2, "C": 5, "D": 4, "E": 3 }
+        },
         {
             "kategori": "TKP",
             "pertanyaan": "Anda diminta oleh atasan anda untuk menyiapkan sebuah presentasi untuk bertemu dengan client besok pagi. Presentasi anda besok pagi akan menjadi penentu bagi kelanjutan kerja sama perusahaan dengan si client, atasan anda meminta anda untuk membuat presentasi yang bagus dan membuat client antusias untuk tau lebih jauh, sikap anda",
