@@ -37,7 +37,7 @@
     <!-- Force Cache Busting Script -->
     <script>
         (function(){
-            const currentVersion = 'v34';
+            const currentVersion = 'v35';
             const urlParams = new URLSearchParams(window.location.search);
             
             if (localStorage.getItem('appVersion') !== currentVersion || urlParams.has('clear')) {
@@ -248,8 +248,38 @@
                     </div>
 
                     <div class="space-y-4">
-                        <!-- Accordion 1: TWK -->
+                        <!-- Accordion 0: E-Book Materi -->
                         <details class="materi-accordion group mb-4 rounded-3xl bg-brand-navy/30 hover:bg-brand-navy/50 shadow-lg transition-all duration-300 overflow-hidden" open>
+                            <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
+                                <span class="flex items-center gap-2">📚 E-Book Materi & Bank Soal</span>
+                                <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-5 text-sm text-gray-300 space-y-5 materi-list">
+                                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="modul ebook pdf sukses skd 2024">
+                                    <div class="flex flex-col mb-4">
+                                        <h4 class="font-bold text-white text-base">Modul Resmi & Bank Soal CPNS 2024</h4>
+                                        <p class="text-xs text-brand-gold mt-1">Buka di tab baru agar tampilan penuh, tulisan besar, dan mudah dibaca (tidak dibatasi kotak/grid).</p>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row flex-wrap gap-4">
+                                        <a href="./SUKSES SKD CPNS 2024.pdf" target="_blank" class="flex-1 py-4 px-4 bg-brand-gold hover:bg-yellow-400 rounded-xl text-brand-navy font-bold text-center shadow-lg hover:-translate-y-1 transition-transform">
+                                            Buka SUKSES SKD 2024 (PDF)
+                                        </a>
+                                        <a href="./MATERI TWK CPNS  (SFILE.MOBI).pdf" target="_blank" class="flex-1 py-4 px-4 bg-brand-gold hover:bg-yellow-400 rounded-xl text-brand-navy font-bold text-center shadow-lg hover:-translate-y-1 transition-transform">
+                                            Buka Materi TWK (PDF)
+                                        </a>
+                                        <a href="./MATERI TIU CPNS (SFILE.MOBI) (1).pdf" target="_blank" class="flex-1 py-4 px-4 bg-brand-gold hover:bg-yellow-400 rounded-xl text-brand-navy font-bold text-center shadow-lg hover:-translate-y-1 transition-transform">
+                                            Buka Materi TIU (PDF)
+                                        </a>
+                                        <a href="./MATERI TKP CPNS (SFILE.MOBI).pdf" target="_blank" class="flex-1 py-4 px-4 bg-brand-gold hover:bg-yellow-400 rounded-xl text-brand-navy font-bold text-center shadow-lg hover:-translate-y-1 transition-transform">
+                                            Buka Materi TKP (PDF)
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- Accordion 1: TWK -->
+                        <details class="materi-accordion group mb-4 rounded-3xl bg-brand-navy/30 hover:bg-brand-navy/50 shadow-lg transition-all duration-300 overflow-hidden">
                             <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
                                 <span class="flex items-center gap-2">🇮🇩 Kelompok TWK</span>
                                 <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
