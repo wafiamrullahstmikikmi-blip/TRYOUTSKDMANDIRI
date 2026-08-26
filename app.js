@@ -156,8 +156,7 @@ function logout() {
 
 // Initialization
 function init() {
-    checkAuth();
-    checkSession();
+    // Auth and Session checks removed for instant access
 
     // Clean up old slider wrappers (migration to modal)
     document.querySelectorAll('.materi-item').forEach(item => {
@@ -521,24 +520,7 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
 }
 
 async function startSimulation() {
-    if (!appState.isLoggedIn) {
-        const voucherVal = els.voucherKeyInput ? els.voucherKeyInput.value.trim().toUpperCase() : '';
-        if (!voucherVal) {
-            alert("Silakan masukkan Kode Voucher Akses terlebih dahulu.");
-            return;
-        }
-        if (!DAFTAR_VOUCHER.includes(voucherVal)) {
-            alert("Kode Voucher tidak valid! Silakan periksa kembali kode akses Anda.");
-            return;
-        }
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('voucherCode', voucherVal);
-        appState.isLoggedIn = true;
-        
-        if (els.voucherContainer) els.voucherContainer.classList.add('hidden');
-        if (els.loggedInBadge) els.loggedInBadge.classList.remove('hidden');
-        if (els.btnLogout) els.btnLogout.classList.remove('hidden');
-    }
+    // Voucher logic removed for instant access
     
     // Set Time based on mode
     const modeConfig = MODES[appState.selectedMode];
@@ -684,163 +666,17 @@ Output WAJIB berupa JSON Array murni array of objects: [{"no": 1, "kategori": "$
 // -----------------------------------------------------------------
 const SUPABASE_URL = "https://tefceqqyacrogjvxydpn.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_pWd3c5mOLVqY7Fh1hmIvuw_nz5-awvi";
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 let currentUser = null;
 
-async function checkSession() {
-    if (!supabase) return;
-    const { data: { session } } = await supabase.auth.getSession();
-    currentUser = session ? session.user : null;
-    updateAuthUI();
-    
-    if (currentUser) {
-        await syncDataFromCloud();
-    } else {
-        // ALWAYS force user to login via Supabase first, before anything else
-        showAuthModal();
-    }
-}
-
-if (supabase) {
-    supabase.auth.onAuthStateChange((event, session) => {
-        currentUser = session ? session.user : null;
-        if (currentUser) {
-            appState.isLoggedIn = true;
-        }
-        updateAuthUI();
-        if (event === 'SIGNED_IN') {
-            syncDataFromCloud();
-        }
-    });
-}
-
-function updateAuthUI() {
-    const btnShowLogin = document.getElementById('btn-show-login');
-    const userProfileBadge = document.getElementById('user-profile-badge');
-    const emailDisplay = document.getElementById('user-email-display');
-    const voucherContainer = document.getElementById('voucher-container');
-    
-    if (!btnShowLogin || !userProfileBadge) return;
-    
-    if (currentUser) {
-        btnShowLogin.classList.add('hidden');
-        userProfileBadge.classList.remove('hidden');
-        userProfileBadge.classList.add('flex');
-        if(emailDisplay) emailDisplay.innerText = currentUser.email;
-    } else {
-        btnShowLogin.classList.remove('hidden');
-        userProfileBadge.classList.add('hidden');
-        userProfileBadge.classList.remove('flex');
-    }
-}
-
-let authMode = 'login'; // 'login' or 'register'
-
-window.showAuthModal = function() {
-    document.getElementById('auth-modal').classList.remove('hidden');
-    document.getElementById('auth-modal').classList.add('flex');
-};
-
-window.hideAuthModal = function() {
-    document.getElementById('auth-modal').classList.add('hidden');
-    document.getElementById('auth-modal').classList.remove('flex');
-    document.getElementById('auth-error-msg').classList.add('hidden');
-};
-
-window.toggleAuthMode = function() {
-    authMode = authMode === 'login' ? 'register' : 'login';
-    const title = document.getElementById('auth-modal-title');
-    const btn = document.getElementById('auth-submit-btn');
-    const toggleText = document.getElementById('auth-toggle-text');
-    
-    if (authMode === 'login') {
-        title.innerText = "Masuk ke Akun";
-        btn.innerText = "Masuk";
-        toggleText.innerHTML = 'Belum punya akun? <a href="#" onclick="toggleAuthMode()" class="text-brand-gold font-bold hover:underline">Daftar sekarang</a>';
-    } else {
-        title.innerText = "Daftar Akun Baru";
-        btn.innerText = "Daftar";
-        toggleText.innerHTML = 'Sudah punya akun? <a href="#" onclick="toggleAuthMode()" class="text-brand-gold font-bold hover:underline">Masuk sekarang</a>';
-    }
-};
-
-window.handleAuthSubmit = async function(e) {
-    e.preventDefault();
-    if (!supabase) {
-        showAuthError("Koneksi Supabase gagal. Cek jaringan Anda.");
-        return;
-    }
-    
-    const email = document.getElementById('auth-email').value;
-    const password = document.getElementById('auth-password').value;
-    const btn = document.getElementById('auth-submit-btn');
-    const originalText = btn.innerText;
-    
-    btn.disabled = true;
-    btn.innerText = "Memproses...";
-    
-    try {
-        if (authMode === 'register') {
-            const { data, error } = await supabase.auth.signUp({ email, password });
-            if (error) throw error;
-            if (data.user && data.user.identities && data.user.identities.length === 0) {
-                showAuthError("Email sudah terdaftar. Silakan login.");
-            } else {
-                alert("Pendaftaran berhasil! Anda otomatis masuk.");
-                hideAuthModal();
-            }
-        } else {
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) throw error;
-            hideAuthModal();
-        }
-    } catch (error) {
-        showAuthError(error.message);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = originalText;
-    }
-};
-
-function showAuthError(msg) {
-    const el = document.getElementById('auth-error-msg');
-    el.innerText = msg;
-    el.classList.remove('hidden');
-}
-
-window.handleGoogleLogin = async function() {
-    if (!supabase) return;
-    try {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google'
-        });
-        if (error) throw error;
-    } catch (error) {
-        alert("Google Login Error: " + error.message);
-    }
-};
-
-window.handleSupabaseLogout = async function() {
-    if (!supabase) return;
-    const { error } = await supabase.auth.signOut();
-    if (error) alert("Error logout: " + error.message);
-    else {
-        appState.examHistory = [];
-        appState.savedVideos = [];
-        appState.savedExplanations = [];
-        renderExamHistory();
-        renderSavedVideos();
-        renderSavedExplanations();
-        alert("Berhasil keluar.");
-    }
-};
+// Auth disabled as per user request
 
 async function syncDataFromCloud() {
     if (!currentUser || !supabase) return;
     
     try {
         // Sync Exam History
-        const { data: historyData } = await supabase.from('exam_history').select('*').order('date', { ascending: false });
+        const { data: historyData } = await supabaseClient.from('exam_history').select('*').order('date', { ascending: false });
         if (historyData) {
             appState.examHistory = historyData.map(row => ({
                 id: row.id,
@@ -862,7 +698,7 @@ async function syncDataFromCloud() {
         }
         
         // Sync Videos
-        const { data: videoData } = await supabase.from('saved_videos').select('*').order('created_at', { ascending: false });
+        const { data: videoData } = await supabaseClient.from('saved_videos').select('*').order('created_at', { ascending: false });
         if (videoData) {
             appState.savedVideos = videoData.map(row => ({
                 id: row.id,
@@ -874,7 +710,7 @@ async function syncDataFromCloud() {
         }
         
         // Sync Explanations
-        const { data: explData } = await supabase.from('saved_explanations').select('*').order('created_at', { ascending: false });
+        const { data: explData } = await supabaseClient.from('saved_explanations').select('*').order('created_at', { ascending: false });
         if (explData) {
             appState.savedExplanations = explData.map(row => ({
                 id: row.id,
@@ -1608,12 +1444,12 @@ window.toggleSaveVideo = async function(videoId, encTitle, encDesc, btn) {
     localStorage.setItem('savedVideos', JSON.stringify(appState.savedVideos));
     
     // Cloud Sync
-    if (currentUser && supabase) {
+    if (currentUser && supabaseClient) {
         try {
             if (isSaved) {
-                await supabase.from('saved_videos').delete().match({ user_id: currentUser.id, video_id: videoId });
+                await supabaseClient.from('saved_videos').delete().match({ user_id: currentUser.id, video_id: videoId });
             } else {
-                await supabase.from('saved_videos').insert([{ user_id: currentUser.id, video_id: videoId, title, category: desc }]);
+                await supabaseClient.from('saved_videos').insert([{ user_id: currentUser.id, video_id: videoId, title, category: desc }]);
             }
         } catch (e) { console.error("Video Cloud Save Error:", e); }
     }
@@ -1698,9 +1534,9 @@ window.toggleSaveExplanation = async function(idx, btn) {
     btn.classList.remove('bg-brand-navy', 'text-brand-gold');
     
     // Cloud Sync
-    if (currentUser && supabase) {
+    if (currentUser && supabaseClient) {
         try {
-            await supabase.from('saved_explanations').insert([{ user_id: currentUser.id, question_data: questionData }]);
+            await supabaseClient.from('saved_explanations').insert([{ user_id: currentUser.id, question_data: questionData }]);
             // Re-sync to get proper UUID
             syncDataFromCloud();
         } catch (e) { console.error("Expl Cloud Save Error:", e); }
@@ -1723,9 +1559,9 @@ window.deleteSavedExplanation = async function(id) {
     appState.savedExplanations = appState.savedExplanations.filter(e => e.id !== id);
     localStorage.setItem('savedExplanations', JSON.stringify(appState.savedExplanations));
     
-    if (currentUser && supabase) {
+    if (currentUser && supabaseClient) {
         try {
-            await supabase.from('saved_explanations').delete().eq('id', id);
+            await supabaseClient.from('saved_explanations').delete().eq('id', id);
         } catch (e) { console.error("Expl Cloud Delete Error:", e); }
     }
     renderSavedExplanations();
@@ -1856,9 +1692,9 @@ window.saveExamHistory = async function(historyData) {
     if (appState.examHistory.length > 50) appState.examHistory.pop();
     localStorage.setItem('examHistory', JSON.stringify(appState.examHistory));
     
-    if (currentUser && supabase) {
+    if (currentUser && supabaseClient) {
         try {
-            await supabase.from('exam_history').insert([{
+            await supabaseClient.from('exam_history').insert([{
                 user_id: currentUser.id,
                 date: new Date(historyData.timestamp).toISOString(),
                 mode: historyData.modeName,
@@ -1877,9 +1713,9 @@ window.clearExamHistory = async function() {
         appState.examHistory = [];
         localStorage.removeItem('examHistory');
         
-        if (currentUser && supabase) {
+        if (currentUser && supabaseClient) {
             try {
-                await supabase.from('exam_history').delete().eq('user_id', currentUser.id);
+                await supabaseClient.from('exam_history').delete().eq('user_id', currentUser.id);
             } catch (e) { console.error(e); }
         }
         window.renderExamHistory();
@@ -1951,3 +1787,6 @@ window.renderExamHistory = function() {
         els.examHistoryList.appendChild(div);
     });
 };
+
+// Initialize app when DOM is ready
+document.addEventListener('DOMContentLoaded', init);
