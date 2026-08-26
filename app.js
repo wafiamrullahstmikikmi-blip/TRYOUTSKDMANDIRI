@@ -870,12 +870,6 @@ async function syncDataFromCloud() {
 
 
 // -----------------------------------------------------------------
-// CONFIGURATION & STATE
-// -----------------------------------------------------------------
-let YOUTUBE_API_KEY = "MASUKKAN_YOUTUBE_API_KEY_ANDA";
-let GEMINI_API_KEY = "MASUKKAN_GEMINI_API_KEY_ANDA";
-
-// -----------------------------------------------------------------
 // EXAM LOGIC & UI
 // -----------------------------------------------------------------
 
