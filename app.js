@@ -156,7 +156,8 @@ function logout() {
 
 // Initialization
 function init() {
-    // Auth and Session checks removed for instant access
+    // Initializing Cloud Sync
+    syncDataFromCloud();
 
     // Clean up old slider wrappers (migration to modal)
     document.querySelectorAll('.materi-item').forEach(item => {
@@ -667,16 +668,27 @@ Output WAJIB berupa JSON Array murni array of objects: [{"no": 1, "kategori": "$
 const SUPABASE_URL = "https://tefceqqyacrogjvxydpn.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_pWd3c5mOLVqY7Fh1hmIvuw_nz5-awvi";
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-let currentUser = null;
 
-// Auth disabled as per user request
+// Menggunakan Device ID sebagai User ID anonim (karena Auth login dinonaktifkan)
+let currentUserId = localStorage.getItem('guest_user_id');
+if (!currentUserId) {
+    currentUserId = 'guest_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    localStorage.setItem('guest_user_id', currentUserId);
+}
+const currentUser = { id: currentUserId };
 
 async function syncDataFromCloud() {
-    if (!currentUser || !supabase) return;
+    // FIX: Cegah error ReferenceError (!supabase diubah menjadi !supabaseClient) yang menyebabkan UI freeze
+    if (!currentUser || !supabaseClient) return;
     
     try {
         // Sync Exam History
-        const { data: historyData } = await supabaseClient.from('exam_history').select('*').order('date', { ascending: false });
+        const { data: historyData, error: err1 } = await supabaseClient
+            .from('exam_history')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('date', { ascending: false });
+            
         if (historyData) {
             appState.examHistory = historyData.map(row => ({
                 id: row.id,
@@ -691,14 +703,21 @@ async function syncDataFromCloud() {
                     TKP: row.tkp_score,
                     Total: row.total_score,
                     status: row.is_passed ? 'LULUS PASSING GRADE' : 'TIDAK LULUS / SELESAI',
-                    Max: 0, Percentage: 0 // Default for single mode fallback
+                    Max: row.max_score || 0, 
+                    Percentage: row.percentage || 0
                 }
             }));
-            renderExamHistory();
+            localStorage.setItem('examHistory', JSON.stringify(appState.examHistory));
+            if (typeof window.renderExamHistory === 'function') window.renderExamHistory();
         }
         
         // Sync Videos
-        const { data: videoData } = await supabaseClient.from('saved_videos').select('*').order('created_at', { ascending: false });
+        const { data: videoData, error: err2 } = await supabaseClient
+            .from('saved_videos')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('created_at', { ascending: false });
+            
         if (videoData) {
             appState.savedVideos = videoData.map(row => ({
                 id: row.id,
@@ -706,21 +725,28 @@ async function syncDataFromCloud() {
                 title: row.title,
                 desc: row.category || ''
             }));
-            renderSavedVideos();
+            localStorage.setItem('savedVideos', JSON.stringify(appState.savedVideos));
+            if (typeof window.renderSavedVideos === 'function') window.renderSavedVideos();
         }
         
         // Sync Explanations
-        const { data: explData } = await supabaseClient.from('saved_explanations').select('*').order('created_at', { ascending: false });
+        const { data: explData, error: err3 } = await supabaseClient
+            .from('saved_explanations')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('created_at', { ascending: false });
+            
         if (explData) {
             appState.savedExplanations = explData.map(row => ({
                 id: row.id,
                 question_data: row.question_data,
                 created_at: row.created_at
             }));
-            renderSavedExplanations();
+            localStorage.setItem('savedExplanations', JSON.stringify(appState.savedExplanations));
+            if (typeof window.renderSavedExplanations === 'function') window.renderSavedExplanations();
         }
     } catch (e) {
-        console.error("Cloud sync error", e);
+        console.error("Cloud sync error (Aman, fallback ke data lokal)", e);
     }
 }
 
