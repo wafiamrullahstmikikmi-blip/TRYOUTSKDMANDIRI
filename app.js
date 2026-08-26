@@ -47,7 +47,9 @@ let appState = {
     currentQuestionIndex: 0,
     timerSeconds: MODES[1].duration,
     timerInterval: null,
-    savedVideos: JSON.parse(localStorage.getItem('savedVideos')) || []
+    examHistory: JSON.parse(localStorage.getItem('examHistory')) || [],
+    savedVideos: JSON.parse(localStorage.getItem('savedVideos')) || [],
+    savedExplanations: JSON.parse(localStorage.getItem('savedExplanations')) || []
 };
 
 // DOM Elements
@@ -144,6 +146,7 @@ function logout() {
 // Initialization
 function init() {
     checkAuth();
+    checkSession();
 
     // Clean up old slider wrappers (migration to modal)
     document.querySelectorAll('.materi-item').forEach(item => {
@@ -665,6 +668,212 @@ Output WAJIB berupa JSON Array murni array of objects: [{"no": 1, "kategori": "$
     return callGemini(prompt, true, targetKey);
 }
 
+// -----------------------------------------------------------------
+// SUPABASE CONFIGURATION
+// -----------------------------------------------------------------
+const SUPABASE_URL = "https://tefceqqyacrogjvxydpn.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_pWd3c5mOLVqY7Fh1hmIvuw_nz5-awvi";
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+let currentUser = null;
+
+async function checkSession() {
+    if (!supabase) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    currentUser = session ? session.user : null;
+    updateAuthUI();
+    if (currentUser) {
+        await syncDataFromCloud();
+    } else {
+        // Force user to login page/modal on first visit
+        const hasVoucher = localStorage.getItem('isLoggedIn') === 'true';
+        if (!hasVoucher) {
+            showAuthModal();
+        }
+    }
+}
+
+if (supabase) {
+    supabase.auth.onAuthStateChange((event, session) => {
+        currentUser = session ? session.user : null;
+        if (currentUser) {
+            appState.isLoggedIn = true;
+        }
+        updateAuthUI();
+        if (event === 'SIGNED_IN') {
+            syncDataFromCloud();
+        }
+    });
+}
+
+function updateAuthUI() {
+    const btnShowLogin = document.getElementById('btn-show-login');
+    const userProfileBadge = document.getElementById('user-profile-badge');
+    const emailDisplay = document.getElementById('user-email-display');
+    const voucherContainer = document.getElementById('voucher-container');
+    
+    if (!btnShowLogin || !userProfileBadge) return;
+    
+    if (currentUser) {
+        btnShowLogin.classList.add('hidden');
+        userProfileBadge.classList.remove('hidden');
+        userProfileBadge.classList.add('flex');
+        if(emailDisplay) emailDisplay.innerText = currentUser.email;
+        if(voucherContainer) voucherContainer.classList.add('hidden');
+    } else {
+        btnShowLogin.classList.remove('hidden');
+        userProfileBadge.classList.add('hidden');
+        userProfileBadge.classList.remove('flex');
+    }
+}
+
+let authMode = 'login'; // 'login' or 'register'
+
+window.showAuthModal = function() {
+    document.getElementById('auth-modal').classList.remove('hidden');
+    document.getElementById('auth-modal').classList.add('flex');
+};
+
+window.hideAuthModal = function() {
+    document.getElementById('auth-modal').classList.add('hidden');
+    document.getElementById('auth-modal').classList.remove('flex');
+    document.getElementById('auth-error-msg').classList.add('hidden');
+};
+
+window.toggleAuthMode = function() {
+    authMode = authMode === 'login' ? 'register' : 'login';
+    const title = document.getElementById('auth-modal-title');
+    const btn = document.getElementById('auth-submit-btn');
+    const toggleText = document.getElementById('auth-toggle-text');
+    
+    if (authMode === 'login') {
+        title.innerText = "Masuk ke Akun";
+        btn.innerText = "Masuk";
+        toggleText.innerHTML = 'Belum punya akun? <a href="#" onclick="toggleAuthMode()" class="text-brand-gold font-bold hover:underline">Daftar sekarang</a>';
+    } else {
+        title.innerText = "Daftar Akun Baru";
+        btn.innerText = "Daftar";
+        toggleText.innerHTML = 'Sudah punya akun? <a href="#" onclick="toggleAuthMode()" class="text-brand-gold font-bold hover:underline">Masuk sekarang</a>';
+    }
+};
+
+window.handleAuthSubmit = async function(e) {
+    e.preventDefault();
+    if (!supabase) {
+        showAuthError("Koneksi Supabase gagal. Cek jaringan Anda.");
+        return;
+    }
+    
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    const btn = document.getElementById('auth-submit-btn');
+    const originalText = btn.innerText;
+    
+    btn.disabled = true;
+    btn.innerText = "Memproses...";
+    
+    try {
+        if (authMode === 'register') {
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) throw error;
+            if (data.user && data.user.identities && data.user.identities.length === 0) {
+                showAuthError("Email sudah terdaftar. Silakan login.");
+            } else {
+                alert("Pendaftaran berhasil! Anda otomatis masuk.");
+                hideAuthModal();
+            }
+        } else {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            hideAuthModal();
+        }
+    } catch (error) {
+        showAuthError(error.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = originalText;
+    }
+};
+
+function showAuthError(msg) {
+    const el = document.getElementById('auth-error-msg');
+    el.innerText = msg;
+    el.classList.remove('hidden');
+}
+
+window.handleSupabaseLogout = async function() {
+    if (!supabase) return;
+    const { error } = await supabase.auth.signOut();
+    if (error) alert("Error logout: " + error.message);
+    else {
+        appState.examHistory = [];
+        appState.savedVideos = [];
+        appState.savedExplanations = [];
+        renderExamHistory();
+        renderSavedVideos();
+        renderSavedExplanations();
+        alert("Berhasil keluar.");
+    }
+};
+
+async function syncDataFromCloud() {
+    if (!currentUser || !supabase) return;
+    
+    try {
+        // Sync Exam History
+        const { data: historyData } = await supabase.from('exam_history').select('*').order('date', { ascending: false });
+        if (historyData) {
+            appState.examHistory = historyData.map(row => ({
+                id: row.id,
+                timestamp: new Date(row.date).getTime(),
+                date: window.formatDate(new Date(row.date).getTime()),
+                modeName: row.mode,
+                isSKDFull: row.mode === "SKD Full",
+                passed: row.is_passed,
+                details: {
+                    TWK: row.twk_score,
+                    TIU: row.tiu_score,
+                    TKP: row.tkp_score,
+                    Total: row.total_score,
+                    status: row.is_passed ? 'LULUS PASSING GRADE' : 'TIDAK LULUS / SELESAI',
+                    Max: 0, Percentage: 0 // Default for single mode fallback
+                }
+            }));
+            renderExamHistory();
+        }
+        
+        // Sync Videos
+        const { data: videoData } = await supabase.from('saved_videos').select('*').order('created_at', { ascending: false });
+        if (videoData) {
+            appState.savedVideos = videoData.map(row => ({
+                id: row.id,
+                videoId: row.video_id,
+                title: row.title,
+                desc: row.category || ''
+            }));
+            renderSavedVideos();
+        }
+        
+        // Sync Explanations
+        const { data: explData } = await supabase.from('saved_explanations').select('*').order('created_at', { ascending: false });
+        if (explData) {
+            appState.savedExplanations = explData.map(row => ({
+                id: row.id,
+                question_data: row.question_data,
+                created_at: row.created_at
+            }));
+            renderSavedExplanations();
+        }
+    } catch (e) {
+        console.error("Cloud sync error", e);
+    }
+}
+
+
+// -----------------------------------------------------------------
+// CONFIGURATION & STATE
+// -----------------------------------------------------------------
+let YOUTUBE_API_KEY = "MASUKKAN_YOUTUBE_API_KEY_ANDA";
+let GEMINI_API_KEY = "MASUKKAN_GEMINI_API_KEY_ANDA";
 
 // -----------------------------------------------------------------
 // EXAM LOGIC & UI
@@ -1190,8 +1399,24 @@ PENTING: JANGAN SEKALI-KALI menggunakan sintaks LaTeX atau MathJax (seperti $...
         
         btn.classList.add('hidden');
         contentDiv.classList.remove('hidden');
-        // use marked.js to parse markdown
-        contentDiv.innerHTML = marked.parse(textRes);
+        
+        const htmlContent = marked.parse(textRes);
+        
+        // Add save button
+        const saveBtnHtml = `
+            <div class="mt-4 flex justify-end">
+                <button onclick="toggleSaveExplanation(${idx}, this)" class="text-xs font-bold bg-brand-navy border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-navy px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                    Simpan Penjelasan
+                </button>
+            </div>
+        `;
+        
+        contentDiv.innerHTML = htmlContent + saveBtnHtml;
+        
+        // Save the raw text to memory so we can save it to DB
+        q.aiExplanation = textRes;
+        
     } catch (error) {
         btn.innerHTML = `Gagal. Coba lagi`;
         btn.disabled = false;
@@ -1349,18 +1574,18 @@ PENTING: Jika deskripsi video kosong atau tidak jelas, cobalah menebak materi da
 // ==========================================
 // SAVED VIDEOS LOGIC
 // ==========================================
-window.toggleSaveVideo = function(videoId, encTitle, encDesc, btn) {
+window.toggleSaveVideo = async function(videoId, encTitle, encDesc, btn) {
     const title = decodeURIComponent(encTitle);
     const desc = decodeURIComponent(encDesc);
     const isSaved = appState.savedVideos.some(v => v.videoId === videoId);
+    
+    // Optimistic UI Update
     if (isSaved) {
-        // Remove
         appState.savedVideos = appState.savedVideos.filter(v => v.videoId !== videoId);
         btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>`;
         btn.classList.remove('text-brand-gold');
         btn.classList.add('text-gray-400');
     } else {
-        // Save
         appState.savedVideos.push({ videoId, title, desc });
         btn.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3a2 2 0 00-2 2v16l7-3.5 7 3.5V5a2 2 0 00-2-2H5z"></path></svg>`;
         btn.classList.remove('text-gray-400');
@@ -1368,7 +1593,17 @@ window.toggleSaveVideo = function(videoId, encTitle, encDesc, btn) {
     }
     localStorage.setItem('savedVideos', JSON.stringify(appState.savedVideos));
     
-    // Auto re-render if we are in the saved videos tab
+    // Cloud Sync
+    if (currentUser && supabase) {
+        try {
+            if (isSaved) {
+                await supabase.from('saved_videos').delete().match({ user_id: currentUser.id, video_id: videoId });
+            } else {
+                await supabase.from('saved_videos').insert([{ user_id: currentUser.id, video_id: videoId, title, category: desc }]);
+            }
+        } catch (e) { console.error("Video Cloud Save Error:", e); }
+    }
+    
     if (els.tabContentTersimpan && !els.tabContentTersimpan.classList.contains('hidden')) {
         renderSavedVideos();
     }
@@ -1417,6 +1652,129 @@ window.renderSavedVideos = function() {
     });
     
     els.savedVideosGrid.innerHTML = htmlStr;
+};
+
+// ==========================================
+// SAVED EXPLANATIONS LOGIC
+// ==========================================
+window.toggleSaveExplanation = async function(idx, btn) {
+    const q = appState.questions[idx];
+    if (!q || !q.aiExplanation) return;
+    
+    // Structure what we want to save
+    const questionData = {
+        no: q.no,
+        kategori: q.kategori,
+        pertanyaan: q.pertanyaan,
+        pilihan: q.pilihan,
+        kunci: q.kunci,
+        bobotTKP: q.bobotTKP,
+        aiExplanation: q.aiExplanation,
+        timestamp: Date.now()
+    };
+    
+    // Update State (Local)
+    appState.savedExplanations.unshift({ id: Date.now().toString(), question_data: questionData, created_at: new Date().toISOString() });
+    localStorage.setItem('savedExplanations', JSON.stringify(appState.savedExplanations));
+    
+    // Update Button UI temporarily
+    const ogHtml = btn.innerHTML;
+    btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Tersimpan!`;
+    btn.classList.add('bg-brand-gold', 'text-brand-navy');
+    btn.classList.remove('bg-brand-navy', 'text-brand-gold');
+    
+    // Cloud Sync
+    if (currentUser && supabase) {
+        try {
+            await supabase.from('saved_explanations').insert([{ user_id: currentUser.id, question_data: questionData }]);
+            // Re-sync to get proper UUID
+            syncDataFromCloud();
+        } catch (e) { console.error("Expl Cloud Save Error:", e); }
+    }
+    
+    if (document.getElementById('saved-explanations-list') && !document.getElementById('tab-content-tersimpan').classList.contains('hidden')) {
+        renderSavedExplanations();
+    }
+    
+    setTimeout(() => {
+        btn.innerHTML = ogHtml;
+        btn.classList.remove('bg-brand-gold', 'text-brand-navy');
+        btn.classList.add('bg-brand-navy', 'text-brand-gold');
+    }, 2000);
+};
+
+window.deleteSavedExplanation = async function(id) {
+    if(!confirm("Hapus penjelasan ini dari tersimpan?")) return;
+    
+    appState.savedExplanations = appState.savedExplanations.filter(e => e.id !== id);
+    localStorage.setItem('savedExplanations', JSON.stringify(appState.savedExplanations));
+    
+    if (currentUser && supabase) {
+        try {
+            await supabase.from('saved_explanations').delete().eq('id', id);
+        } catch (e) { console.error("Expl Cloud Delete Error:", e); }
+    }
+    renderSavedExplanations();
+};
+
+window.renderSavedExplanations = function() {
+    const listContainer = document.getElementById('saved-explanations-list');
+    const emptyState = document.getElementById('saved-explanations-empty');
+    if (!listContainer || !emptyState) return;
+    
+    listContainer.innerHTML = '';
+    
+    if (appState.savedExplanations.length === 0) {
+        listContainer.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        return;
+    }
+    
+    listContainer.classList.remove('hidden');
+    emptyState.classList.add('hidden');
+    emptyState.classList.remove('flex');
+    
+    appState.savedExplanations.forEach(expl => {
+        const q = expl.question_data;
+        const div = document.createElement('div');
+        div.className = 'glass p-5 md:p-6 rounded-2xl border border-gray-700/50 shadow-sm mb-4';
+        
+        let optionsHtml = `<div class="mt-4 space-y-2">`;
+        if (q.pilihan) {
+            Object.entries(q.pilihan).forEach(([key, text]) => {
+                let bgClass = "bg-brand-surface border-gray-800";
+                if (q.kategori !== 'TKP' && key === q.kunci) {
+                    bgClass = "bg-green-900/30 border-green-800";
+                } else if (q.kategori === 'TKP' && q.bobotTKP && q.bobotTKP[key] === 5) {
+                    bgClass = "bg-green-900/30 border-green-800";
+                }
+                optionsHtml += `<div class="p-3 rounded-lg border ${bgClass} flex"><span class="font-bold mr-3 text-brand-gold w-5">${key}.</span><span class="text-gray-300 text-sm">${text}</span></div>`;
+            });
+        }
+        optionsHtml += `</div>`;
+        
+        div.innerHTML = `
+            <div class="flex justify-between items-start mb-4 border-b border-gray-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-brand-gold bg-brand-surface border border-brand-gold/30 px-3 py-1 rounded-md text-sm">${q.kategori}</span>
+                    <span class="text-xs text-gray-500">${window.formatDate(q.timestamp || Date.parse(expl.created_at))}</span>
+                </div>
+                <button onclick="deleteSavedExplanation('${expl.id}')" class="text-gray-500 hover:text-red-500 transition p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+            </div>
+            <p class="text-gray-200 font-medium mb-4 whitespace-pre-wrap">${q.pertanyaan}</p>
+            ${optionsHtml}
+            <div class="mt-6 pt-4 border-t border-brand-gold/20">
+                <h5 class="text-brand-gold font-bold text-sm mb-3 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Penjelasan AI</h5>
+                <div class="prose prose-sm prose-invert max-w-none text-gray-300 bg-brand-surface/50 p-4 rounded-xl border border-gray-800">
+                    ${marked.parse(q.aiExplanation)}
+                </div>
+            </div>
+        `;
+        listContainer.appendChild(div);
+    });
 };
 
 window.openSavedVideo = function(videoId, encTitle, encDesc) {
@@ -1476,19 +1834,40 @@ window.openSavedVideo = function(videoId, encTitle, encDesc) {
 // -----------------------------------------------------------------
 
 window.getExamHistory = function() {
-    return JSON.parse(localStorage.getItem('examHistory')) || [];
+    return appState.examHistory || [];
 };
 
-window.saveExamHistory = function(historyData) {
-    const history = window.getExamHistory();
-    history.unshift(historyData); // add to front
-    if (history.length > 50) history.pop();
-    localStorage.setItem('examHistory', JSON.stringify(history));
+window.saveExamHistory = async function(historyData) {
+    appState.examHistory.unshift(historyData);
+    if (appState.examHistory.length > 50) appState.examHistory.pop();
+    localStorage.setItem('examHistory', JSON.stringify(appState.examHistory));
+    
+    if (currentUser && supabase) {
+        try {
+            await supabase.from('exam_history').insert([{
+                user_id: currentUser.id,
+                date: new Date(historyData.timestamp).toISOString(),
+                mode: historyData.modeName,
+                total_score: historyData.details.Total || 0,
+                twk_score: historyData.details.TWK || 0,
+                tiu_score: historyData.details.TIU || 0,
+                tkp_score: historyData.details.TKP || 0,
+                is_passed: historyData.passed
+            }]);
+        } catch (e) { console.error("Cloud Save Error:", e); }
+    }
 };
 
-window.clearExamHistory = function() {
+window.clearExamHistory = async function() {
     if(confirm("Apakah Anda yakin ingin menghapus seluruh riwayat ujian?")) {
+        appState.examHistory = [];
         localStorage.removeItem('examHistory');
+        
+        if (currentUser && supabase) {
+            try {
+                await supabase.from('exam_history').delete().eq('user_id', currentUser.id);
+            } catch (e) { console.error(e); }
+        }
         window.renderExamHistory();
     }
 };

@@ -37,7 +37,7 @@
     <!-- Force Cache Busting Script -->
     <script>
         (function(){
-            const currentVersion = 'v36';
+            const currentVersion = 'v39';
             const urlParams = new URLSearchParams(window.location.search);
             
             if (localStorage.getItem('appVersion') !== currentVersion || urlParams.has('clear')) {
@@ -130,7 +130,22 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                 Formasi: Calon Taruna/Praja | Passing Grade 2026
             </div>
-            <button id="btn-logout" class="px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white text-xs rounded transition hidden shadow-sm" onclick="logout()">Keluar / Ganti Voucher</button>
+            <div id="auth-ui-container" class="flex items-center gap-2">
+                <button id="btn-show-login" class="px-4 py-2 bg-brand-gold hover:bg-yellow-400 text-brand-navy font-bold text-xs rounded-xl transition shadow-[0_0_15px_rgba(212,175,55,0.4)] flex items-center gap-2" onclick="showAuthModal()">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                    Masuk
+                </button>
+                <div id="user-profile-badge" class="hidden items-center gap-3">
+                    <div class="flex flex-col items-end hidden md:flex">
+                        <span class="text-xs font-bold text-brand-gold" id="user-email-display">user@email.com</span>
+                        <span class="text-[10px] text-gray-400">Terhubung ke Cloud</span>
+                    </div>
+                    <button id="btn-supabase-logout" class="px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white text-xs rounded-lg transition shadow-sm flex items-center gap-1" onclick="handleSupabaseLogout()">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        Keluar
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -596,24 +611,40 @@
                     </div>
                 </div>
 
-                <!-- TAB 4: Video Tersimpan -->
+                <!-- TAB 4: Koleksi Tersimpan -->
                     <div id="tab-content-tersimpan" class="hidden w-full max-w-4xl mx-auto flex-col min-h-[50vh]">
                         <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-700/50 pb-4">
                             <div>
                                 <h3 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
                                     <svg class="w-6 h-6 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
-                                    Video Tersimpan
+                                    Koleksi Tersimpan
                                 </h3>
-                                <p class="text-sm text-gray-400 mt-1">Daftar video materi yang telah Anda simpan.</p>
+                                <p class="text-sm text-gray-400 mt-1">Daftar video materi dan penjelasan soal yang telah Anda simpan ke Cloud.</p>
                             </div>
                         </div>
 
-                        <div id="saved-videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Video Section -->
+                        <h4 class="text-lg font-bold text-brand-gold mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Video Pembelajaran
+                        </h4>
+                        <div id="saved-videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
                             <!-- Injected by JS -->
                         </div>
-                        <div id="saved-videos-empty" class="hidden flex-col items-center justify-center py-20 text-center opacity-70">
-                            <svg class="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                        <div id="saved-videos-empty" class="hidden flex-col items-center justify-center py-10 text-center opacity-70 mb-10">
                             <p class="text-gray-400 font-medium">Belum ada video yang disimpan.</p>
+                        </div>
+
+                        <!-- Penjelasan Section -->
+                        <h4 class="text-lg font-bold text-brand-gold mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Penjelasan Soal
+                        </h4>
+                        <div id="saved-explanations-list" class="flex flex-col gap-4">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div id="saved-explanations-empty" class="hidden flex-col items-center justify-center py-10 text-center opacity-70">
+                            <p class="text-gray-400 font-medium">Belum ada penjelasan soal yang disimpan.</p>
                         </div>
                     </div>
                     
@@ -902,6 +933,43 @@
         </section>
     </main>
     </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-brand-navy border border-gray-700 rounded-2xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 gold-gradient"></div>
+            <button onclick="hideAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800/50 p-2 rounded-full transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="text-center mb-6">
+                <h3 id="auth-modal-title" class="text-2xl font-bold text-white mb-2">Masuk ke Akun</h3>
+                <p class="text-sm text-gray-400">Simpan riwayat ujian dan materi ke Cloud</p>
+            </div>
+
+            <form id="auth-form" class="space-y-4" onsubmit="handleAuthSubmit(event)">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">Email</label>
+                    <input type="email" id="auth-email" required class="w-full bg-brand-surface border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all" placeholder="nama@email.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1">Password</label>
+                    <input type="password" id="auth-password" required minlength="6" class="w-full bg-brand-surface border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all" placeholder="Minimal 6 karakter">
+                </div>
+                <div id="auth-error-msg" class="text-red-400 text-xs text-center hidden font-medium bg-red-900/20 py-2 rounded"></div>
+                <button type="submit" id="auth-submit-btn" class="w-full gold-gradient text-brand-navy font-bold py-3 rounded-lg shadow-lg hover:shadow-yellow-500/30 transition-all mt-4 flex justify-center items-center gap-2">
+                    Masuk
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-sm text-gray-400 border-t border-gray-800 pt-4">
+                <p id="auth-toggle-text">Belum punya akun? <a href="#" onclick="toggleAuthMode()" class="text-brand-gold font-bold hover:underline">Daftar sekarang</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Data Referensi Tertanam -->
     <script src="data-referensi.js"></script>
