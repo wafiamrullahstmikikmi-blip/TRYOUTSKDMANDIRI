@@ -38,18 +38,29 @@ const MODES = {
     6: { name: "Bahasa Inggris", count: 30, duration: 30 * 60, kategori: "Bahasa Inggris" }
 };
 
+function safeJSONParse(key, fallback) {
+    try {
+        const val = localStorage.getItem(key);
+        if (!val || val === "undefined") return fallback;
+        return JSON.parse(val) || fallback;
+    } catch (e) {
+        console.error("Local storage parse error for", key, e);
+        return fallback;
+    }
+}
+
 // State
 let appState = {
     isLoggedIn: false,
     selectedMode: 1,
-    questions: [], // Array of questions
-    userAnswers: {}, // { questionIndex: { answer: 'A', ragu: false } }
+    questions: [],
+    userAnswers: {},
     currentQuestionIndex: 0,
     timerSeconds: MODES[1].duration,
     timerInterval: null,
-    examHistory: JSON.parse(localStorage.getItem('examHistory')) || [],
-    savedVideos: JSON.parse(localStorage.getItem('savedVideos')) || [],
-    savedExplanations: JSON.parse(localStorage.getItem('savedExplanations')) || []
+    examHistory: safeJSONParse('examHistory', []),
+    savedVideos: safeJSONParse('savedVideos', []),
+    savedExplanations: safeJSONParse('savedExplanations', [])
 };
 
 // DOM Elements
@@ -799,6 +810,18 @@ function showAuthError(msg) {
     el.innerText = msg;
     el.classList.remove('hidden');
 }
+
+window.handleGoogleLogin = async function() {
+    if (!supabase) return;
+    try {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google'
+        });
+        if (error) throw error;
+    } catch (error) {
+        alert("Google Login Error: " + error.message);
+    }
+};
 
 window.handleSupabaseLogout = async function() {
     if (!supabase) return;
