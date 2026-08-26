@@ -692,14 +692,12 @@ async function checkSession() {
     const { data: { session } } = await supabase.auth.getSession();
     currentUser = session ? session.user : null;
     updateAuthUI();
+    
     if (currentUser) {
         await syncDataFromCloud();
     } else {
-        // Force user to login page/modal on first visit
-        const hasVoucher = localStorage.getItem('isLoggedIn') === 'true';
-        if (!hasVoucher) {
-            showAuthModal();
-        }
+        // ALWAYS force user to login via Supabase first, before anything else
+        showAuthModal();
     }
 }
 
@@ -729,7 +727,6 @@ function updateAuthUI() {
         userProfileBadge.classList.remove('hidden');
         userProfileBadge.classList.add('flex');
         if(emailDisplay) emailDisplay.innerText = currentUser.email;
-        if(voucherContainer) voucherContainer.classList.add('hidden');
     } else {
         btnShowLogin.classList.remove('hidden');
         userProfileBadge.classList.add('hidden');

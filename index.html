@@ -37,7 +37,7 @@
     <!-- Force Cache Busting Script -->
     <script>
         (function(){
-            const currentVersion = 'v42';
+            const currentVersion = 'v43';
             const urlParams = new URLSearchParams(window.location.search);
             
             if (localStorage.getItem('appVersion') !== currentVersion || urlParams.has('clear')) {
@@ -926,7 +926,7 @@
                 </div>
 
                 <!-- Discussion List -->
-                <div id="discussion-list" class="space-y-6">
+            <div id="discussion-list" class="space-y-6">
                     <!-- Dynamic evaluation items will be injected here -->
                 </div>
             </div>
@@ -934,17 +934,16 @@
     </main>
     </div>
 
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-brand-navy border border-gray-700 rounded-2xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 gold-gradient"></div>
-            <button onclick="hideAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800/50 p-2 rounded-full transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+    <!-- Auth Modal / Page -->
+    <div id="auth-modal" class="fixed inset-0 bg-brand-navy z-[100] hidden items-center justify-center p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-md relative shadow-2xl border border-gray-700/50 text-center">
             
-            <div class="text-center mb-6">
-                <h3 id="auth-modal-title" class="text-2xl font-bold text-white mb-2">Masuk ke Akun</h3>
-                <p class="text-sm text-gray-400">Simpan riwayat ujian dan materi ke Cloud</p>
+            <div class="mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-brand-gold to-yellow-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-brand-gold/20 mb-4">
+                    <svg class="w-8 h-8 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-black text-white" id="auth-title">Masuk Akun</h3>
+                <p class="text-sm text-gray-400 mt-2">Silakan login untuk menyimpan riwayat dan melanjutkan ke halaman Voucher.</p>
             </div>
 
             <form id="auth-form" class="space-y-4" onsubmit="handleAuthSubmit(event)">
@@ -983,12 +982,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Data Referensi Tertanam -->
-    <script src="data-referensi.js?v=42"></script>
+    <script src="data-referensi.js?v=43"></script>
     
     <!-- Markdown Parser for AI explanations -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
-    <script src="app.js?v=42"></script>
+    <script src="app.js?v=43"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
