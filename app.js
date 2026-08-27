@@ -1568,7 +1568,7 @@ window.toggleSaveExplanation = async function(idx, btn) {
         } catch (e) { console.error("Expl Cloud Save Error:", e); }
     }
     
-    if (document.getElementById('saved-explanations-list') && !document.getElementById('tab-content-tersimpan').classList.contains('hidden')) {
+    if (document.getElementById('saved-explanations-container') && !document.getElementById('tab-content-tersimpan').classList.contains('hidden')) {
         renderSavedExplanations();
     }
     
@@ -1593,14 +1593,74 @@ window.deleteSavedExplanation = async function(id) {
     renderSavedExplanations();
 };
 
+let currentOpenCategory = null;
+
+window.openSavedCategory = function(catKey, title) {
+    currentOpenCategory = catKey;
+    const mainView = document.getElementById('tersimpan-main-view');
+    const detailView = document.getElementById('tersimpan-detail-view');
+    if(mainView && detailView) {
+        mainView.classList.add('hidden');
+        detailView.classList.remove('hidden');
+        document.getElementById('detail-category-title').innerText = "Penjelasan Soal - " + title;
+        renderCategoryItems(catKey);
+    }
+};
+
+window.closeSavedCategory = function() {
+    currentOpenCategory = null;
+    const mainView = document.getElementById('tersimpan-main-view');
+    const detailView = document.getElementById('tersimpan-detail-view');
+    if(mainView && detailView) {
+        detailView.classList.add('hidden');
+        mainView.classList.remove('hidden');
+        renderSavedExplanations();
+    }
+};
+
 window.renderSavedExplanations = function() {
-    const listContainer = document.getElementById('saved-explanations-list');
-    const emptyState = document.getElementById('saved-explanations-empty');
+    let counts = { twk: 0, tiu: 0, tkp: 0, bahasa: 0 };
+    
+    appState.savedExplanations.forEach(expl => {
+        const q = expl.question_data;
+        let catKey = 'bahasa';
+        if (q.kategori === 'TWK') catKey = 'twk';
+        else if (q.kategori === 'TIU') catKey = 'tiu';
+        else if (q.kategori === 'TKP') catKey = 'tkp';
+        
+        counts[catKey]++;
+    });
+    
+    const cats = ['twk', 'tiu', 'tkp', 'bahasa'];
+    cats.forEach(c => {
+        const countBtn = document.getElementById('count-btn-' + c);
+        if(countBtn) {
+            countBtn.innerText = counts[c] + " Tersimpan";
+        }
+    });
+
+    if (currentOpenCategory) {
+        renderCategoryItems(currentOpenCategory);
+    }
+};
+
+window.renderCategoryItems = function(catKey) {
+    const listContainer = document.getElementById('detail-category-list');
+    const emptyState = document.getElementById('detail-category-empty');
     if (!listContainer || !emptyState) return;
     
     listContainer.innerHTML = '';
     
-    if (appState.savedExplanations.length === 0) {
+    const filteredExplanations = appState.savedExplanations.filter(expl => {
+        const q = expl.question_data;
+        let cKey = 'bahasa';
+        if (q.kategori === 'TWK') cKey = 'twk';
+        else if (q.kategori === 'TIU') cKey = 'tiu';
+        else if (q.kategori === 'TKP') cKey = 'tkp';
+        return cKey === catKey;
+    });
+    
+    if (filteredExplanations.length === 0) {
         listContainer.classList.add('hidden');
         emptyState.classList.remove('hidden');
         emptyState.classList.add('flex');
@@ -1611,24 +1671,10 @@ window.renderSavedExplanations = function() {
     emptyState.classList.add('hidden');
     emptyState.classList.remove('flex');
     
-    appState.savedExplanations.forEach(expl => {
+    filteredExplanations.forEach(expl => {
         const q = expl.question_data;
         const div = document.createElement('div');
         div.className = 'glass p-5 md:p-6 rounded-2xl border border-gray-700/50 shadow-sm mb-4';
-        
-        let optionsHtml = `<div class="mt-4 space-y-2">`;
-        if (q.pilihan) {
-            Object.entries(q.pilihan).forEach(([key, text]) => {
-                let bgClass = "bg-brand-surface border-gray-800";
-                if (q.kategori !== 'TKP' && key === q.kunci) {
-                    bgClass = "bg-green-900/30 border-green-800";
-                } else if (q.kategori === 'TKP' && q.bobotTKP && q.bobotTKP[key] === 5) {
-                    bgClass = "bg-green-900/30 border-green-800";
-                }
-                optionsHtml += `<div class="p-3 rounded-lg border ${bgClass} flex"><span class="font-bold mr-3 text-brand-gold w-5">${key}.</span><span class="text-gray-300 text-sm">${text}</span></div>`;
-            });
-        }
-        optionsHtml += `</div>`;
         
         div.innerHTML = `
             <div class="flex justify-between items-start mb-4 border-b border-gray-800 pb-3">
@@ -1636,16 +1682,14 @@ window.renderSavedExplanations = function() {
                     <span class="font-bold text-brand-gold bg-brand-surface border border-brand-gold/30 px-3 py-1 rounded-md text-sm">${q.kategori}</span>
                     <span class="text-xs text-gray-500">${window.formatDate(q.timestamp || Date.parse(expl.created_at))}</span>
                 </div>
-                <button onclick="deleteSavedExplanation('${expl.id}')" class="text-gray-500 hover:text-red-500 transition p-2">
+                <button onclick="deleteSavedExplanation('${expl.id}')" class="text-gray-500 hover:text-red-500 transition p-2" title="Hapus">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
             </div>
-            <p class="text-gray-200 font-medium mb-4 whitespace-pre-wrap">${q.pertanyaan}</p>
-            ${optionsHtml}
-            <div class="mt-6 pt-4 border-t border-brand-gold/20">
+            <div>
                 <h5 class="text-brand-gold font-bold text-sm mb-3 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Penjelasan AI</h5>
                 <div class="prose prose-sm prose-invert max-w-none text-gray-300 bg-brand-surface/50 p-4 rounded-xl border border-gray-800">
-                    ${marked.parse(q.aiExplanation)}
+                    ${marked.parse(q.aiExplanation || "Penjelasan AI tidak tersedia.")}
                 </div>
             </div>
         `;

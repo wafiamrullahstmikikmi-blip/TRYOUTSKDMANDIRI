@@ -590,39 +590,82 @@
                 </div>
 
                 <!-- TAB 4: Koleksi Tersimpan -->
-                    <div id="tab-content-tersimpan" class="hidden w-full max-w-4xl mx-auto flex-col min-h-[50vh]">
-                        <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-700/50 pb-4">
-                            <div>
-                                <h3 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-                                    <svg class="w-6 h-6 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
-                                    Koleksi Tersimpan
-                                </h3>
-                                <p class="text-sm text-gray-400 mt-1">Daftar video materi dan penjelasan soal yang telah Anda simpan ke Cloud.</p>
+                <div id="tab-content-tersimpan" class="hidden w-full max-w-4xl mx-auto flex-col min-h-[50vh]">
+                        
+                        <!-- MAIN VIEW -->
+                        <div id="tersimpan-main-view" class="w-full flex-col">
+                            <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-700/50 pb-4">
+                                <div>
+                                    <h3 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+                                        <svg class="w-6 h-6 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                        Koleksi Tersimpan
+                                    </h3>
+                                    <p class="text-sm text-gray-400 mt-1">Daftar video materi dan penjelasan soal yang telah Anda simpan ke Cloud.</p>
+                                </div>
+                            </div>
+
+                            <!-- Video Section -->
+                            <h4 class="text-lg font-bold text-brand-gold mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Video Pembelajaran
+                            </h4>
+                            <div id="saved-videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                                <!-- Injected by JS -->
+                            </div>
+                            <div id="saved-videos-empty" class="hidden flex-col items-center justify-center py-10 text-center opacity-70 mb-10">
+                                <p class="text-gray-400 font-medium">Belum ada video yang disimpan.</p>
+                            </div>
+
+                            <!-- Penjelasan Section -->
+                            <h4 class="text-lg font-bold text-brand-gold mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Penjelasan Soal
+                            </h4>
+                            
+                            <!-- 4 Category Buttons -->
+                            <div id="saved-expl-buttons" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <button onclick="openSavedCategory('twk', 'TWK (Tes Wawasan Kebangsaan)')" class="glass p-5 rounded-2xl border border-gray-700/50 hover:bg-gray-800 transition flex flex-col items-center justify-center text-center group">
+                                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🇮🇩</div>
+                                    <h5 class="font-bold text-brand-gold text-sm mb-1">TWK</h5>
+                                    <span id="count-btn-twk" class="text-xs text-gray-400 bg-brand-surface px-2 py-1 rounded-full">0 Tersimpan</span>
+                                </button>
+                                <button onclick="openSavedCategory('tiu', 'TIU (Tes Inteligensia Umum)')" class="glass p-5 rounded-2xl border border-gray-700/50 hover:bg-gray-800 transition flex flex-col items-center justify-center text-center group">
+                                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🔢</div>
+                                    <h5 class="font-bold text-brand-gold text-sm mb-1">TIU</h5>
+                                    <span id="count-btn-tiu" class="text-xs text-gray-400 bg-brand-surface px-2 py-1 rounded-full">0 Tersimpan</span>
+                                </button>
+                                <button onclick="openSavedCategory('tkp', 'TKP (Tes Karakteristik Pribadi)')" class="glass p-5 rounded-2xl border border-gray-700/50 hover:bg-gray-800 transition flex flex-col items-center justify-center text-center group">
+                                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🤝</div>
+                                    <h5 class="font-bold text-brand-gold text-sm mb-1">TKP</h5>
+                                    <span id="count-btn-tkp" class="text-xs text-gray-400 bg-brand-surface px-2 py-1 rounded-full">0 Tersimpan</span>
+                                </button>
+                                <button onclick="openSavedCategory('bahasa', 'Bahasa (Indonesia/Inggris)')" class="glass p-5 rounded-2xl border border-gray-700/50 hover:bg-gray-800 transition flex flex-col items-center justify-center text-center group">
+                                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">📚</div>
+                                    <h5 class="font-bold text-brand-gold text-sm mb-1">Bahasa</h5>
+                                    <span id="count-btn-bahasa" class="text-xs text-gray-400 bg-brand-surface px-2 py-1 rounded-full">0 Tersimpan</span>
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Video Section -->
-                        <h4 class="text-lg font-bold text-brand-gold mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Video Pembelajaran
-                        </h4>
-                        <div id="saved-videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                            <!-- Injected by JS -->
-                        </div>
-                        <div id="saved-videos-empty" class="hidden flex-col items-center justify-center py-10 text-center opacity-70 mb-10">
-                            <p class="text-gray-400 font-medium">Belum ada video yang disimpan.</p>
-                        </div>
+                        <!-- DETAIL VIEW (Empty Category Page) -->
+                        <div id="tersimpan-detail-view" class="hidden w-full flex-col animate-fadeIn">
+                            <div class="mb-6 flex items-center gap-4 border-b border-gray-700/50 pb-4">
+                                <button onclick="closeSavedCategory()" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition flex items-center justify-center">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                </button>
+                                <div>
+                                    <h3 id="detail-category-title" class="text-xl md:text-2xl font-bold text-brand-gold">Penjelasan Soal</h3>
+                                </div>
+                            </div>
+                            
+                            <div id="detail-category-empty" class="hidden flex-col items-center justify-center py-20 text-center opacity-70">
+                                <svg class="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <p class="text-gray-400 font-medium">Belum ada penjelasan yang disimpan di kategori ini.</p>
+                            </div>
 
-                        <!-- Penjelasan Section -->
-                        <h4 class="text-lg font-bold text-brand-gold mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            Penjelasan Soal
-                        </h4>
-                        <div id="saved-explanations-list" class="flex flex-col gap-4">
-                            <!-- Injected by JS -->
-                        </div>
-                        <div id="saved-explanations-empty" class="hidden flex-col items-center justify-center py-10 text-center opacity-70">
-                            <p class="text-gray-400 font-medium">Belum ada penjelasan soal yang disimpan.</p>
+                            <div id="detail-category-list" class="flex flex-col gap-4">
+                                <!-- Injected by JS -->
+                            </div>
                         </div>
                     </div>
                     
