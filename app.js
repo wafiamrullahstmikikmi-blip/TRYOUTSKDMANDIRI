@@ -635,7 +635,37 @@ async function startSimulation() {
     }
 }
 
+// --- BLACKLIST SYSTEM FOR UNIQUENESS ---
+window.topicBlacklist = JSON.parse(localStorage.getItem('topicBlacklist')) || {
+    TWK: { count: 0, topics: [] },
+    TIU: { count: 0, topics: [] },
+    TKP: { count: 0, topics: [] },
+    BAHASA: { count: 0, topics: [] }
+};
+
 async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK') {
+    let catKeyBL = kategori;
+    if (kategori.includes('Bahasa') || kategori.includes('B. Indo') || kategori.includes('B. Ing')) catKeyBL = 'BAHASA';
+    
+    if (!window.topicBlacklist[catKeyBL]) {
+        window.topicBlacklist[catKeyBL] = { count: 0, topics: [] };
+    }
+
+    // Auto reset if 5 exams reached
+    if (window.topicBlacklist[catKeyBL].count >= 5) {
+        window.topicBlacklist[catKeyBL].count = 0;
+        window.topicBlacklist[catKeyBL].topics = [];
+        localStorage.setItem('topicBlacklist', JSON.stringify(window.topicBlacklist));
+    }
+
+    let blacklistWarning = "";
+    let prevTopics = window.topicBlacklist[catKeyBL].topics || [];
+    if (prevTopics.length > 0) {
+        // Pick the last 15 topics to avoid prompt getting too large
+        let recentTopics = prevTopics.slice(-15).join(', ');
+        blacklistWarning = `\nPERINGATAN SANGAT PENTING: DILARANG KERAS membuat soal dengan tema, alur cerita, perhitungan, atau studi kasus yang berhubungan dengan daftar TOPIK berikut: [${recentTopics}]. (Peserta sudah pernah mengerjakan topik-topik tersebut. CARI TEMA/IDE BARU YANG LAIN!).\n`;
+    }
+
     const samples = getRandomSamples(refBank, 3);
     const sampleStr = JSON.stringify(samples, null, 2);
     
@@ -651,7 +681,7 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
     }
 
     const prompt = `Kamu adalah dewan pakar pembuat soal seleksi Kedinasan berstandar HOTS (Higher Order Thinking Skills) tingkat DEWA. Buatkan ${jumlah} soal untuk kategori: ${kategori}.
-
+${blacklistWarning}
 Sebagai acuan MUTLAK mengenai panjang teks, gaya bahasa, kerumitan logika, dan format JSON, gunakan 3 contoh soal referensi asli berikut:
 ${sampleStr}
 
@@ -661,9 +691,27 @@ Tugasmu:
 3. ${instructions}
 4. UNTUK MATEMATIKA: DILARANG KERAS menggunakan sintaks LaTeX/MathJax (seperti $...$, \\frac{}{}, \\times, \\sqrt{}). Gunakan format teks biasa, misal: 1/2, x, akar, =, pangkat.
 
-Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null, "aiExplanation": "Jelaskan logika penyelesaiannya secara singkat"}, ...].`;
+Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null, "aiExplanation": "Jelaskan logika penyelesaiannya secara singkat", "topikSingkat": "Inti topik soal ini (Maksimal 4 kata, misal: 'Korupsi e-KTP' atau 'Deret Fibonacci Bertingkat')"}, ...].`;
 
-    return callGemini(prompt, true, targetKey);
+    let generatedData = await callGemini(prompt, true, targetKey);
+    
+    // Save generated topics to blacklist
+    if (generatedData && Array.isArray(generatedData)) {
+        let addedNew = false;
+        generatedData.forEach(q => {
+            if (q.topikSingkat) {
+                window.topicBlacklist[catKeyBL].topics.push(q.topikSingkat);
+                addedNew = true;
+            }
+        });
+        
+        if (addedNew) {
+            window.topicBlacklist[catKeyBL].count++;
+            localStorage.setItem('topicBlacklist', JSON.stringify(window.topicBlacklist));
+        }
+    }
+    
+    return generatedData;
 }
 
 // -----------------------------------------------------------------
@@ -1836,10 +1884,15 @@ window.renderExamHistory = function() {
                 </div>
             `;
         } else {
+            let maxP = h.details.Max || (h.modeName.includes('TWK') ? 150 : (h.modeName.includes('TIU') ? 175 : 225));
+            let perc = h.details.Percentage || Math.round(((h.details.Total || 0) / maxP) * 100);
+            let displayStatus = h.details.status === "TIDAK LULUS / SELESAI" ? "Selesai" : h.details.status;
+            h.details.status = displayStatus; // clean up old status text
+
             detailsHtml = `
                 <div class="flex flex-wrap gap-3 mt-2">
-                    <span class="px-2 py-1 bg-brand-navy rounded-md text-xs font-semibold text-gray-300 border border-gray-800">Skor: ${h.details.Total} / ${h.details.Max}</span>
-                    <span class="px-2 py-1 bg-brand-surface rounded-md text-xs font-bold text-brand-gold border border-brand-gold/30">Benar: ${h.details.Percentage}%</span>
+                    <span class="px-2 py-1 bg-brand-navy rounded-md text-xs font-semibold text-gray-300 border border-gray-800">Skor: ${h.details.Total} / ${maxP}</span>
+                    <span class="px-2 py-1 bg-brand-surface rounded-md text-xs font-bold text-brand-gold border border-brand-gold/30">Benar: ${perc}%</span>
                 </div>
             `;
         }
