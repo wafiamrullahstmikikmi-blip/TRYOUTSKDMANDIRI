@@ -641,23 +641,27 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
     
     let instructions = "";
     if (kategori === 'TWK') {
-        instructions = `Fokus pada implementasi dan penalaran, berbasis studi kasus tentang Nasionalisme, Integritas, Bela Negara, Pilar Negara, dan implementasi UUD 1945. SANGAT PENTING: Untuk soal yang menyangkut fakta sejarah, nama tokoh, nama perjanjian, atau pasal UUD 1945, Anda WAJIB memastikan datanya 100% akurat sesuai sejarah dan hukum Indonesia. Dilarang keras berhalusinasi atau mengarang isi pasal/fakta. Pikirkan matang-matang dan utamakan keakuratan fakta di atas segalanya saat menentukan kunci jawaban. kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Jangan berikan soal hafalan. Uji kemampuan analisis tingkat tinggi (HOTS) terkait implementasi Nasionalisme, Integritas, Bela Negara, atau UUD 1945. Pilihan ganda (A, B, C, D, E) harus dibuat SANGAT MENGECOH, logis, dan mirip satu sama lain. Fakta sejarah dan pasal konstitusi wajib 100% akurat. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TIU') {
-        instructions = `Cakup Penalaran Analitis (kasus susunan posisi/penjadwalan yang kompleks), Numerik Berhitung Cepat/Deret pecahan bertingkat, dan Serial Figural (MAKSIMAL 4-5 soal figural saja dari total soal). KHUSUS SOAL FIGURAL: Wajib berikan TEPAT 5 (LIMA) deretan tag HTML <svg> murni berdampingan di dalam string 'pertanyaan' untuk menggambar pola urutan gambar. PENTING: Gunakan stroke="white" atau fill="white" pada elemen SVG (JANGAN HITAM) karena latar web berwarna gelap. Jangan gunakan teks pengantar pertanyaan sama sekali untuk soal figural. Selain itu, SEMUA nilai di dalam objek 'pilihan' (A, B, C, D, E) JUGA WAJIB berupa 1 tag <svg> murni, tanpa teks tulisan. kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Cakup Penalaran Analitis (kasus susunan posisi/penjadwalan bersyarat majemuk yang rumit), Numerik Berhitung (aljabar, pecahan, perbandingan umur/kecepatan tingkat lanjut), atau Deret Angka (pola 3 lapis/kombinasi). Pilihan jawaban harus dirancang menjebak. Jika Anda membuat soal Figural, berikan 5 urutan <svg> murni di dalam teks pertanyaan (gunakan stroke/fill warna white/putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TKP') {
-        instructions = `Berbasis kasus dilematis pelayanan publik/kerja. kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik.`;
+        instructions = `Teks soal WAJIB berupa skenario dunia kerja atau pelayanan publik yang SANGAT PANJANG, detail, dan penuh konflik kepentingan/dilema tingkat tinggi. Semua pilihan jawaban (A, B, C, D, E) HARUS terdengar sangat positif, profesional, dan rasional (jangan buat opsi yang jelas-jelas buruk/konyol). Buat tingkat pengecohnya maksimal agar sulit dinilai mana yang poin 5 dan mana yang poin 1. Kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik tanpa duplikat.`;
     } else { // Bahasa
-        instructions = `Soal grammar, reading comprehension, atau ejaan baku sesuai kategori bahasa. Penilaian = Benar 5, Salah 0. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Soal grammar, struktur kalimat kompleks, reading comprehension dari teks panjang, atau ejaan baku sesuai EYD. Tingkat kesulitan advance. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     }
 
-    const prompt = `Kamu adalah pembuat soal ujian seleksi Kedinasan profesional. Buatkan ${jumlah} soal untuk kategori: ${kategori}.
-Gunakan contoh soal referensi berikut sebagai standar kualitas, tingkat kesulitan (HOTS), dan pola penulisan:
+    const prompt = `Kamu adalah dewan pakar pembuat soal seleksi Kedinasan berstandar HOTS (Higher Order Thinking Skills) tingkat DEWA. Buatkan ${jumlah} soal untuk kategori: ${kategori}.
+
+Sebagai acuan MUTLAK mengenai panjang teks, gaya bahasa, kerumitan logika, dan format JSON, gunakan 3 contoh soal referensi asli berikut:
 ${sampleStr}
 
-Tugasmu: Buat soal BARU yang variasi angka/studi kasusnya berbeda dari referensi di atas, tetapi memiliki tingkat kesulitan dan tipe penalaran yang KEMBAR/SELEVEL dengan contoh referensi.
-Instruksi Tambahan: ${instructions}
-PENTING UNTUK MATEMATIKA: JANGAN PERNAH menggunakan sintaks LaTeX atau MathJax (seperti $...$, \\frac{}{}, \\times, \\sqrt{}). Gunakan teks biasa, misal: 1/2, x, akar, =. 
-Output WAJIB berupa JSON Array murni array of objects: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null}, ...].`;
+Tugasmu:
+1. Buat soal BARU yang berbeda sama sekali dari referensi (ubah angka, tokoh, skenario, dan variabel kasus).
+2. TINGKAT KESULITAN HARUS SULIT! Panjang teks dan beban analisis logika HARUS SAMA atau LEBIH SULIT dari referensi.
+3. ${instructions}
+4. UNTUK MATEMATIKA: DILARANG KERAS menggunakan sintaks LaTeX/MathJax (seperti $...$, \\frac{}{}, \\times, \\sqrt{}). Gunakan format teks biasa, misal: 1/2, x, akar, =, pangkat.
+
+Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null, "aiExplanation": "Jelaskan logika penyelesaiannya secara singkat"}, ...].`;
 
     return callGemini(prompt, true, targetKey);
 }
