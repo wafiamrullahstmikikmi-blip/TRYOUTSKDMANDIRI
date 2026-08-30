@@ -159,23 +159,65 @@ function init() {
     // Initializing Cloud Sync
     syncDataFromCloud();
 
-    // Clean up old slider wrappers (migration to modal)
-    document.querySelectorAll('.materi-item').forEach(item => {
-        const sliderWrapper = item.querySelector('.group\\/slider');
-        if (sliderWrapper) sliderWrapper.remove();
-        
-        // Update the button's onclick attribute
-        const btn = item.querySelector('button[onclick^="fetchYouTubeVideo"]');
-        if (btn) {
-            const titleText = item.querySelector('h4').innerText;
-            const onclickStr = btn.getAttribute('onclick');
-            const match = onclickStr.match(/fetchYouTubeVideo\('([^']+)'/);
-            if (match) {
-                const query = match[1];
-                btn.setAttribute('onclick', `fetchYouTubeVideo('${query}', '${titleText}')`);
+    // Replace old hardcoded materi with new dynamic synced list
+    const materiContainer = document.querySelector('#tab-content-materi .space-y-4');
+    if (materiContainer) {
+        // Remove all accordions except the first one (E-Book)
+        const accordions = materiContainer.querySelectorAll('.materi-accordion');
+        accordions.forEach((acc, idx) => {
+            if (idx > 0) acc.remove();
+        });
+
+        const materiData = [
+            {
+                title: '🇮🇩 Tes Wawasan Kebangsaan (TWK)',
+                cat: 'TWK',
+                items: ['Nasionalisme', 'Integritas', 'Bela Negara', 'Pancasila', 'Bhinneka Tunggal Ika', 'NKRI', 'UUD 1945', 'Bahasa Indonesia']
+            },
+            {
+                title: '🔢 Tes Inteligensia Umum (TIU)',
+                cat: 'TIU',
+                items: ['Analogi', 'Silogisme', 'Analitis', 'Operasi Bilangan', 'Deret', 'Perbandingan', 'Jarak, Waktu dan Kecepatan', 'Aritmatika Sosial', 'Kombinatorika', 'Bangun Datar & Bangun Ruang', 'Kuantitatif Datar & Bangun Ruang', 'Kuantitatif Perbandingan', 'Figural Gambar']
+            },
+            {
+                title: '👥 Tes Karakteristik Pribadi (TKP)',
+                cat: 'TKP',
+                items: ['Pelayanan Publik', 'Profesionalisme', 'Jejaring Kerja', 'Sosial Budaya', 'Teknologi Informasi dan Komunikasi', 'Anti Radikalisme']
             }
-        }
-    });
+        ];
+
+        materiData.forEach((section) => {
+            let itemsHtml = '';
+            section.items.forEach((item) => {
+                const query = `${section.cat} ${item}`;
+                itemsHtml += `
+                <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="${query.toLowerCase()}">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                        <div>
+                            <h4 class="font-bold text-white text-base">${item}</h4>
+                            <p class="text-xs text-brand-gold mt-1">Materi ${section.cat}</p>
+                        </div>
+                        <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('${query}', '${item}')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Tonton 10+ Video</span>
+                        </button>
+                    </div>
+                </div>`;
+            });
+
+            const accHtml = `
+            <details class="materi-accordion group mb-4 rounded-3xl bg-brand-navy/30 hover:bg-brand-navy/50 shadow-lg transition-all duration-300 overflow-hidden">
+                <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-800/50 transition-colors font-bold text-brand-gold select-none outline-none">
+                    <span class="flex items-center gap-2">${section.title}</span>
+                    <svg class="w-5 h-5 accordion-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </summary>
+                <div class="p-5 text-sm text-gray-300 space-y-5 materi-list">
+                    ${itemsHtml}
+                </div>
+            </details>`;
+            materiContainer.insertAdjacentHTML('beforeend', accHtml);
+        });
+    }
 
     // Inject Video Modal
     if (!document.getElementById('video-learning-modal')) {
@@ -690,6 +732,7 @@ Tugasmu:
 2. TINGKAT KESULITAN HARUS SULIT! Panjang teks dan beban analisis logika HARUS SAMA atau LEBIH SULIT dari referensi.
 3. ${instructions}
 4. UNTUK MATEMATIKA: DILARANG KERAS menggunakan sintaks LaTeX/MathJax (seperti $...$, \\frac{}{}, \\times, \\sqrt{}). Gunakan format teks biasa, misal: 1/2, x, akar, =, pangkat.
+5. PANJANG JAWABAN: Pastikan panjang teks untuk SEMUA pilihan (A, B, C, D, E) SANGAT MIRIP/SERAGAM. JANGAN biarkan kunci jawaban atau jawaban poin 5 terlihat lebih mencolok/panjang dari yang lain!
 
 Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null, "aiExplanation": "Jelaskan logika penyelesaiannya secara singkat", "topikSingkat": "Inti topik soal ini (Maksimal 4 kata, misal: 'Korupsi e-KTP' atau 'Deret Fibonacci Bertingkat')"}, ...].`;
 
@@ -1393,7 +1436,7 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
     loading.classList.remove('hidden');
 
     try {
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=Materi+SKD+${encodeURIComponent(query)}&type=video&videoEmbeddable=true&key=${YOUTUBE_API_KEY}`;
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&q=Materi+Konsep+Lengkap+${encodeURIComponent(query)}+SKD+CPNS&type=video&videoEmbeddable=true&key=${YOUTUBE_API_KEY}`;
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -1403,8 +1446,12 @@ window.fetchYouTubeVideo = async function(query, moduleTitle) {
         const data = await response.json();
         
         if (data.items && data.items.length > 0) {
-            const shuffledItems = data.items.sort(() => 0.5 - Math.random());
-            const selectedItems = shuffledItems.slice(0, 5);
+            // Keep the first few items in original order as they are usually the most relevant "full materi" videos from top channels,
+            // but also shuffle a bit to keep it fresh
+            const topItems = data.items.slice(0, 5);
+            const otherItems = data.items.slice(5).sort(() => 0.5 - Math.random());
+            
+            const selectedItems = [...topItems, ...otherItems].slice(0, 10);
 
             let htmlStr = '';
             selectedItems.forEach(item => {
