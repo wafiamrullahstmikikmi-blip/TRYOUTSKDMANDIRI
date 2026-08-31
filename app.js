@@ -1055,6 +1055,7 @@ function finishExam() {
 
     clearInterval(appState.timerInterval);
     els.examView.style.display = 'none';
+    els.evaluationView.classList.remove('hidden'); // Safety clear
     els.evaluationView.style.display = '';
     
     calculateAndShowEvaluation();
@@ -1064,11 +1065,11 @@ function finishExam() {
 // EVALUATION & DISCUSSION
 // -----------------------------------------------------------------
 
-function calculateAndShowEvaluation() {
+function calculateAndShowEvaluation(isReview = false) {
     if (appState.selectedMode === 1) {
-        calculateSKDFull();
+        calculateSKDFull(isReview);
     } else {
-        calculateSingleMode();
+        calculateSingleMode(isReview);
     }
     
     // Default show all in discussion list
@@ -1100,7 +1101,7 @@ function calculateAndShowEvaluation() {
     }
 }
 
-function calculateSKDFull() {
+function calculateSKDFull(isReview = false) {
     els.evalMultiDisplay.classList.remove('hidden');
     els.evalSingleDisplay.classList.remove('flex');
     els.evalSingleDisplay.classList.add('hidden');
@@ -1161,23 +1162,25 @@ function calculateSKDFull() {
     renderScoreBar('TKP', scores.TKP, passTKP);
     
     // Save to history
-    window.saveExamHistory({
-        timestamp: Date.now(),
-        date: window.formatDate(Date.now()),
-        modeName: MODES[appState.selectedMode].name,
-        isSKDFull: true,
-        passed: passedAll,
-        details: {
-            TWK: scores.TWK,
-            TIU: scores.TIU,
-            TKP: scores.TKP,
-            Total: total,
-            status: passedAll ? 'LULUS PASSING GRADE' : 'TIDAK LULUS'
-        }
-    });
+    if (!isReview) {
+        window.saveExamHistory({
+            timestamp: Date.now(),
+            date: window.formatDate(Date.now()),
+            modeName: MODES[appState.selectedMode].name,
+            isSKDFull: true,
+            passed: passedAll,
+            details: {
+                TWK: scores.TWK,
+                TIU: scores.TIU,
+                TKP: scores.TKP,
+                Total: total,
+                status: passedAll ? 'LULUS PASSING GRADE' : 'TIDAK LULUS'
+            }
+        });
+    }
 }
 
-function calculateSingleMode() {
+function calculateSingleMode(isReview = false) {
     els.evalMultiDisplay.classList.add('hidden');
     els.evalSingleDisplay.classList.remove('hidden');
     els.evalSingleDisplay.classList.add('flex');
@@ -1224,19 +1227,21 @@ function calculateSingleMode() {
     els.overallStatus.className = 'inline-block px-6 py-2 rounded-full text-sm font-bold mt-2 bg-blue-50 text-blue-700 border border-blue-200';
     
     // Save to history
-    window.saveExamHistory({
-        timestamp: Date.now(),
-        date: window.formatDate(Date.now()),
-        modeName: modeConfig.name,
-        isSKDFull: false,
-        passed: false, // Single modes don't have passing grades
-        details: {
-            Total: totalScore,
-            Max: maxPossible,
-            Percentage: percentage,
-            status: `Benar: ${correctCount} | Salah/Kosong: ${wrongCount}`
-        }
-    });
+    if (!isReview) {
+        window.saveExamHistory({
+            timestamp: Date.now(),
+            date: window.formatDate(Date.now()),
+            modeName: modeConfig.name,
+            isSKDFull: false,
+            passed: false, // Single modes don't have passing grades
+            details: {
+                Total: totalScore,
+                Max: maxPossible,
+                Percentage: percentage,
+                status: `Benar: ${correctCount} | Salah/Kosong: ${wrongCount}`
+            }
+        });
+    }
 }
 
 function renderDiscussionList(filter) {
@@ -1325,11 +1330,18 @@ function renderDiscussionList(filter) {
         optionsHtml += `</div>`;
 
         // System Explanation Area
+        let shortExplanation = q.aiExplanation || "Penjelasan singkat tidak tersedia (soal lama).";
+        
         let aiAreaHtml = `
             <div class="mt-4 pt-4 border-t border-gray-800">
+                <div class="mb-4 p-4 rounded-xl bg-blue-900/20 border border-blue-800/50">
+                    <h5 class="text-xs font-bold text-blue-400 mb-2 uppercase tracking-wider">💡 Pembahasan Singkat</h5>
+                    <div class="text-sm text-gray-200 whitespace-pre-wrap">${shortExplanation}</div>
+                </div>
+                
                 <button id="btn-ai-${idx}" class="text-sm font-semibold text-brand-gold flex items-center gap-2 hover:text-white transition" onclick="fetchExplanation(${idx})">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Minta Pembahasan System
+                    Bahas Lebih Mendalam dengan AI (Analisis & Trik)
                 </button>
                 <div id="ai-content-${idx}" class="mt-4 text-sm text-gray-300 hidden prose prose-sm prose-invert max-w-none bg-brand-surface p-4 rounded-xl border border-gray-700"></div>
             </div>
@@ -1852,14 +1864,71 @@ window.openSavedVideo = function(videoId, encTitle, encDesc) {
 // HISTORY FUNCTIONS
 // -----------------------------------------------------------------
 
+const IDB = {
+    db: null,
+    init() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open('SKDCatDB', 1);
+            req.onupgradeneeded = e => {
+                let db = e.target.result;
+                if(!db.objectStoreNames.contains('fullExams')) {
+                    db.createObjectStore('fullExams', { keyPath: 'id' });
+                }
+            };
+            req.onsuccess = e => { IDB.db = e.target.result; resolve(); };
+            req.onerror = e => reject(e);
+        });
+    },
+    async save(id, data) {
+        if(!IDB.db) await IDB.init();
+        return new Promise((resolve, reject) => {
+            const tx = IDB.db.transaction('fullExams', 'readwrite');
+            tx.objectStore('fullExams').put({ id, data });
+            tx.oncomplete = () => resolve();
+            tx.onerror = e => reject(e);
+        });
+    },
+    async get(id) {
+        if(!IDB.db) await IDB.init();
+        return new Promise((resolve, reject) => {
+            const tx = IDB.db.transaction('fullExams', 'readonly');
+            const req = tx.objectStore('fullExams').get(id);
+            req.onsuccess = () => resolve(req.result ? req.result.data : null);
+            req.onerror = e => reject(e);
+        });
+    },
+    async clear() {
+        if(!IDB.db) await IDB.init();
+        return new Promise((resolve, reject) => {
+            const tx = IDB.db.transaction('fullExams', 'readwrite');
+            tx.objectStore('fullExams').clear();
+            tx.oncomplete = () => resolve();
+            tx.onerror = e => reject(e);
+        });
+    }
+};
+
 window.getExamHistory = function() {
     return appState.examHistory || [];
 };
 
 window.saveExamHistory = async function(historyData) {
+    // Generate a unique ID if not exists
+    const historyId = historyData.timestamp.toString();
+    historyData.id = historyId;
+
     appState.examHistory.unshift(historyData);
     if (appState.examHistory.length > 50) appState.examHistory.pop();
     localStorage.setItem('examHistory', JSON.stringify(appState.examHistory));
+    
+    // Save FULL exam data to IndexedDB
+    try {
+        await IDB.save(historyId, {
+            questions: appState.questions,
+            userAnswers: appState.userAnswers,
+            selectedMode: appState.selectedMode
+        });
+    } catch(e) { console.error("IDB Save Error:", e); }
     
     if (currentUser && supabaseClient) {
         try {
@@ -1881,6 +1950,8 @@ window.clearExamHistory = async function() {
     if(confirm("Apakah Anda yakin ingin menghapus seluruh riwayat ujian?")) {
         appState.examHistory = [];
         localStorage.removeItem('examHistory');
+        
+        try { await IDB.clear(); } catch(e) { console.error("IDB Clear Error:", e); }
         
         if (currentUser && supabaseClient) {
             try {
@@ -1955,11 +2026,77 @@ window.renderExamHistory = function() {
                 ${detailsHtml}
             </div>
             <div class="text-left md:text-right shrink-0 mt-2 md:mt-0">
-                <div class="font-bold text-sm ${statusColor}">${h.details.status}</div>
+                <div class="font-bold text-sm ${statusColor} mb-3">${h.details.status}</div>
+                <button onclick="reviewExam('${h.timestamp}')" class="text-xs font-bold bg-brand-navy border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-navy px-4 py-2 rounded-lg transition-all shadow-md flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Lihat Pembahasan
+                </button>
             </div>
         `;
         els.examHistoryList.appendChild(div);
     });
+};
+
+window.reviewExam = async function(id) {
+    if (!id) return alert("ID Ujian tidak valid.");
+    
+    // Tampilkan loading
+    els.dashboardView.classList.add('hidden');
+    els.evaluationView.style.display = 'none';
+    
+    const loadingMessage = document.createElement('div');
+    loadingMessage.id = 'review-loading';
+    loadingMessage.className = 'fixed inset-0 z-[100] flex flex-col items-center justify-center bg-brand-navy/90 backdrop-blur-sm text-white';
+    loadingMessage.innerHTML = `<div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-brand-gold mb-4"></div><p class="font-bold text-brand-gold">Memuat Riwayat Ujian...</p>`;
+    document.body.appendChild(loadingMessage);
+    
+    try {
+        let fullData = await IDB.get(id.toString());
+        
+        // FUZZY MATCH FALLBACK: Jika tidak ketemu, mungkin karena sinkronisasi Supabase membulatkan milidetik
+        if (!fullData) {
+            if (!IDB.db) await IDB.init();
+            const tx = IDB.db.transaction('fullExams', 'readonly');
+            const allReq = tx.objectStore('fullExams').getAll();
+            
+            fullData = await new Promise((resolve) => {
+                allReq.onsuccess = () => {
+                    const records = allReq.result;
+                    const targetTime = parseInt(id.toString());
+                    // Cari data yang selisih waktunya kurang dari 2 detik
+                    const matched = records.find(r => Math.abs(parseInt(r.id) - targetTime) < 2000);
+                    resolve(matched ? matched.data : null);
+                };
+                allReq.onerror = () => resolve(null);
+            });
+        }
+
+        if(!fullData) {
+            alert("Maaf, riwayat detail untuk ujian ini tidak ditemukan di memori perangkat ini.");
+            els.dashboardView.classList.remove('hidden');
+            return;
+        }
+        
+        // Load data to state
+        appState.questions = fullData.questions;
+        appState.userAnswers = fullData.userAnswers;
+        appState.selectedMode = fullData.selectedMode;
+        
+        // Render UI directly to Evaluation View, skipping Exam View
+        els.examView.classList.add('hidden');
+        els.evaluationView.style.display = '';
+        
+        // Calculate and Show, BUT pass true so it doesn't re-save history
+        calculateAndShowEvaluation(true); 
+        
+    } catch(e) {
+        console.error(e);
+        alert("Terjadi kesalahan saat memuat data.");
+        els.dashboardView.classList.remove('hidden');
+    } finally {
+        const ld = document.getElementById('review-loading');
+        if (ld) ld.remove();
+    }
 };
 
 // Initialize app when DOM is ready
