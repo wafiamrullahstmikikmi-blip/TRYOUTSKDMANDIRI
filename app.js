@@ -24,7 +24,7 @@ const DAFTAR_VOUCHER = [
 const API_KEYS = {
     TWK: "AQ.Ab" + "8RN6LGJYuNtMk_" + "fDS_digkpH76qhP55G3nxx_-LT0Zf3iQHA",
     TIU: "AQ.Ab" + "8RN6JtEB7bBYUp" + "j7cDNSoP35hmVI9OyRg4wpFjbrUFrMLfTw",
-    TKP_BAHASA: "AQ.Ab" + "8RN6IWsZhbLV2-" + "TPKHAZPw4aITVtuMP1JLFnz8iLdgtivbhQ"
+    TKP_BAHASA: "AQ.Ab" + "8RN6L0udVFUsjF" + "X0I0cu9FJ2vfp_5No94HT6lIHyr0CFVqKQ"
 };
 const YOUTUBE_API_KEY = "AIzaS" + "yDnHI4iW5W8m1S" + "Pv9b6VVknHhy69f2LPUE";
 const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA'];
@@ -507,7 +507,7 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
         let apiKey = API_KEYS[keyType];
         
         // WAJIB gunakan header x-goog-api-key untuk kunci AQ terbaru
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
         
         try {
             const response = await fetch(url, {
