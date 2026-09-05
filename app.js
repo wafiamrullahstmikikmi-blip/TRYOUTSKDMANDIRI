@@ -22,9 +22,9 @@ const DAFTAR_VOUCHER = [
 // Masukkan API Key Anda di bawah ini. Mendukung penuh awalan AIza... maupun AQ...
 // (Jika Anda akan mengunggah kode ini ke GitHub publik, disarankan memecah string misal: "AQ." + "abcdef..." agar tidak diblokir GitHub)
 const API_KEYS = {
-    TWK: "AQ.Ab" + "8RN6LGJYuNtMk_" + "fDS_digkpH76qhP55G3nxx_-LT0Zf3iQHA",
-    TIU: "AQ.Ab" + "8RN6JtEB7bBYUp" + "j7cDNSoP35hmVI9OyRg4wpFjbrUFrMLfTw",
-    TKP_BAHASA: "AQ.Ab" + "8RN6L0udVFUsjF" + "X0I0cu9FJ2vfp_5No94HT6lIHyr0CFVqKQ"
+    TWK: "AQ.Ab" + "8RN6JmkvftqtfO" + "-x_anV3AIVjxpPwV-Z2PewCvX0qu7Md2dg",
+    TIU: "AQ.Ab" + "8RN6KhPFhfL_z0" + "_nxwWtQc0phtcR0zeWu3xQmvo60C5i8CKA",
+    TKP_BAHASA: "AQ.Ab" + "8RN6KkjAmH-RtB" + "f76r2IkWpFZ3dsrJOltHuEIRw2C8PbuKyA"
 };
 const YOUTUBE_API_KEY = "AIzaS" + "yDnHI4iW5W8m1S" + "Pv9b6VVknHhy69f2LPUE";
 const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA'];
@@ -521,9 +521,9 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
 
             if (!response.ok) {
                 const errText = await response.text();
-                if (response.status === 429) {
-                    console.warn(`Rate limit pada API Key ${keyType}, mencoba fallback...`);
-                    if (i === keysToTry.length - 1) throw new Error('Semua API Key terkena Rate Limit. Harap tunggu sebentar lalu coba lagi.');
+                if (response.status === 429 || response.status === 503) {
+                    console.warn(`Error ${response.status} pada API Key ${keyType}, mencoba fallback...`);
+                    if (i === keysToTry.length - 1) throw new Error(`Semua API Key terkena Limit/High Demand. Harap tunggu 1-2 menit lalu coba lagi.`);
                     continue; 
                 }
                 
