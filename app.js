@@ -693,8 +693,8 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
         window.topicBlacklist[catKeyBL] = { count: 0, topics: [] };
     }
 
-    // Auto reset if 5 exams reached
-    if (window.topicBlacklist[catKeyBL].count >= 5) {
+    // Auto reset if 2 exams reached
+    if (window.topicBlacklist[catKeyBL].count >= 2) {
         window.topicBlacklist[catKeyBL].count = 0;
         window.topicBlacklist[catKeyBL].topics = [];
         localStorage.setItem('topicBlacklist', JSON.stringify(window.topicBlacklist));
