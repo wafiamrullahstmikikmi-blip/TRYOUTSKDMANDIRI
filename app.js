@@ -172,7 +172,7 @@ function init() {
             {
                 title: '🇮🇩 Tes Wawasan Kebangsaan (TWK)',
                 cat: 'TWK',
-                items: ['Nasionalisme', 'Integritas', 'Bela Negara', 'Pancasila', 'Bhinneka Tunggal Ika', 'NKRI', 'UUD 1945', 'Bahasa Indonesia']
+                items: ['Nasionalisme', 'Integritas', 'Bela Negara', 'Pancasila', 'Bhinneka Tunggal Ika', 'NKRI', 'UUD 1945', 'Sejarah', 'Bahasa Indonesia']
             },
             {
                 title: '🔢 Tes Inteligensia Umum (TIU)',
