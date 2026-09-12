@@ -713,11 +713,11 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
     
     let instructions = "";
     if (kategori === 'TWK') {
-        instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Jangan berikan soal hafalan. Uji kemampuan analisis tingkat tinggi (HOTS) terkait implementasi Nasionalisme, Integritas, Bela Negara, atau UUD 1945. Pilihan ganda (A, B, C, D, E) harus dibuat SANGAT MENGECOH, logis, dan mirip satu sama lain. Fakta sejarah dan pasal konstitusi wajib 100% akurat. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Wajib pastikan distribusi materi SANGAT MERATA: Harus ada porsi untuk Sejarah/Tokoh Pahlawan, UUD 1945/Pancasila, Nasionalisme, dan Integritas. Pilihan ganda (A, B, C, D, E) harus dibuat SANGAT MENGECOH, logis, dan mirip satu sama lain. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TIU') {
-        instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Cakup Penalaran Analitis (kasus susunan posisi/penjadwalan bersyarat majemuk yang rumit), Numerik Berhitung (aljabar, pecahan, perbandingan umur/kecepatan tingkat lanjut), atau Deret Angka (pola 3 lapis/kombinasi). Pilihan jawaban harus dirancang menjebak. Jika Anda membuat soal Figural, berikan 5 urutan <svg> murni di dalam teks pertanyaan (gunakan stroke/fill warna white/putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Wajib pastikan distribusi materi SANGAT MERATA: Harus mencakup Penalaran Verbal (Silogisme/Analogi), Numerik Berhitung (aljabar, pecahan, perbandingan, deret), dan WAJIB sediakan soal Figural (Gambar). Untuk Figural: berikan 5 urutan <svg> murni di teks pertanyaan (stroke/fill warna putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TKP') {
-        instructions = `Teks soal WAJIB berupa skenario dunia kerja atau pelayanan publik yang SANGAT PANJANG, detail, dan penuh konflik kepentingan/dilema tingkat tinggi. Semua pilihan jawaban (A, B, C, D, E) HARUS terdengar sangat positif, profesional, dan rasional (jangan buat opsi yang jelas-jelas buruk/konyol). Buat tingkat pengecohnya maksimal agar sulit dinilai mana yang poin 5 dan mana yang poin 1. Kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik tanpa duplikat.`;
+        instructions = `Teks soal WAJIB berupa skenario dunia kerja atau pelayanan publik yang SANGAT PANJANG, detail, dan penuh konflik kepentingan. Wajib pastikan distribusi materi SANGAT MERATA: Harus mencakup Pelayanan Publik, Jejaring Kerja, Sosial Budaya, TIK, Profesionalisme, dan Anti Radikalisme. Semua pilihan jawaban (A, B, C, D, E) HARUS terdengar positif/profesional. Kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik.`;
     } else { // Bahasa
         instructions = `Soal grammar, struktur kalimat kompleks, reading comprehension dari teks panjang, atau ejaan baku sesuai EYD. Tingkat kesulitan advance. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     }
@@ -731,10 +731,10 @@ Tugasmu:
 1. Buat soal BARU yang berbeda sama sekali dari referensi (ubah angka, tokoh, skenario, dan variabel kasus).
 2. TINGKAT KESULITAN HARUS SULIT! Panjang teks dan beban analisis logika HARUS SAMA atau LEBIH SULIT dari referensi.
 3. ${instructions}
-4. UNTUK MATEMATIKA: DILARANG KERAS menggunakan sintaks LaTeX/MathJax (seperti $...$, \\frac{}{}, \\times, \\sqrt{}). Gunakan format teks biasa, misal: 1/2, x, akar, =, pangkat.
-5. PANJANG JAWABAN: Pastikan panjang teks untuk SEMUA pilihan (A, B, C, D, E) SANGAT MIRIP/SERAGAM. JANGAN biarkan kunci jawaban atau jawaban poin 5 terlihat lebih mencolok/panjang dari yang lain!
+4. UNTUK MATEMATIKA: DILARANG KERAS menggunakan sintaks LaTeX/MathJax (seperti $...$, \\frac{}{}, \\times, \\sqrt{}). Gunakan format teks biasa.
+5. PANJANG JAWABAN: Pastikan panjang teks untuk SEMUA pilihan (A, B, C, D, E) SANGAT MIRIP/SERAGAM. JANGAN biarkan kunci jawaban terlihat mencolok!
 
-Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null, "aiExplanation": "Jelaskan logika penyelesaiannya secara singkat", "topikSingkat": "Inti topik soal ini (Maksimal 4 kata, misal: 'Korupsi e-KTP' atau 'Deret Fibonacci Bertingkat')"}, ...].`;
+Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null, "aiExplanation": "Jelaskan logika penyelesaiannya", "topikSingkat": "TULIS NAMA TOKOH/KASUS SPESIFIK SAJA (Maksimal 4 kata, misal: 'Korupsi e-KTP', 'Perang Diponegoro', 'Deret Pola 3'). DILARANG KERAS menulis nama mata pelajaran seperti 'Sejarah', 'Figural', 'Integritas' agar tidak merusak sistem!"}, ...].`;
 
     let generatedData = await callGemini(prompt, true, targetKey);
     
