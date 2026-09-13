@@ -24,10 +24,11 @@ const DAFTAR_VOUCHER = [
 const API_KEYS = {
     TWK: "AQ.Ab" + "8RN6JmkvftqtfO" + "-x_anV3AIVjxpPwV-Z2PewCvX0qu7Md2dg",
     TIU: "AQ.Ab" + "8RN6KhPFhfL_z0" + "_nxwWtQc0phtcR0zeWu3xQmvo60C5i8CKA",
-    TKP_BAHASA: "AQ.Ab" + "8RN6KkjAmH-RtB" + "f76r2IkWpFZ3dsrJOltHuEIRw2C8PbuKyA"
+    TKP_BAHASA: "AQ.Ab" + "8RN6KkjAmH-RtB" + "f76r2IkWpFZ3dsrJOltHuEIRw2C8PbuKyA",
+    PSIKOTES: "AQ.Ab" + "8RN6LYv8JeN0pQ" + "2nReiOY5KKEMr_eYgVqNQXbcWRsfV830hA" // USER WILL FILL THIS
 };
 const YOUTUBE_API_KEY = "AIzaS" + "yDnHI4iW5W8m1S" + "Pv9b6VVknHhy69f2LPUE";
-const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA'];
+const FALLBACK_ORDER = ['TWK', 'TIU', 'TKP_BAHASA', 'PSIKOTES'];
 
 const MODES = {
     1: { name: "SKD Full", count: 110, duration: 100 * 60 },
@@ -35,7 +36,12 @@ const MODES = {
     3: { name: "Drilling TIU", count: 35, duration: 35 * 60, kategori: "TIU" },
     4: { name: "Drilling TKP", count: 45, duration: 40 * 60, kategori: "TKP" },
     5: { name: "Bahasa Indonesia", count: 30, duration: 30 * 60, kategori: "Bahasa Indonesia" },
-    6: { name: "Bahasa Inggris", count: 30, duration: 30 * 60, kategori: "Bahasa Inggris" }
+    6: { name: "Bahasa Inggris", count: 30, duration: 30 * 60, kategori: "Bahasa Inggris" },
+    71: { name: "Psikotes Verbal", count: 30, duration: 30 * 60, kategori: "Psikotes Verbal" },
+    72: { name: "Psikotes Numerik", count: 30, duration: 30 * 60, kategori: "Psikotes Numerik" },
+    73: { name: "Psikotes Spasial", count: 25, duration: 25 * 60, kategori: "Psikotes Spasial" },
+    74: { name: "Tes Kecermatan", count: 40, duration: 20 * 60, kategori: "Psikotes Kecermatan" },
+    75: { name: "Tes Kepribadian (EPPS)", count: 30, duration: 25 * 60, kategori: "Psikotes Kepribadian" }
 };
 
 function safeJSONParse(key, fallback) {
@@ -130,7 +136,14 @@ const els = {
     singleModeScore: document.getElementById('single-mode-score'),
     singleModePoints: document.getElementById('single-mode-points'),
     singleModeMaxPoints: document.getElementById('single-mode-max-points'),
-    overallStatus: document.getElementById('overall-status')
+    overallStatus: document.getElementById('overall-status'),
+
+    // Psikotes Modal
+    btnPsikotesMenu: document.getElementById('btn-psikotes-menu'),
+    modalPsikotes: document.getElementById('modal-psikotes'),
+    btnClosePsikotes: document.getElementById('btn-close-psikotes'),
+    btnConfirmPsikotes: document.getElementById('btn-confirm-psikotes'),
+    modalPsikotesCards: document.querySelectorAll('#modal-psikotes .mode-card')
 };
 
 // Auth Logic
@@ -438,6 +451,93 @@ function init() {
         });
     }
 
+    // Psikotes Modal Logic
+    if (els.btnPsikotesMenu && els.modalPsikotes && els.btnClosePsikotes) {
+        els.btnPsikotesMenu.addEventListener('click', () => {
+            // Reset selection inside modal when opening
+            els.modalPsikotesCards.forEach(c => {
+                c.classList.remove('active', 'ring-brand-gold/50', 'bg-brand-navy/60');
+                c.classList.add('ring-transparent', 'bg-brand-navy/40');
+                const indicator = c.querySelector('.indicator');
+                if(indicator) indicator.classList.add('hidden');
+            });
+            // If we already selected a psikotes mode, pre-select it
+            if (appState.selectedMode >= 71 && appState.selectedMode <= 75) {
+                const preSelect = Array.from(els.modalPsikotesCards).find(c => parseInt(c.dataset.mode) === appState.selectedMode);
+                if (preSelect) {
+                    preSelect.classList.add('active', 'ring-brand-gold/50', 'bg-brand-navy/60');
+                    preSelect.classList.remove('ring-transparent', 'bg-brand-navy/40');
+                    const ind = preSelect.querySelector('.indicator');
+                    if(ind) ind.classList.remove('hidden');
+                }
+            } else {
+                // Default to 71 (Verbal)
+                appState.selectedMode = 71;
+                const firstCard = els.modalPsikotesCards[0];
+                if (firstCard) {
+                    firstCard.classList.add('active', 'ring-brand-gold/50', 'bg-brand-navy/60');
+                    firstCard.classList.remove('ring-transparent', 'bg-brand-navy/40');
+                    const ind = firstCard.querySelector('.indicator');
+                    if(ind) ind.classList.remove('hidden');
+                }
+            }
+
+            els.modalPsikotes.classList.remove('hidden');
+        });
+
+        els.btnClosePsikotes.addEventListener('click', () => {
+            els.modalPsikotes.classList.add('hidden');
+        });
+
+        els.btnConfirmPsikotes.addEventListener('click', () => {
+            els.modalPsikotes.classList.add('hidden');
+            // Remove active state from main drilling cards
+            els.modeCards.forEach(c => {
+                c.classList.remove('active', 'ring-1', 'ring-brand-gold/50', 'bg-brand-navy/60', 'shadow-[0_0_30px_rgba(212,175,55,0.25)]');
+                c.classList.add('bg-brand-navy/20', 'ring-1', 'ring-transparent', 'hover:bg-brand-navy/40', 'hover:shadow-[0_0_20px_rgba(212,175,55,0.15)]');
+                const indicator = c.querySelector('.indicator');
+                if(indicator) indicator.classList.add('hidden');
+            });
+            // Add visual cue to the menu button
+            els.btnPsikotesMenu.classList.add('ring-1', 'ring-brand-gold/50', 'bg-brand-navy/60', 'shadow-[0_0_30px_rgba(212,175,55,0.25)]');
+            els.btnPsikotesMenu.classList.remove('border-dashed', 'bg-brand-navy/20');
+            // Update title to show selection
+            const selectedConfig = MODES[appState.selectedMode];
+            els.btnPsikotesMenu.querySelector('h3').innerText = selectedConfig.name;
+        });
+
+        // Mode cards inside the modal
+        els.modalPsikotesCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove active classes
+                els.modalPsikotesCards.forEach(c => {
+                    c.classList.remove('active', 'ring-brand-gold/50', 'bg-brand-navy/60');
+                    c.classList.add('ring-transparent', 'bg-brand-navy/40');
+                    const indicator = c.querySelector('.indicator');
+                    if(indicator) indicator.classList.add('hidden');
+                });
+                // Add active classes
+                card.classList.add('active', 'ring-brand-gold/50', 'bg-brand-navy/60');
+                card.classList.remove('ring-transparent', 'bg-brand-navy/40');
+                const indicator = card.querySelector('.indicator');
+                if(indicator) indicator.classList.remove('hidden');
+                
+                appState.selectedMode = parseInt(card.dataset.mode);
+            });
+        });
+    }
+
+    // Main Mode Selection Listeners override to un-highlight btnPsikotesMenu
+    els.modeCards.forEach(card => {
+        card.addEventListener('click', () => {
+            if (els.btnPsikotesMenu) {
+                els.btnPsikotesMenu.classList.remove('ring-1', 'ring-brand-gold/50', 'bg-brand-navy/60', 'shadow-[0_0_30px_rgba(212,175,55,0.25)]');
+                els.btnPsikotesMenu.classList.add('border-dashed', 'bg-brand-navy/20');
+                els.btnPsikotesMenu.querySelector('h3').innerText = "Menu Psikotes";
+            }
+        });
+    });
+
     // Event Listeners
     els.btnStart.addEventListener('click', startSimulation);
     els.btnPrev.addEventListener('click', () => navigateQuestion(appState.currentQuestionIndex - 1));
@@ -606,16 +706,22 @@ async function startSimulation() {
             allQuestions = [...finalTwk, ...finalTiu, ...finalTkp];
             
         } else {
-            // MODE 2-6: Single Mode
-            const bankKey = 
-                appState.selectedMode === 2 ? 'twk_only' :
-                appState.selectedMode === 3 ? 'tiu_only' :
-                appState.selectedMode === 4 ? 'tkp_only' :
-                appState.selectedMode === 5 ? 'bahasa_indonesia' : 'bahasa_inggris';
+            // MODE 2-75: Single Mode
+            let bankKey = 'twk_only';
+            if (appState.selectedMode === 3) bankKey = 'tiu_only';
+            else if (appState.selectedMode === 4) bankKey = 'tkp_only';
+            else if (appState.selectedMode === 5) bankKey = 'bahasa_indonesia';
+            else if (appState.selectedMode === 6) bankKey = 'bahasa_inggris';
+            else if (appState.selectedMode === 71) bankKey = 'psikotes_verbal';
+            else if (appState.selectedMode === 72) bankKey = 'psikotes_numerik';
+            else if (appState.selectedMode === 73) bankKey = 'psikotes_spasial';
+            else if (appState.selectedMode === 74) bankKey = 'psikotes_kecermatan';
+            else if (appState.selectedMode === 75) bankKey = 'psikotes_kepribadian';
             
             let tKey = 'TKP_BAHASA';
             if (appState.selectedMode === 2) tKey = 'TWK';
             else if (appState.selectedMode === 3) tKey = 'TIU';
+            else if (appState.selectedMode >= 71 && appState.selectedMode <= 75) tKey = 'PSIKOTES';
 
             const rawData = await generateQuestionsData(modeConfig.kategori, modeConfig.count, BANK_REFERENSI[bankKey], tKey);
             const arr = Array.isArray(rawData) ? rawData : rawData.soal || [];
@@ -718,6 +824,16 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
         instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Wajib pastikan distribusi materi SANGAT MERATA: Harus mencakup Penalaran Verbal (Silogisme/Analogi), Numerik Berhitung (aljabar, pecahan, perbandingan, deret), dan WAJIB sediakan soal Figural (Gambar). Untuk Figural: berikan 5 urutan <svg> murni di teks pertanyaan (stroke/fill warna putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TKP') {
         instructions = `Teks soal WAJIB berupa skenario dunia kerja atau pelayanan publik yang SANGAT PANJANG, detail, dan penuh konflik kepentingan. Wajib pastikan distribusi materi SANGAT MERATA: Harus mencakup Pelayanan Publik, Jejaring Kerja, Sosial Budaya, TIK, Profesionalisme, dan Anti Radikalisme. Semua pilihan jawaban (A, B, C, D, E) HARUS terdengar positif/profesional. Kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik.`;
+    } else if (kategori === 'Psikotes Verbal') {
+        instructions = `Fokus HANYA pada Sinonim, Antonim, Analogi, dan Silogisme/Penalaran Logis tingkat lanjut. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+    } else if (kategori === 'Psikotes Numerik') {
+        instructions = `Fokus HANYA pada Deret Angka kompleks, Hitung Cepat, dan Aritmatika Logika. DILARANG menggunakan format matematika rumit, gunakan teks biasa. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+    } else if (kategori === 'Psikotes Spasial') {
+        instructions = `Fokus HANYA pada Tes Spasial / Figural / Gambar. WAJIB menggunakan kode murni <svg> untuk menggambar soal dan setiap pilihan jawaban (stroke warna putih). Kunci: (A/B/C/D/E), bobotTKP: null.`;
+    } else if (kategori === 'Psikotes Kecermatan') {
+        instructions = `Fokus HANYA pada Tes Kecermatan (mencari huruf/angka hilang dari referensi tabel). Kunci: (A/B/C/D/E), bobotTKP: null.`;
+    } else if (kategori === 'Psikotes Kepribadian') {
+        instructions = `Fokus HANYA pada Tes Kepribadian (EPPS). Peserta harus memilih respon yang paling menggambarkan dirinya (A-E). Kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5}.`;
     } else { // Bahasa
         instructions = `Soal grammar, struktur kalimat kompleks, reading comprehension dari teks panjang, atau ejaan baku sesuai EYD. Tingkat kesulitan advance. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     }

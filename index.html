@@ -220,6 +220,12 @@
                             30 Menit
                         </div>
                     </div>
+                    
+                    <div id="btn-psikotes-menu" class="bg-brand-navy/20 p-4 md:p-5 rounded-[2rem] ring-1 ring-transparent hover:bg-brand-navy/40 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] cursor-pointer transition-all relative overflow-hidden flex flex-col justify-center items-center text-center border-2 border-dashed border-brand-gold/30">
+                        <svg class="w-8 h-8 text-brand-gold mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <h3 class="font-bold text-white text-sm md:text-lg mb-1 leading-tight text-brand-gold">Menu Psikotes</h3>
+                        <p class="text-[10px] md:text-xs text-brand-muted">Pilih Kategori Psikotes</p>
+                    </div>
                 </div>
 
                 <div class="flex justify-center mt-6 mb-12">
@@ -227,6 +233,68 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         MULAI SIMULASI SEKARANG
                     </button>
+                </div>
+
+                <!-- Modal Psikotes (Hidden by default) -->
+                <div id="modal-psikotes" class="fixed inset-0 bg-brand-navy/90 backdrop-blur-sm z-[60] flex items-center justify-center hidden p-4">
+                    <div class="glass rounded-3xl p-6 md:p-8 max-w-3xl w-full shadow-2xl relative border border-brand-gold/30 max-h-[90vh] overflow-y-auto custom-scrollbar">
+                        <button id="btn-close-psikotes" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-brand-surface rounded-full p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                        <h2 class="text-2xl font-bold text-white mb-2 text-center">Pilih Kategori Psikotes</h2>
+                        <p class="text-brand-muted text-sm text-center mb-6">Pilih jenis soal psikotes spesifik yang ingin Anda latih.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Option Verbal -->
+                            <div class="mode-card bg-brand-navy/40 p-4 rounded-2xl ring-1 ring-transparent hover:bg-brand-navy/60 hover:ring-brand-gold/50 cursor-pointer transition-all relative" data-mode="71">
+                                <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="p-2 bg-blue-900/50 rounded-lg text-blue-400">🧠</div>
+                                    <h4 class="font-bold text-white">Psikotes Verbal</h4>
+                                </div>
+                                <p class="text-xs text-gray-400">Sinonim, Antonim, Analogi, Silogisme, Penalaran Logis. (30 Soal)</p>
+                            </div>
+                            <!-- Option Numerik -->
+                            <div class="mode-card bg-brand-navy/40 p-4 rounded-2xl ring-1 ring-transparent hover:bg-brand-navy/60 hover:ring-brand-gold/50 cursor-pointer transition-all relative" data-mode="72">
+                                <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="p-2 bg-green-900/50 rounded-lg text-green-400">🔢</div>
+                                    <h4 class="font-bold text-white">Psikotes Numerik</h4>
+                                </div>
+                                <p class="text-xs text-gray-400">Deret Angka, Hitung Cepat, Logika Aritmatika Dasar. (30 Soal)</p>
+                            </div>
+                            <!-- Option Spasial -->
+                            <div class="mode-card bg-brand-navy/40 p-4 rounded-2xl ring-1 ring-transparent hover:bg-brand-navy/60 hover:ring-brand-gold/50 cursor-pointer transition-all relative" data-mode="73">
+                                <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="p-2 bg-purple-900/50 rounded-lg text-purple-400">🧊</div>
+                                    <h4 class="font-bold text-white">Psikotes Spasial</h4>
+                                </div>
+                                <p class="text-xs text-gray-400">Pola Gambar, Rotasi Bangun Ruang, Analogi Visual. (25 Soal)</p>
+                            </div>
+                            <!-- Option Kecermatan -->
+                            <div class="mode-card bg-brand-navy/40 p-4 rounded-2xl ring-1 ring-transparent hover:bg-brand-navy/60 hover:ring-brand-gold/50 cursor-pointer transition-all relative" data-mode="74">
+                                <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="p-2 bg-red-900/50 rounded-lg text-red-400">⏱️</div>
+                                    <h4 class="font-bold text-white">Tes Kecermatan</h4>
+                                </div>
+                                <p class="text-xs text-gray-400">Huruf/Angka Hilang, Kecepatan & Ketelitian (Ala Pauli/Kraepelin). (40 Soal)</p>
+                            </div>
+                            <!-- Option Kepribadian -->
+                            <div class="mode-card bg-brand-navy/40 p-4 rounded-2xl ring-1 ring-transparent hover:bg-brand-navy/60 hover:ring-brand-gold/50 cursor-pointer transition-all relative md:col-span-2" data-mode="75">
+                                <div class="absolute top-0 right-0 gold-gradient text-brand-navy text-[10px] font-bold px-2 py-1 rounded-bl-lg indicator hidden">TERPILIH</div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="p-2 bg-orange-900/50 rounded-lg text-orange-400">🎭</div>
+                                    <h4 class="font-bold text-white">Tes Kepribadian (EPPS)</h4>
+                                </div>
+                                <p class="text-xs text-gray-400">Pilihan preferensi yang paling mencerminkan diri sendiri. Tidak ada jawaban salah. (30 Soal)</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button id="btn-confirm-psikotes" class="gold-gradient text-brand-navy font-bold px-6 py-2 rounded-xl hover:scale-105 transition-transform shadow-lg">Pilih Kategori Ini</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tab 3: Kumpulan Materi & Trik SKD -->

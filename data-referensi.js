@@ -188,5 +188,146 @@ const BANK_REFERENSI = {
             "kunci": "D",
             "bobotTKP": null
         }
+    ],
+
+    psikotes_verbal: [
+        {
+            "kategori": "Psikotes Verbal",
+            "pertanyaan": "KENDARAAN : MOBIL = BIAYA : ...",
+            "pilihan": {
+                "A": "Tarif",
+                "B": "Harga",
+                "C": "Ongkos",
+                "D": "Pajak",
+                "E": "Uang"
+            },
+            "kunci": "C",
+            "bobotTKP": null,
+            "aiExplanation": "Mobil adalah jenis kendaraan, Ongkos adalah jenis biaya.",
+            "topikSingkat": "Analogi Kata"
+        },
+        {
+            "kategori": "Psikotes Verbal",
+            "pertanyaan": "Semua karyawan berdasi. Sebagian karyawan berjas. Kesimpulan yang tepat adalah...",
+            "pilihan": {
+                "A": "Sebagian karyawan berdasi dan berjas",
+                "B": "Sebagian karyawan tidak berdasi",
+                "C": "Semua karyawan berdasi dan berjas",
+                "D": "Semua yang berjas adalah karyawan",
+                "E": "Semua karyawan tidak berjas"
+            },
+            "kunci": "A",
+            "bobotTKP": null,
+            "aiExplanation": "Karena semua berdasi dan sebagian berjas, maka ada sebagian yang memiliki keduanya.",
+            "topikSingkat": "Silogisme Logika"
+        }
+    ],
+
+    psikotes_numerik: [
+        {
+            "kategori": "Psikotes Numerik",
+            "pertanyaan": "Lengkapi deret berikut: 2, 5, 11, 23, 47, ...",
+            "pilihan": {
+                "A": "94",
+                "B": "95",
+                "C": "96",
+                "D": "98",
+                "E": "101"
+            },
+            "kunci": "B",
+            "bobotTKP": null,
+            "aiExplanation": "Polanya adalah x2 + 1. 47 * 2 + 1 = 95.",
+            "topikSingkat": "Deret Pola Perkalian"
+        },
+        {
+            "kategori": "Psikotes Numerik",
+            "pertanyaan": "Jika x = 1/3 dari 60 dan y = 20% dari 100, maka hubungan x dan y adalah...",
+            "pilihan": {
+                "A": "x > y",
+                "B": "x < y",
+                "C": "x = y",
+                "D": "x = 2y",
+                "E": "Hubungan tidak dapat ditentukan"
+            },
+            "kunci": "C",
+            "bobotTKP": null,
+            "aiExplanation": "x = 1/3 * 60 = 20. y = 20% * 100 = 20. Maka x = y.",
+            "topikSingkat": "Aritmatika Dasar"
+        }
+    ],
+
+    psikotes_spasial: [
+        {
+            "kategori": "Psikotes Spasial",
+            "pertanyaan": "Tentukan kelanjutan pola gambar berikut:<br><br>Pola 1:<br><svg width='100' height='100' viewBox='0 0 100 100'><rect x='10' y='10' width='30' height='30' fill='none' stroke='white' stroke-width='2'/></svg><br><br>Pola 2:<br><svg width='100' height='100' viewBox='0 0 100 100'><rect x='35' y='35' width='30' height='30' fill='none' stroke='white' stroke-width='2'/></svg><br><br>Pola 3:<br>...",
+            "pilihan": {
+                "A": "<svg width='100' height='100' viewBox='0 0 100 100'><rect x='60' y='60' width='30' height='30' fill='none' stroke='white' stroke-width='2'/></svg>",
+                "B": "<svg width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='20' fill='none' stroke='white' stroke-width='2'/></svg>",
+                "C": "<svg width='100' height='100' viewBox='0 0 100 100'><rect x='10' y='60' width='30' height='30' fill='none' stroke='white' stroke-width='2'/></svg>",
+                "D": "<svg width='100' height='100' viewBox='0 0 100 100'><rect x='60' y='10' width='30' height='30' fill='none' stroke='white' stroke-width='2'/></svg>",
+                "E": "<svg width='100' height='100' viewBox='0 0 100 100'><polygon points='50,10 90,90 10,90' fill='none' stroke='white' stroke-width='2'/></svg>"
+            },
+            "kunci": "A",
+            "bobotTKP": null,
+            "aiExplanation": "Kotak bergerak ke arah kanan bawah (diagonal).",
+            "topikSingkat": "Spasial Translasi"
+        }
+    ],
+
+    psikotes_kecermatan: [
+        {
+            "kategori": "Psikotes Kecermatan",
+            "pertanyaan": "Tabel acuan: <b>A E R S T</b><br><br>Carilah huruf yang HILANG pada deret berikut: <b>S A T E ...</b>",
+            "pilihan": {
+                "A": "A",
+                "B": "E",
+                "C": "R",
+                "D": "S",
+                "E": "T"
+            },
+            "kunci": "C",
+            "bobotTKP": null,
+            "aiExplanation": "Huruf R tidak ada di deret SATE.",
+            "topikSingkat": "Kecermatan Huruf Hilang"
+        },
+        {
+            "kategori": "Psikotes Kecermatan",
+            "pertanyaan": "Tabel acuan: <b>1 4 6 8 9</b><br><br>Carilah angka yang HILANG pada deret berikut: <b>8 1 9 4 ...</b>",
+            "pilihan": {
+                "A": "1",
+                "B": "4",
+                "C": "6",
+                "D": "8",
+                "E": "9"
+            },
+            "kunci": "C",
+            "bobotTKP": null,
+            "aiExplanation": "Angka 6 tidak ada di deret.",
+            "topikSingkat": "Kecermatan Angka Hilang"
+        }
+    ],
+
+    psikotes_kepribadian: [
+        {
+            "kategori": "Psikotes Kepribadian",
+            "pertanyaan": "Pilihlah salah satu kecenderungan yang paling menggambarkan diri Anda ketika menghadapi tekanan batas waktu (deadline):",
+            "pilihan": {
+                "A": "Saya merasa tertantang dan bekerja lebih cepat di bawah tekanan batas waktu.",
+                "B": "Saya merasa panik pada awalnya, namun segera membuat rencana yang terstruktur untuk mengatasinya.",
+                "C": "Saya memilih untuk mendelegasikan sebagian tugas agar selesai tepat waktu.",
+                "D": "Saya cenderung bekerja lebih lambat karena harus memastikan tidak ada kesalahan.",
+                "E": "Saya tidak peduli dengan batas waktu asalkan hasil pekerjaan saya sangat sempurna."
+            },
+            "kunci": null,
+            "bobotTKP": {
+                "A": 5,
+                "B": 4,
+                "C": 3,
+                "D": 2,
+                "E": 1
+            },
+            "aiExplanation": "A menunjukkan ketahanan kerja yang tinggi, B menujukkan kemampuan planning, C bisa diterima, E menunjukkan sifat perfeksionis namun mengabaikan komitmen waktu.",
+            "topikSingkat": "EPPS Tekanan Waktu"
+        }
     ]
 };
