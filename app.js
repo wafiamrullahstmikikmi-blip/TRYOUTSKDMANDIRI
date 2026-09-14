@@ -185,17 +185,28 @@ function init() {
             {
                 title: '🇮🇩 Tes Wawasan Kebangsaan (TWK)',
                 cat: 'TWK',
-                items: ['Nasionalisme', 'Integritas', 'Bela Negara', 'Pancasila', 'Bhinneka Tunggal Ika', 'NKRI', 'UUD 1945', 'Sejarah', 'Bahasa Indonesia']
+                items: ['Nasionalisme', 'Integritas', 'Bela Negara', 'Pilar Negara', 'Bahasa Negara']
             },
             {
                 title: '🔢 Tes Inteligensia Umum (TIU)',
                 cat: 'TIU',
-                items: ['Analogi', 'Silogisme', 'Analitis', 'Operasi Bilangan', 'Deret', 'Perbandingan', 'Jarak, Waktu dan Kecepatan', 'Aritmatika Sosial', 'Kombinatorika', 'Bangun Datar & Bangun Ruang', 'Kuantitatif Datar & Bangun Ruang', 'Kuantitatif Perbandingan', 'Figural Gambar']
+                items: [
+                    'Verbal: Analogi', 
+                    'Verbal: Silogisme', 
+                    'Verbal: Analitis', 
+                    'Numerik: Berhitung', 
+                    'Numerik: Deret Angka', 
+                    'Numerik: Perbandingan Kuantitatif', 
+                    'Numerik: Soal Cerita',
+                    'Figural: Analogi',
+                    'Figural: Ketidaksamaan',
+                    'Figural: Serial'
+                ]
             },
             {
                 title: '👥 Tes Karakteristik Pribadi (TKP)',
                 cat: 'TKP',
-                items: ['Pelayanan Publik', 'Profesionalisme', 'Jejaring Kerja', 'Sosial Budaya', 'Teknologi Informasi dan Komunikasi', 'Anti Radikalisme']
+                items: ['Pelayanan Publik', 'Jejaring Kerja', 'Sosial Budaya', 'Teknologi (TIK)', 'Profesionalisme', 'Anti Radikalisme']
             }
         ];
 
@@ -207,8 +218,11 @@ function init() {
                 <div class="materi-item p-5 rounded-[2rem] bg-brand-navy/40 hover:bg-brand-navy/60 shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300" data-title="${query.toLowerCase()}">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                         <div>
-                            <h4 class="font-bold text-white text-base">${item}</h4>
-                            <p class="text-xs text-brand-gold mt-1">Materi ${section.cat}</p>
+                            <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                <h4 class="font-bold text-white text-base">${item}</h4>
+                                <span class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full font-black animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.6)] border border-red-400">🔥 RESMI 2026</span>
+                            </div>
+                            <p class="text-xs text-brand-gold mt-1">Materi Indikator Khusus ${section.cat}</p>
                         </div>
                         <button class="flex items-center justify-center gap-2 text-xs font-bold text-brand-navy bg-brand-gold hover:bg-yellow-400 px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-brand-gold/30 hover:-translate-y-1 shrink-0" onclick="fetchYouTubeVideo('${query}', '${item}')">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -819,11 +833,11 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
     
     let instructions = "";
     if (kategori === 'TWK') {
-        instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Wajib pastikan distribusi materi SANGAT MERATA: Harus ada porsi untuk Sejarah/Tokoh Pahlawan, UUD 1945/Pancasila, Nasionalisme, dan Integritas. Pilihan ganda (A, B, C, D, E) harus dibuat SANGAT MENGECOH, logis, dan mirip satu sama lain. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Fokus HANYA pada: Nasionalisme, Integritas, Bela Negara, Pilar Negara (Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika), dan Bahasa Negara. Jika membuat soal Sejarah, HARUS berhubungan erat dengan Nasionalisme atau Bela Negara, dan MAKSIMAL HANYA 3 SOAL SEJARAH dari total soal. DILARANG membuat soal di luar topik resmi tersebut. Pilihan ganda (A, B, C, D, E) harus dibuat SANGAT MENGECOH, logis, dan mirip satu sama lain. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TIU') {
-        instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Wajib pastikan distribusi materi SANGAT MERATA: Harus mencakup Penalaran Verbal (Silogisme/Analogi), Numerik Berhitung (aljabar, pecahan, perbandingan, deret), dan WAJIB sediakan soal Figural (Gambar). Untuk Figural: berikan 5 urutan <svg> murni di teks pertanyaan (stroke/fill warna putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Fokus HANYA pada: Kemampuan Verbal (Analogi, Silogisme, Analitis), Kemampuan Numerik (Berhitung, Deret angka, Perbandingan kuantitatif, Soal cerita), dan Kemampuan Figural (Analogi, Ketidaksamaan, Serial). Untuk Figural: berikan 5 urutan <svg> murni di teks pertanyaan (stroke/fill warna putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TKP') {
-        instructions = `Teks soal WAJIB berupa skenario dunia kerja atau pelayanan publik yang SANGAT PANJANG, detail, dan penuh konflik kepentingan. Wajib pastikan distribusi materi SANGAT MERATA: Harus mencakup Pelayanan Publik, Jejaring Kerja, Sosial Budaya, TIK, Profesionalisme, dan Anti Radikalisme. Semua pilihan jawaban (A, B, C, D, E) HARUS terdengar positif/profesional. Kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik.`;
+        instructions = `Teks soal WAJIB berupa skenario dunia kerja atau pelayanan publik yang SANGAT PANJANG, detail, dan penuh konflik kepentingan. Fokus HANYA pada: Pelayanan Publik, Jejaring Kerja, Sosial Budaya, Teknologi (TIK), Profesionalisme, dan Anti Radikalisme. Semua pilihan jawaban (A, B, C, D, E) HARUS terdengar positif/profesional. Kunci: null, bobotTKP: {"A": 1-5, "B": 1-5, "C": 1-5, "D": 1-5, "E": 1-5} nilai unik.`;
     } else if (kategori === 'Psikotes Verbal') {
         instructions = `Fokus HANYA pada Sinonim, Antonim, Analogi, dan Silogisme/Penalaran Logis tingkat lanjut. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'Psikotes Numerik') {
