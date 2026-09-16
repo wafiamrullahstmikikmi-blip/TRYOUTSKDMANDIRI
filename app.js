@@ -22,9 +22,9 @@ const DAFTAR_VOUCHER = [
 // Masukkan API Key Anda di bawah ini. Mendukung penuh awalan AIza... maupun AQ...
 // (Jika Anda akan mengunggah kode ini ke GitHub publik, disarankan memecah string misal: "AQ." + "abcdef..." agar tidak diblokir GitHub)
 const API_KEYS = {
-    TWK: "AQ.Ab" + "8RN6JmkvftqtfO" + "-x_anV3AIVjxpPwV-Z2PewCvX0qu7Md2dg",
-    TIU: "AQ.Ab" + "8RN6KhPFhfL_z0" + "_nxwWtQc0phtcR0zeWu3xQmvo60C5i8CKA",
-    TKP_BAHASA: "AQ.Ab" + "8RN6KkjAmH-RtB" + "f76r2IkWpFZ3dsrJOltHuEIRw2C8PbuKyA",
+    TWK: "AQ.Ab" + "8RN6IxNFOdLqT7" + "zIpwgrqz48vVXswFgp3xlHwERZ_6lXzWuA",
+    TIU: "AQ.Ab" + "8RN6LDD-wZjA-Q" + "YyJ55IHPq0oHV3CSMGnmTCvIwfCq0Z5xew",
+    TKP_BAHASA: "AQ.Ab" + "8RN6KNAeMfrcfM" + "IUFLqcX6zCXkaqpJCTs_WtVu_3RijuSqXA",
     PSIKOTES: "AQ.Ab" + "8RN6LYv8JeN0pQ" + "2nReiOY5KKEMr_eYgVqNQXbcWRsfV830hA" // USER WILL FILL THIS
 };
 const YOUTUBE_API_KEY = "AIzaS" + "yDnHI4iW5W8m1S" + "Pv9b6VVknHhy69f2LPUE";
