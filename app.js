@@ -66,7 +66,9 @@ let appState = {
     timerInterval: null,
     examHistory: safeJSONParse('examHistory', []),
     savedVideos: safeJSONParse('savedVideos', []),
-    savedExplanations: safeJSONParse('savedExplanations', [])
+    savedExplanations: safeJSONParse('savedExplanations', []),
+    isTimerEnabled: true,
+    specificTopic: null
 };
 
 // DOM Elements
@@ -143,7 +145,18 @@ const els = {
     modalPsikotes: document.getElementById('modal-psikotes'),
     btnClosePsikotes: document.getElementById('btn-close-psikotes'),
     btnConfirmPsikotes: document.getElementById('btn-confirm-psikotes'),
-    modalPsikotesCards: document.querySelectorAll('#modal-psikotes .mode-card')
+    modalPsikotesCards: document.querySelectorAll('#modal-psikotes .mode-card'),
+
+    // Drilling Options Modal
+    modalDrillingOptions: document.getElementById('modal-drilling-options'),
+    btnCloseDrillingOptions: document.getElementById('btn-close-drilling-options'),
+    btnStartDrillingCustom: document.getElementById('btn-start-drilling-custom'),
+    drillingOptionsTitle: document.getElementById('drilling-options-title'),
+    drillingTypeRadios: document.getElementsByName('drilling_type'),
+    drillingTopicSelectContainer: document.getElementById('drilling-topic-select-container'),
+    drillingTopicSelect: document.getElementById('drilling-topic-select'),
+    labelOptTimer: document.getElementById('label-opt-timer'),
+    labelOptNoTimer: document.getElementById('label-opt-notimer')
 };
 
 // Auth Logic
@@ -552,8 +565,87 @@ function init() {
         });
     });
 
-    // Event Listeners
-    els.btnStart.addEventListener('click', startSimulation);
+    // Drilling Options Logic
+    const DRILING_TOPICS = {
+        2: ['Nasionalisme', 'Integritas', 'Bela Negara', 'Pilar Negara', 'Bahasa Negara'],
+        3: ['Verbal: Analogi', 'Verbal: Silogisme', 'Verbal: Analitis', 'Numerik: Berhitung', 'Numerik: Deret Angka', 'Numerik: Perbandingan Kuantitatif', 'Numerik: Soal Cerita', 'Figural: Analogi', 'Figural: Ketidaksamaan', 'Figural: Serial'],
+        4: ['Pelayanan Publik', 'Jejaring Kerja', 'Sosial Budaya', 'Teknologi (TIK)', 'Profesionalisme', 'Anti Radikalisme'],
+        5: ['Ejaan & Tanda Baca', 'Gagasan Pokok & Simpulan', 'Makna Kata & Istilah'],
+        6: ['Reading Comprehension', 'Structure & Grammar', 'Vocabulary'],
+        71: ['Sinonim', 'Antonim', 'Analogi', 'Silogisme / Penalaran Logis'],
+        72: ['Deret Angka', 'Hitung Cepat', 'Aritmatika Logika'],
+        73: ['Pola Gambar', 'Rotasi Bangun Ruang', 'Analogi Visual'],
+        74: ['Huruf Hilang', 'Angka Hilang'],
+        75: ['Preferensi Pribadi']
+    };
+
+    if (els.modalDrillingOptions) {
+        els.btnStart.addEventListener('click', () => {
+            if (appState.selectedMode === 1) {
+                // Mode 1 (Full SKD) langsung mulai
+                appState.isTimerEnabled = true;
+                appState.specificTopic = null;
+                startSimulation();
+            } else {
+                // Tampilkan Modal Opsi Drilling
+                const modeName = MODES[appState.selectedMode]?.name || "Mode";
+                els.drillingOptionsTitle.innerText = `Pengaturan ${modeName}`;
+                
+                // Reset radio to timer
+                els.drillingTypeRadios[0].checked = true;
+                els.drillingTopicSelectContainer.classList.add('hidden');
+                
+                // Populate dropdown
+                els.drillingTopicSelect.innerHTML = '';
+                const topics = DRILING_TOPICS[appState.selectedMode] || [];
+                topics.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.innerText = t;
+                    els.drillingTopicSelect.appendChild(opt);
+                });
+
+                els.modalDrillingOptions.classList.remove('hidden');
+            }
+        });
+
+        els.btnCloseDrillingOptions.addEventListener('click', () => {
+            els.modalDrillingOptions.classList.add('hidden');
+        });
+
+        // Radio change listener
+        els.drillingTypeRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'notimer') {
+                    els.drillingTopicSelectContainer.classList.remove('hidden');
+                    els.labelOptNoTimer.classList.add('border-brand-gold', 'bg-brand-gold/10');
+                    els.labelOptNoTimer.classList.remove('border-gray-700', 'bg-brand-navy/40');
+                    els.labelOptTimer.classList.add('border-gray-700', 'bg-brand-navy/40');
+                    els.labelOptTimer.classList.remove('border-brand-gold', 'bg-brand-gold/10');
+                } else {
+                    els.drillingTopicSelectContainer.classList.add('hidden');
+                    els.labelOptTimer.classList.add('border-brand-gold', 'bg-brand-gold/10');
+                    els.labelOptTimer.classList.remove('border-gray-700', 'bg-brand-navy/40');
+                    els.labelOptNoTimer.classList.add('border-gray-700', 'bg-brand-navy/40');
+                    els.labelOptNoTimer.classList.remove('border-brand-gold', 'bg-brand-gold/10');
+                }
+            });
+        });
+
+        els.btnStartDrillingCustom.addEventListener('click', () => {
+            const isTimer = els.drillingTypeRadios[0].checked;
+            appState.isTimerEnabled = isTimer;
+            if (!isTimer) {
+                appState.specificTopic = els.drillingTopicSelect.value;
+            } else {
+                appState.specificTopic = null;
+            }
+            els.modalDrillingOptions.classList.add('hidden');
+            startSimulation();
+        });
+    } else {
+        els.btnStart.addEventListener('click', startSimulation);
+    }
     els.btnPrev.addEventListener('click', () => navigateQuestion(appState.currentQuestionIndex - 1));
     els.btnNext.addEventListener('click', () => navigateQuestion(appState.currentQuestionIndex + 1));
     els.btnRagu.addEventListener('click', toggleRaguRagu);
@@ -635,9 +727,14 @@ async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
 
             if (!response.ok) {
                 const errText = await response.text();
-                if (response.status === 429 || response.status === 503) {
+                console.error(`API Error ${response.status} pada key ${keyType}:`, errText);
+                
+                if (response.status === 429 || response.status === 503 || response.status === 500) {
                     console.warn(`Error ${response.status} pada API Key ${keyType}, mencoba fallback...`);
-                    if (i === keysToTry.length - 1) throw new Error(`Semua API Key terkena Limit/High Demand. Harap tunggu 1-2 menit lalu coba lagi.`);
+                    if (i === keysToTry.length - 1) throw new Error(`Semua API Key terkena Limit/High Demand (Error ${response.status}). Harap tunggu 1-2 menit lalu coba lagi.`);
+                    
+                    // Jeda 2 detik sebelum mencoba API key berikutnya agar tidak dianggap spam
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                     continue; 
                 }
                 
@@ -737,10 +834,11 @@ async function startSimulation() {
             else if (appState.selectedMode === 3) tKey = 'TIU';
             else if (appState.selectedMode >= 71 && appState.selectedMode <= 75) tKey = 'PSIKOTES';
 
-            const rawData = await generateQuestionsData(modeConfig.kategori, modeConfig.count, BANK_REFERENSI[bankKey], tKey);
+            let targetCount = appState.isTimerEnabled ? modeConfig.count : 10;
+            const rawData = await generateQuestionsData(modeConfig.kategori, targetCount, BANK_REFERENSI[bankKey], tKey, appState.specificTopic);
             const arr = Array.isArray(rawData) ? rawData : rawData.soal || [];
             
-            allQuestions = arr.slice(0, modeConfig.count).map((q, idx) => ({
+            allQuestions = arr.slice(0, targetCount).map((q, idx) => ({
                 ...q,
                 no: idx + 1,
                 kategori: modeConfig.kategori
@@ -749,7 +847,8 @@ async function startSimulation() {
 
         clearInterval(progressInterval);
         
-        if(allQuestions.length < modeConfig.count) {
+        let expectedCount = appState.selectedMode === 1 ? modeConfig.count : (appState.isTimerEnabled ? modeConfig.count : 10);
+        if(allQuestions.length < expectedCount) {
            console.warn("System generated fewer questions than requested.", allQuestions.length);
         }
 
@@ -805,7 +904,7 @@ window.topicBlacklist = JSON.parse(localStorage.getItem('topicBlacklist')) || {
     BAHASA: { count: 0, topics: [] }
 };
 
-async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK') {
+async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK', specificTopic = null) {
     let catKeyBL = kategori;
     if (kategori.includes('Bahasa') || kategori.includes('B. Indo') || kategori.includes('B. Ing')) catKeyBL = 'BAHASA';
     
@@ -828,9 +927,11 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
         blacklistWarning = `\nPERINGATAN SANGAT PENTING: DILARANG KERAS membuat soal dengan tema, alur cerita, perhitungan, atau studi kasus yang berhubungan dengan daftar TOPIK berikut: [${recentTopics}]. (Peserta sudah pernah mengerjakan topik-topik tersebut. CARI TEMA/IDE BARU YANG LAIN!).\n`;
     }
 
-    const samples = getRandomSamples(refBank, 3);
-    const sampleStr = JSON.stringify(samples, null, 2);
-    
+    let specificTopicInstruction = "";
+    if (specificTopic) {
+        specificTopicInstruction = `\nINSTRUKSI KHUSUS: KARENA MODE FOKUS MATERI AKTIF, ANDA WAJIB MEMBUAT SELURUH SOAL HANYA TENTANG TOPIK: "${specificTopic}". JANGAN MEMASUKKAN MATERI ATAU TOPIK LAIN SAMA SEKALI!\n`;
+    }
+
     let instructions = "";
     if (kategori === 'TWK') {
         instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Fokus HANYA pada: Nasionalisme, Integritas, Bela Negara, Pilar Negara (Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika), dan Bahasa Negara. Jika membuat soal Sejarah, HARUS berhubungan erat dengan Nasionalisme atau Bela Negara, dan MAKSIMAL HANYA 3 SOAL SEJARAH dari total soal. DILARANG membuat soal di luar topik resmi tersebut. Pilihan ganda (A, B, C, D, E) harus dibuat SANGAT MENGECOH, logis, dan mirip satu sama lain. Kunci: (A/B/C/D/E), bobotTKP: null.`;
@@ -852,8 +953,17 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
         instructions = `Soal grammar, struktur kalimat kompleks, reading comprehension dari teks panjang, atau ejaan baku sesuai EYD. Tingkat kesulitan advance. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     }
 
-    const prompt = `Kamu adalah dewan pakar pembuat soal seleksi Kedinasan berstandar HOTS (Higher Order Thinking Skills) tingkat DEWA. Buatkan ${jumlah} soal untuk kategori: ${kategori}.
-${blacklistWarning}
+    let allGenerated = [];
+    let remaining = jumlah;
+    const batchSize = 10; // Pecah request max 10 soal untuk hindari 503 Overloaded
+
+    while (remaining > 0) {
+        let currentBatch = Math.min(remaining, batchSize);
+        const samples = getRandomSamples(refBank, 3);
+        const sampleStr = JSON.stringify(samples, null, 2);
+
+        const prompt = `Kamu adalah dewan pakar pembuat soal seleksi Kedinasan berstandar HOTS (Higher Order Thinking Skills) tingkat DEWA. Buatkan ${currentBatch} soal untuk kategori: ${kategori}.
+${blacklistWarning}${specificTopicInstruction}
 Sebagai acuan MUTLAK mengenai panjang teks, gaya bahasa, kerumitan logika, dan format JSON, gunakan 3 contoh soal referensi asli berikut:
 ${sampleStr}
 
@@ -866,25 +976,34 @@ Tugasmu:
 
 Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "pertanyaan": "...", "pilihan": {"A": "...", "B": "...", "C": "...", "D": "...", "E": "..."}, "kunci": "A", "bobotTKP": null, "aiExplanation": "Jelaskan logika penyelesaiannya", "topikSingkat": "TULIS NAMA TOKOH/KASUS SPESIFIK SAJA (Maksimal 4 kata, misal: 'Korupsi e-KTP', 'Perang Diponegoro', 'Deret Pola 3'). DILARANG KERAS menulis nama mata pelajaran seperti 'Sejarah', 'Figural', 'Integritas' agar tidak merusak sistem!"}, ...].`;
 
-    let generatedData = await callGemini(prompt, true, targetKey);
-    
-    // Save generated topics to blacklist
-    if (generatedData && Array.isArray(generatedData)) {
-        let addedNew = false;
-        generatedData.forEach(q => {
-            if (q.topikSingkat) {
-                window.topicBlacklist[catKeyBL].topics.push(q.topikSingkat);
-                addedNew = true;
-            }
-        });
+        let generatedData = await callGemini(prompt, true, targetKey);
         
-        if (addedNew) {
-            window.topicBlacklist[catKeyBL].count++;
-            localStorage.setItem('topicBlacklist', JSON.stringify(window.topicBlacklist));
+        if (generatedData && Array.isArray(generatedData)) {
+            allGenerated = allGenerated.concat(generatedData);
+            
+            // Save generated topics to blacklist immediately
+            let addedNew = false;
+            generatedData.forEach(q => {
+                if (q.topikSingkat) {
+                    window.topicBlacklist[catKeyBL].topics.push(q.topikSingkat);
+                    addedNew = true;
+                }
+            });
+            if (addedNew) {
+                window.topicBlacklist[catKeyBL].count++;
+                localStorage.setItem('topicBlacklist', JSON.stringify(window.topicBlacklist));
+            }
+        }
+        
+        remaining -= currentBatch;
+        
+        if (remaining > 0) {
+            // Jeda antar batch agar tidak kena limit
+            await new Promise(resolve => setTimeout(resolve, 3000));
         }
     }
     
-    return generatedData;
+    return allGenerated;
 }
 
 // -----------------------------------------------------------------
@@ -1146,6 +1265,14 @@ function toggleRaguRagu() {
 }
 
 function startTimer() {
+    if (!appState.isTimerEnabled) {
+        els.timerDisplays.forEach(el => {
+            el.innerText = "Tanpa Batas Waktu";
+            el.classList.remove('text-red-500');
+        });
+        return;
+    }
+    
     updateTimerDisplay();
     appState.timerInterval = setInterval(() => {
         appState.timerSeconds--;
@@ -1159,6 +1286,7 @@ function startTimer() {
 }
 
 function updateTimerDisplay() {
+    if (!appState.isTimerEnabled) return;
     const h = Math.floor(appState.timerSeconds / 3600).toString().padStart(2, '0');
     const m = Math.floor((appState.timerSeconds % 3600) / 60).toString().padStart(2, '0');
     const s = (appState.timerSeconds % 60).toString().padStart(2, '0');
