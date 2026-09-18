@@ -934,7 +934,8 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
 
     let instructions = "";
     if (kategori === 'TWK') {
-        instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Fokus HANYA pada: Nasionalisme, Integritas, Bela Negara, Pilar Negara (Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika), dan Bahasa Negara. Jika membuat soal Sejarah, HARUS berhubungan erat dengan Nasionalisme atau Bela Negara, dan MAKSIMAL HANYA 3 SOAL SEJARAH dari total soal. DILARANG membuat soal di luar topik resmi tersebut. Pilihan ganda (A, B, C, D, E) harus dibuat SANGAT MENGECOH, logis, dan mirip satu sama lain. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+        instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Fokus HANYA pada: Nasionalisme, Integritas, Bela Negara, Pilar Negara, dan Bahasa Negara. 
+ATURAN SANGAT KETAT: 95% soal WAJIB menggunakan konteks kehidupan masa kini (Tahun 2020-an), contohnya: Kasus Korupsi, ASN di kantor, konflik sosial modern, pelanggaran hukum, atau isu viral terkini. DILARANG KERAS menggunakan tema sejarah masa lalu (penjajahan, kerajaan, pahlawan kemerdekaan) lebih dari 1 soal! Pilihan ganda harus SANGAT MENGECOH. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TIU') {
         instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Fokus HANYA pada: Kemampuan Verbal (Analogi, Silogisme, Analitis), Kemampuan Numerik (Berhitung, Deret angka, Perbandingan kuantitatif, Soal cerita), dan Kemampuan Figural (Analogi, Ketidaksamaan, Serial). Untuk Figural: berikan 5 urutan <svg> murni di teks pertanyaan (stroke/fill warna putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TKP') {
