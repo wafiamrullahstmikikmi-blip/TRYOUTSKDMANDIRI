@@ -935,7 +935,7 @@ async function generateQuestionsData(kategori, jumlah, refBank, targetKey = 'TWK
     let instructions = "";
     if (kategori === 'TWK') {
         instructions = `Teks soal WAJIB berupa narasi/berita/studi kasus nyata yang PANJANG dan kompleks. Fokus HANYA pada: Nasionalisme, Integritas, Bela Negara, Pilar Negara, dan Bahasa Negara. 
-ATURAN SANGAT KETAT: 95% soal WAJIB menggunakan konteks kehidupan masa kini (Tahun 2020-an), contohnya: Kasus Korupsi, ASN di kantor, konflik sosial modern, pelanggaran hukum, atau isu viral terkini. DILARANG KERAS menggunakan tema sejarah masa lalu (penjajahan, kerajaan, pahlawan kemerdekaan) lebih dari 1 soal! Pilihan ganda harus SANGAT MENGECOH. Kunci: (A/B/C/D/E), bobotTKP: null.`;
+ATURAN SANGAT KETAT: 100% soal WAJIB menggunakan konteks kehidupan masa kini (Tahun 2020-an), contohnya: Kasus Korupsi, ASN di kantor, konflik sosial modern, pelanggaran hukum, atau isu viral terkini. DILARANG KERAS MENGGUNAKAN TEMA SEJARAH MASA LALU (seperti penjajahan, kerajaan, pahlawan, kemerdekaan, BPUPKI, proklamasi). HAPUS SEMUA UNSUR SEJARAH! Pilihan ganda harus SANGAT MENGECOH. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TIU') {
         instructions = `Tingkat kesulitan harus SANGAT TINGGI (HOTS). Fokus HANYA pada: Kemampuan Verbal (Analogi, Silogisme, Analitis), Kemampuan Numerik (Berhitung, Deret angka, Perbandingan kuantitatif, Soal cerita), dan Kemampuan Figural (Analogi, Ketidaksamaan, Serial). Untuk Figural: berikan 5 urutan <svg> murni di teks pertanyaan (stroke/fill warna putih), dan 1 <svg> di setiap pilihan jawaban tanpa teks. Kunci: (A/B/C/D/E), bobotTKP: null.`;
     } else if (kategori === 'TKP') {
@@ -956,7 +956,7 @@ ATURAN SANGAT KETAT: 95% soal WAJIB menggunakan konteks kehidupan masa kini (Tah
 
     let allGenerated = [];
     let remaining = jumlah;
-    const batchSize = 10; // Pecah request max 10 soal untuk hindari 503 Overloaded
+    const batchSize = 15; // Ditingkatkan ke 15 agar lebih cepat namun tetap aman dari token limit
 
     while (remaining > 0) {
         let currentBatch = Math.min(remaining, batchSize);
@@ -999,8 +999,8 @@ Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "per
         remaining -= currentBatch;
         
         if (remaining > 0) {
-            // Jeda antar batch agar tidak kena limit
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            // Jeda antar batch agar tidak kena limit, dipercepat menjadi 1 detik
+            await new Promise(resolve => setTimeout(resolve, 1000));
         }
     }
     
