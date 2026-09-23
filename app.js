@@ -22,9 +22,9 @@ const DAFTAR_VOUCHER = [
 // Masukkan API Key Anda di bawah ini. Mendukung penuh awalan AIza... maupun AQ...
 // (Jika Anda akan mengunggah kode ini ke GitHub publik, disarankan memecah string misal: "AQ." + "abcdef..." agar tidak diblokir GitHub)
 const API_KEYS = {
-    TWK: "AQ.Ab" + "8RN6IxNFOdLqT7" + "zIpwgrqz48vVXswFgp3xlHwERZ_6lXzWuA",
-    TIU: "AQ.Ab" + "8RN6LDD-wZjA-Q" + "YyJ55IHPq0oHV3CSMGnmTCvIwfCq0Z5xew",
-    TKP_BAHASA: "AQ.Ab" + "8RN6KNAeMfrcfM" + "IUFLqcX6zCXkaqpJCTs_WtVu_3RijuSqXA",
+    TWK: "AQ.Ab" + "8RN6JpqsX5Q6j7" + "hvnwfb6kJL50ZqLE9zMvW5i7gXH1-_RPaw",
+    TIU: "AQ.Ab" + "8RN6LJZjnnoexF" + "Ds-M_Tufu_Jf5i1F64YWPKPaQGTsieLeeA",
+    TKP_BAHASA: "AQ.Ab" + "8RN6JE8WBbH8gV" + "xnrQcOluY70DaMa0bqV_7ZqfKiSWEWnPQQ",
     PSIKOTES: "AQ.Ab" + "8RN6LYv8JeN0pQ" + "2nReiOY5KKEMr_eYgVqNQXbcWRsfV830hA" // USER WILL FILL THIS
 };
 const YOUTUBE_API_KEY = "AIzaS" + "yDnHI4iW5W8m1S" + "Pv9b6VVknHhy69f2LPUE";
@@ -694,8 +694,17 @@ function cleanJsonResponse(rawText) {
     return rawText.substring(startIndex, lastIndex + 1);
 }
 
+let globalKeyIndex = 0;
+
 async function callGemini(prompt, isJson = true, preferredKeyType = 'TWK') {
-    const keysToTry = [preferredKeyType, ...FALLBACK_ORDER.filter(k => k !== preferredKeyType)];
+    // Gunakan sistem Round-Robin (Giliran) agar beban merata ke semua API Key
+    // Ini berfungsi mengakali limit 5 Request Per Minute dari Gemini 3.5 Flash
+    const keysToTry = [];
+    for(let i=0; i < FALLBACK_ORDER.length; i++) {
+        keysToTry.push(FALLBACK_ORDER[(globalKeyIndex + i) % FALLBACK_ORDER.length]);
+    }
+    // Geser giliran untuk request berikutnya
+    globalKeyIndex = (globalKeyIndex + 1) % FALLBACK_ORDER.length;
     
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -793,18 +802,20 @@ async function startSimulation() {
             if(progress < 85) {
                 progress += 5;
                 els.loadingProgressBar.style.width = `${progress}%`;
-                els.loadingProgressText.innerText = `Sedang memproses... (estimasi System sedang meracik)`;
             }
         }, 2000);
 
         if (appState.selectedMode === 1) {
-            // MODE 1: SKD Full (Concurrent)
-            const pTwk = generateQuestionsData('TWK', 30, BANK_REFERENSI.twk_only, 'TWK');
-            const pTiu = generateQuestionsData('TIU', 35, BANK_REFERENSI.tiu_only, 'TIU');
-            const pTkp = generateQuestionsData('TKP', 45, BANK_REFERENSI.tkp_only, 'TKP_BAHASA');
-
-            const [twkData, tiuData, tkpData] = await Promise.all([pTwk, pTiu, pTkp]);
+            // MODE 1: SKD Full (Sequential untuk menghindari 503 Overloaded)
+            els.loadingProgressText.innerText = `Sedang memproses TWK (30 Soal)...`;
+            const twkData = await generateQuestionsData('TWK', 30, BANK_REFERENSI.twk_only, 'TWK');
             
+            els.loadingProgressText.innerText = `Sedang memproses TIU (35 Soal)...`;
+            const tiuData = await generateQuestionsData('TIU', 35, BANK_REFERENSI.tiu_only, 'TIU');
+            
+            els.loadingProgressText.innerText = `Sedang memproses TKP (45 Soal)...`;
+            const tkpData = await generateQuestionsData('TKP', 45, BANK_REFERENSI.tkp_only, 'TKP_BAHASA');
+
             const formatQuestions = (data, cat, startNo, expectedCount) => {
                 const arr = Array.isArray(data) ? data : data.soal || [];
                 return arr.slice(0, expectedCount).map((q, idx) => ({ ...q, no: startNo + idx, kategori: cat }));
@@ -956,7 +967,7 @@ ATURAN SANGAT KETAT: 100% soal WAJIB menggunakan konteks kehidupan masa kini (Ta
 
     let allGenerated = [];
     let remaining = jumlah;
-    const batchSize = 15; // Ditingkatkan ke 15 agar lebih cepat namun tetap aman dari token limit
+    const batchSize = 10; // Dikembalikan ke 10 soal per tarikan agar server AI tidak kehabisan nafas (menghindari 503)
 
     while (remaining > 0) {
         let currentBatch = Math.min(remaining, batchSize);
@@ -999,8 +1010,8 @@ Output WAJIB berupa JSON Array murni: [{"no": 1, "kategori": "${kategori}", "per
         remaining -= currentBatch;
         
         if (remaining > 0) {
-            // Jeda antar batch agar tidak kena limit, dipercepat menjadi 1 detik
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Jeda antar batch (2 detik) agar tidak memicu deteksi spam / rate limit dari Google
+            await new Promise(resolve => setTimeout(resolve, 2000));
         }
     }
     
